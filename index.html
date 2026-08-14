@@ -1271,6 +1271,50 @@
       }
     }
 
+
+    .memo-view {
+      min-height: 92px;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .memo-view.empty {
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .memo-mode-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .memo-mode-label {
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .memo-mode-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .volume-debug {
+      margin-top: 4px;
+      color: var(--faint);
+      font-size: 9px;
+      font-variant-numeric: tabular-nums;
+    }
+
     @media (max-width: 760px) {
       .main-grid { grid-template-columns: 1fr; }
 
@@ -1386,7 +1430,7 @@
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.3</span></div>
+          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.3.1</span></div>
           <div id="roomLine" class="room-line"></div>
         </div>
         <span id="roleBadge" class="badge">PLAYER</span>
@@ -1442,6 +1486,7 @@
             <input id="volumeSlider" type="range" min="0" max="100" step="1" value="70">
             <span id="volumeValue" class="volume-value">70%</span>
           </div>
+          <div id="volumeDebug" class="volume-debug"></div>
 
           <div class="link-actions">
             <button id="openYoutube" class="btn secondary" disabled>원본 YouTube 열기</button>
@@ -1529,11 +1574,23 @@
             </button>
 
             <div id="playlistMemoPanel" class="playlist-memo-panel hidden">
-              <div class="field-label">플레이리스트 전체 메모 · MASTER 전용</div>
-              <textarea id="playlistMemoTextarea" class="large-memo-input" maxlength="5000" placeholder="세션 전체의 BGM 운영 메모, 장면 순서, 주의사항 등을 자유롭게 적어두세요."></textarea>
-              <div class="inline-actions">
-                <button id="savePlaylistMemoButton" class="mini-btn">메모 저장</button>
+              <div class="memo-mode-head">
+                <div class="memo-mode-label">플레이리스트 전체 메모 · MASTER 전용</div>
+                <div class="memo-mode-actions">
+                  <button id="editPlaylistMemoButton" class="mini-btn">수정</button>
+                </div>
               </div>
+
+              <div id="playlistMemoView" class="memo-view empty">저장된 메모가 없습니다.</div>
+
+              <div id="playlistMemoEdit" class="hidden">
+                <textarea id="playlistMemoTextarea" class="large-memo-input" maxlength="5000" placeholder="세션 전체의 BGM 운영 메모, 장면 순서, 주의사항 등을 자유롭게 적어두세요."></textarea>
+                <div class="inline-actions">
+                  <button id="savePlaylistMemoButton" class="mini-btn">저장</button>
+                  <button id="cancelPlaylistMemoButton" class="mini-btn">취소</button>
+                </div>
+              </div>
+
               <div id="playlistMemoStatus" class="status-line"></div>
             </div>
 
@@ -1698,6 +1755,7 @@
     const recoverPlaybackButton = $("#recoverPlaybackButton");
     const volumeSlider = $("#volumeSlider");
     const volumeValue = $("#volumeValue");
+    const volumeDebug = $("#volumeDebug");
     const openYoutube = $("#openYoutube");
     const copyYoutube = $("#copyYoutube");
     const playerStatus = $("#playerStatus");
@@ -1742,8 +1800,12 @@
 
     const playlistMemoToggle = $("#playlistMemoToggle");
     const playlistMemoPanel = $("#playlistMemoPanel");
+    const playlistMemoView = $("#playlistMemoView");
+    const playlistMemoEdit = $("#playlistMemoEdit");
+    const editPlaylistMemoButton = $("#editPlaylistMemoButton");
     const playlistMemoTextarea = $("#playlistMemoTextarea");
     const savePlaylistMemoButton = $("#savePlaylistMemoButton");
+    const cancelPlaylistMemoButton = $("#cancelPlaylistMemoButton");
     const playlistMemoStatus = $("#playlistMemoStatus");
 
     let currentUser = null;
@@ -1796,7 +1858,12 @@
     let lastMasterObservedAt = 0;
 
     let playlistMemoExpanded = false;
+    let playlistMemoEditing = false;
     const memoExpandedTracks = new Set();
+    const memoEditingTracks = new Set();
+
+    let desiredVolume = Number(volumeSlider.value);
+    let volumeGuardTimer = null;
 
     const SYNC_CHECK_MS = 4000;
     const DRIFT_THRESHOLD_SEC = 1.8;
@@ -1908,7 +1975,7 @@
             "Google 로그인이 취소되었습니다.";
         } else if (code === "auth/unauthorized-domain") {
           accountStatus.textContent =
-            "이 GitHub Pages 주소가 Firebase 승인 도메인에 등록되지 않았습니다.";
+            `Firebase 승인 도메인에 '${window.location.hostname}' 을(를) 추가해 주세요. 프로토콜과 경로는 넣지 않습니다.`;
         } else if (code === "auth/operation-not-allowed") {
           accountStatus.textContent =
             "Firebase에서 Google 로그인 제공업체가 아직 활성화되지 않았습니다.";
@@ -2866,6 +2933,7 @@
               unlockButton.disabled = false;
               unlockButton.textContent = "▶ BGM 재생 활성화";
               applySavedVolume();
+              startVolumeGuard();
 
               setDiagnostics(
                 audioActivated
@@ -2890,6 +2958,12 @@
 
             onStateChange: (event) => {
               refreshVideoMetadata();
+
+              if (desiredVolume <= 0) {
+                applySavedVolume();
+              } else {
+                updateVolumeDiagnostics();
+              }
 
               if (
                 isMaster &&
@@ -2980,21 +3054,89 @@
       );
     }
 
-    function applySavedVolume() {
+    function applySavedVolume({ userInitiated = false } = {}) {
       if (!ytReady || !ytPlayer) {
         return;
       }
 
-      const volume =
-        Number(volumeSlider.value);
+      desiredVolume =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            Number(volumeSlider.value) || 0
+          )
+        );
 
-      ytPlayer.setVolume(volume);
+      ytPlayer.setVolume(desiredVolume);
 
-      if (volume <= 0) {
+      if (desiredVolume <= 0) {
+        // 0%는 setVolume(0)만 믿지 않고 mute까지 함께 유지한다.
         ytPlayer.mute();
-      } else {
+      } else if (userInitiated) {
+        // 사용자가 앱 슬라이더를 직접 0보다 크게 움직였을 때만
+        // 명시적으로 음소거를 해제한다.
+        // YouTube 플레이어 자체에서 누른 mute를 앱이 멋대로 풀지 않는다.
         ytPlayer.unMute();
       }
+
+      updateVolumeDiagnostics();
+    }
+
+    function updateVolumeDiagnostics() {
+      if (!ytReady || !ytPlayer) {
+        volumeDebug.textContent = "";
+        return;
+      }
+
+      try {
+        const apiVolume =
+          Number(ytPlayer.getVolume?.() ?? -1);
+
+        const muted =
+          Boolean(ytPlayer.isMuted?.());
+
+        volumeDebug.textContent =
+          `player ${apiVolume}% · ${muted ? "muted" : "sound on"}`;
+      } catch {
+        volumeDebug.textContent = "";
+      }
+    }
+
+    function startVolumeGuard() {
+      if (volumeGuardTimer) {
+        clearInterval(volumeGuardTimer);
+      }
+
+      volumeGuardTimer = setInterval(() => {
+        if (!ytReady || !ytPlayer) {
+          return;
+        }
+
+        try {
+          const apiVolume =
+            Number(ytPlayer.getVolume?.() ?? -1);
+
+          const muted =
+            Boolean(ytPlayer.isMuted?.());
+
+          // 앱 슬라이더가 0이면 재생 상태 변화/영상 교체 후에도
+          // 실제 플레이어가 반드시 음소거 상태를 유지하도록 보정한다.
+          if (desiredVolume <= 0) {
+            if (apiVolume !== 0) {
+              ytPlayer.setVolume(0);
+            }
+
+            if (!muted) {
+              ytPlayer.mute();
+            }
+          }
+
+          updateVolumeDiagnostics();
+        } catch (error) {
+          console.error("volume guard failed", error);
+        }
+      }, 500);
     }
 
     function setDiagnostics(text, kind) {
@@ -4029,7 +4171,10 @@
           folderData = value.folders ?? {};
           playlistMemo = String(value.playlistMemo ?? "");
 
+          renderPlaylistMemoView();
+
           if (
+            !playlistMemoEditing &&
             document.activeElement !== playlistMemoTextarea
           ) {
             playlistMemoTextarea.value = playlistMemo;
@@ -4527,6 +4672,65 @@
       return select;
     }
 
+    function renderPlaylistMemoView() {
+      const content =
+        String(playlistMemo || "");
+
+      if (content.trim()) {
+        playlistMemoView.textContent =
+          content;
+
+        playlistMemoView.classList.remove(
+          "empty"
+        );
+      } else {
+        playlistMemoView.textContent =
+          "저장된 메모가 없습니다.";
+
+        playlistMemoView.classList.add(
+          "empty"
+        );
+      }
+    }
+
+    function setPlaylistMemoEditMode(editing) {
+      playlistMemoEditing =
+        Boolean(editing);
+
+      playlistMemoView.classList.toggle(
+        "hidden",
+        playlistMemoEditing
+      );
+
+      playlistMemoEdit.classList.toggle(
+        "hidden",
+        !playlistMemoEditing
+      );
+
+      editPlaylistMemoButton.classList.toggle(
+        "hidden",
+        playlistMemoEditing
+      );
+
+      if (playlistMemoEditing) {
+        playlistMemoTextarea.value =
+          playlistMemo || "";
+
+        playlistMemoStatus.textContent =
+          "";
+
+        setTimeout(
+          () => playlistMemoTextarea.focus(),
+          0
+        );
+      } else {
+        playlistMemoTextarea.value =
+          playlistMemo || "";
+
+        renderPlaylistMemoView();
+      }
+    }
+
     function togglePlaylistMemo() {
       playlistMemoExpanded =
         !playlistMemoExpanded;
@@ -4542,8 +4746,7 @@
           : "▸ 플레이리스트 메모";
 
       if (playlistMemoExpanded) {
-        playlistMemoTextarea.value =
-          playlistMemo || "";
+        setPlaylistMemoEditMode(false);
       }
     }
 
@@ -4562,8 +4765,13 @@
           playlistMemoTextarea.value
         );
 
+        playlistMemo =
+          playlistMemoTextarea.value;
+
         playlistMemoStatus.textContent =
           "플레이리스트 메모를 저장했습니다.";
+
+        setPlaylistMemoEditMode(false);
 
       } catch (error) {
         playlistMemoStatus.textContent =
@@ -4595,6 +4803,17 @@
 
         statusEl.textContent =
           "곡 메모를 저장했습니다.";
+
+        if (playlistData[trackId]) {
+          playlistData[trackId] = {
+            ...playlistData[trackId],
+            memo: textarea.value
+          };
+        }
+
+        setTimeout(() => {
+          renderPlaylist();
+        }, 80);
 
       } catch (error) {
         statusEl.textContent =
@@ -4745,20 +4964,59 @@
             memoStatus
           );
 
+          const isEditing =
+            memoEditingTracks.has(track.id);
+
+          const memoView = document.createElement("div");
+          memoView.className = "memo-view";
+
+          const memoContent =
+            String(track.memo || "");
+
+          if (memoContent.trim()) {
+            memoView.textContent =
+              memoContent;
+          } else {
+            memoView.textContent =
+              "저장된 메모가 없습니다.";
+            memoView.classList.add("empty");
+          }
+
+          const viewActions = document.createElement("div");
+          viewActions.className = "inline-actions";
+
+          const editMemoButton = document.createElement("button");
+          editMemoButton.className = "mini-btn";
+          editMemoButton.textContent =
+            memoContent.trim() ? "수정" : "메모 작성";
+
+          editMemoButton.addEventListener("click", () => {
+            memoEditingTracks.add(track.id);
+            renderPlaylist();
+          });
+
+          viewActions.appendChild(editMemoButton);
+
+          const editWrap = document.createElement("div");
+
           const memoTextarea = document.createElement("textarea");
           memoTextarea.className = "large-memo-input";
           memoTextarea.maxLength = 2000;
           memoTextarea.placeholder =
             "이 곡을 언제, 어떤 장면에서 사용할지 자유롭게 적어두세요. 줄바꿈도 그대로 저장됩니다.";
           memoTextarea.value =
-            String(track.memo || "");
+            memoContent;
 
-          const memoActions = document.createElement("div");
-          memoActions.className = "inline-actions";
+          const editActions = document.createElement("div");
+          editActions.className = "inline-actions";
 
           const memoSaveButton = document.createElement("button");
           memoSaveButton.className = "mini-btn";
-          memoSaveButton.textContent = "메모 저장";
+          memoSaveButton.textContent = "저장";
+
+          const memoCancelButton = document.createElement("button");
+          memoCancelButton.className = "mini-btn";
+          memoCancelButton.textContent = "취소";
 
           memoSaveButton.addEventListener(
             "click",
@@ -4772,18 +5030,41 @@
               );
 
               memoSaveButton.disabled = false;
+
+              if (!memoStatus.textContent.includes("실패")) {
+                memoEditingTracks.delete(track.id);
+              }
             }
           );
 
-          memoActions.appendChild(
-            memoSaveButton
+          memoCancelButton.addEventListener(
+            "click",
+            () => {
+              memoEditingTracks.delete(track.id);
+              renderPlaylist();
+            }
           );
 
-          memoPanel.append(
-            memoHead,
-            memoTextarea,
-            memoActions
+          editActions.append(
+            memoSaveButton,
+            memoCancelButton
           );
+
+          editWrap.append(
+            memoTextarea,
+            editActions
+          );
+
+          memoPanel.appendChild(memoHead);
+
+          if (isEditing) {
+            memoPanel.appendChild(editWrap);
+          } else {
+            memoPanel.append(
+              memoView,
+              viewActions
+            );
+          }
 
           card.appendChild(memoPanel);
         }
@@ -5047,6 +5328,16 @@
       togglePlaylistMemo
     );
 
+    editPlaylistMemoButton.addEventListener(
+      "click",
+      () => setPlaylistMemoEditMode(true)
+    );
+
+    cancelPlaylistMemoButton.addEventListener(
+      "click",
+      () => setPlaylistMemoEditMode(false)
+    );
+
     savePlaylistMemoButton.addEventListener(
       "click",
       savePlaylistMemo
@@ -5196,6 +5487,9 @@
     volumeSlider.addEventListener(
       "input",
       () => {
+        desiredVolume =
+          Number(volumeSlider.value);
+
         volumeValue.textContent =
           `${volumeSlider.value}%`;
 
@@ -5204,7 +5498,9 @@
           volumeSlider.value
         );
 
-        applySavedVolume();
+        applySavedVolume({
+          userInitiated: true
+        });
       }
     );
 
