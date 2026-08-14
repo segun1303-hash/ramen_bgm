@@ -402,6 +402,281 @@
       line-height: 1.55;
     }
 
+
+    .room-summary {
+      margin-bottom: 16px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--soft2);
+    }
+
+    .room-name-display {
+      font-size: 18px;
+      font-weight: 850;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .room-subtext {
+      margin-top: 5px;
+      color: var(--faint);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .presence-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 18px 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .presence-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .person-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .presence-dot {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 8px;
+      border-radius: 999px;
+      background: #b9b7b1;
+      box-shadow: 0 0 0 3px rgba(0,0,0,.025);
+    }
+
+    .presence-dot.online {
+      background: #42a66b;
+      box-shadow: 0 0 0 3px rgba(66,166,107,.12);
+    }
+
+    .person-name {
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .person-role {
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .04em;
+    }
+
+    .playlist-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 22px 0 10px;
+    }
+
+    .playlist-toolbar .section-title {
+      margin: 0;
+    }
+
+    .playlist-add {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--soft2);
+    }
+
+    .compact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .mini-btn {
+      min-height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--text);
+      font-size: 11px;
+    }
+
+    .playlist-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 10px;
+    }
+
+    .playlist-empty {
+      padding: 18px;
+      border: 1px dashed #d6d3cc;
+      border-radius: 12px;
+      color: var(--faint);
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .playlist-item {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .playlist-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 12px;
+    }
+
+    .playlist-index {
+      width: 25px;
+      flex: 0 0 25px;
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .playlist-titles {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .playlist-private-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .playlist-public-title {
+      margin-top: 2px;
+      overflow: hidden;
+      color: var(--faint);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 10px;
+    }
+
+    .playlist-head-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .icon-btn {
+      min-width: 31px;
+      min-height: 31px;
+      padding: 0 7px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft2);
+      color: var(--text);
+      font-size: 11px;
+    }
+
+    .playlist-body {
+      padding: 13px;
+      border-top: 1px solid var(--line);
+      background: var(--soft2);
+    }
+
+    .playlist-body.hidden {
+      display: none;
+    }
+
+    .notes-wrap {
+      margin-top: 14px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .note-add-row {
+      display: grid;
+      grid-template-columns: 92px 1fr auto;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .note-add-row input {
+      min-height: 38px !important;
+      height: 38px;
+      font-size: 12px !important;
+    }
+
+    .note-list {
+      display: grid;
+      gap: 6px;
+      margin-top: 9px;
+    }
+
+    .note-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 5px 7px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .time-link {
+      min-height: 27px;
+      padding: 0 7px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--soft);
+      color: var(--text);
+      font-size: 10px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+    }
+
+    .note-text {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .danger-mini {
+      color: #a13d34;
+    }
+
+    .version-text {
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
     @media (max-width: 760px) {
       .main-grid { grid-template-columns: 1fr; }
 
@@ -422,7 +697,9 @@
       .role-grid,
       .button-grid.two,
       .button-grid.three,
-      .link-actions {
+      .link-actions,
+      .compact-grid,
+      .note-add-row {
         grid-template-columns: 1fr;
       }
     }
@@ -444,6 +721,11 @@
         <input id="roomUrl" type="url" placeholder="https://ccfolia.com/rooms/..." autocomplete="off">
       </div>
 
+      <div class="field">
+        <label for="nicknameInput">닉네임</label>
+        <input id="nicknameInput" type="text" maxlength="20" placeholder="이 방에서 사용할 닉네임" autocomplete="nickname">
+      </div>
+
       <div class="role-grid">
         <button id="masterButton" class="btn primary">룸마스터로 입장</button>
         <button id="playerButton" class="btn secondary">플레이어로 입장</button>
@@ -456,12 +738,12 @@
 
         <div class="field">
           <label for="pinInput">마스터 PIN</label>
-          <input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="4~12자리 숫자">
+          <input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="4자리 숫자">
         </div>
 
         <div id="pinConfirmField" class="field hidden">
           <label for="pinConfirm">PIN 확인</label>
-          <input id="pinConfirm" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="같은 PIN을 한 번 더 입력">
+          <input id="pinConfirm" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="같은 4자리 PIN">
         </div>
 
         <div class="button-grid two" style="margin-top:14px;">
@@ -477,7 +759,7 @@
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-title">CCFOLIA BGM</div>
+          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.0</span></div>
           <div id="roomLine" class="room-line"></div>
         </div>
         <span id="roleBadge" class="badge">PLAYER</span>
@@ -531,8 +813,22 @@
         </section>
 
         <section class="pane">
-          <div id="playerOnlyPanel">
+
+          <div class="room-summary">
             <h2 class="section-title">ROOM</h2>
+            <div id="roomNameDisplay" class="room-name-display">이름 없는 방</div>
+            <div class="room-subtext">코코포리아 룸 이름은 외부에서 자동으로 읽지 않고, 룸마스터가 한 번 저장하면 이 방에 계속 표시됩니다.</div>
+
+            <div class="presence-title">
+              <span>접속자</span>
+              <span id="onlineCount" class="version-text">0 online</span>
+            </div>
+            <div id="presenceList" class="presence-list">
+              <div class="small">접속 상태를 불러오는 중…</div>
+            </div>
+          </div>
+
+          <div id="playerOnlyPanel">
             <div id="playerRoleMessage" class="role-warning">
               룸마스터가 선택한 BGM이 이 화면에 동기화됩니다.
             </div>
@@ -546,7 +842,17 @@
             <h2 class="section-title">MASTER CONTROL</h2>
 
             <div class="master-panel">
-              <div class="field-label">YouTube 링크</div>
+              <div class="field-label">방 이름</div>
+              <input id="roomNameInput" type="text" maxlength="40" placeholder="예: 라플라스의 유언">
+              <button id="saveRoomNameButton" class="btn secondary" style="width:100%; margin-top:9px;">방 이름 저장</button>
+              <div id="roomNameStatus" class="status-line"></div>
+            </div>
+
+            <div class="master-panel">
+              <div class="field-label">빠른 재생 · 공개 제목</div>
+              <input id="quickPublicTitleInput" type="text" maxlength="80" placeholder="플레이어에게 보일 제목">
+
+              <div class="field-label" style="margin-top:10px;">YouTube 링크</div>
               <input id="youtubeUrlInput" type="url" placeholder="https://www.youtube.com/watch?v=...">
 
               <button id="loadAndPlayButton" class="btn primary" style="width:100%; margin-top:10px;">
@@ -572,6 +878,40 @@
               </div>
 
               <div id="masterStatus" class="status-line"></div>
+            </div>
+
+            <div class="playlist-toolbar">
+              <h2 class="section-title">PLAYLIST</h2>
+              <span class="version-text">방에 저장됨</span>
+            </div>
+
+            <div class="playlist-add">
+              <div class="field-label">새 BGM 추가</div>
+
+              <div class="compact-grid">
+                <div>
+                  <div class="field-label">내 제목</div>
+                  <input id="newPrivateTitle" type="text" maxlength="80" placeholder="예: NPC 사망">
+                </div>
+                <div>
+                  <div class="field-label">공개 제목</div>
+                  <input id="newPublicTitle" type="text" maxlength="80" placeholder="예: @@장면">
+                </div>
+              </div>
+
+              <div class="field-label" style="margin-top:10px;">YouTube 링크</div>
+              <input id="newYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
+
+              <div class="inline-actions">
+                <button id="copyNewTitleButton" class="mini-btn">공개 제목 ← 내 제목</button>
+                <button id="addPlaylistButton" class="btn primary" style="min-height:34px;">＋ 플레이리스트 추가</button>
+              </div>
+
+              <div id="playlistAddStatus" class="status-line"></div>
+            </div>
+
+            <div id="playlistList" class="playlist-list">
+              <div class="playlist-empty">아직 저장된 BGM이 없습니다.</div>
             </div>
           </div>
         </section>
@@ -605,7 +945,9 @@
       set,
       update,
       onValue,
-      serverTimestamp
+      serverTimestamp,
+      push,
+      onDisconnect
     } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
     const firebaseConfig = {
@@ -627,6 +969,7 @@
     const entryView = $("#entryView");
     const appView = $("#appView");
     const roomUrlInput = $("#roomUrl");
+    const nicknameInput = $("#nicknameInput");
     const masterButton = $("#masterButton");
     const playerButton = $("#playerButton");
     const entryError = $("#entryError");
@@ -641,6 +984,9 @@
     const pinError = $("#pinError");
 
     const roomLine = $("#roomLine");
+    const roomNameDisplay = $("#roomNameDisplay");
+    const presenceList = $("#presenceList");
+    const onlineCount = $("#onlineCount");
     const roleBadge = $("#roleBadge");
     const playerOnlyPanel = $("#playerOnlyPanel");
     const playerRoleMessage = $("#playerRoleMessage");
@@ -660,6 +1006,11 @@
     const playerStatus = $("#playerStatus");
     const diagnostics = $("#diagnostics");
 
+    const roomNameInput = $("#roomNameInput");
+    const saveRoomNameButton = $("#saveRoomNameButton");
+    const roomNameStatus = $("#roomNameStatus");
+
+    const quickPublicTitleInput = $("#quickPublicTitleInput");
     const youtubeUrlInput = $("#youtubeUrlInput");
     const loadAndPlayButton = $("#loadAndPlayButton");
     const resumeButton = $("#resumeButton");
@@ -670,10 +1021,26 @@
     const masterStatus = $("#masterStatus");
     const masterError = $("#masterError");
 
+    const newPrivateTitle = $("#newPrivateTitle");
+    const newPublicTitle = $("#newPublicTitle");
+    const newYoutubeUrl = $("#newYoutubeUrl");
+    const copyNewTitleButton = $("#copyNewTitleButton");
+    const addPlaylistButton = $("#addPlaylistButton");
+    const playlistAddStatus = $("#playlistAddStatus");
+    const playlistList = $("#playlistList");
+
     let currentUser = null;
     let currentRoomId = null;
     let currentRoomCode = null;
+    let currentNickname = "";
+    let currentRoomName = "";
+    let currentOwnerUid = null;
     let pendingMasterMode = null;
+
+    let presenceData = {};
+    let playlistData = {};
+    let playlistUnsubscribe = null;
+    const expandedTracks = new Set();
 
     let isMaster = false;
     let serverOffsetMs = 0;
@@ -716,6 +1083,9 @@
         : 70
     );
     volumeValue.textContent = `${volumeSlider.value}%`;
+
+    const rememberedNickname = localStorage.getItem("ccfolia-bgm-nickname") ?? "";
+    nicknameInput.value = rememberedNickname;
 
     function setEntryBusy(busy) {
       masterButton.disabled = busy;
@@ -814,6 +1184,19 @@
 
     async function prepareRoom() {
       entryError.textContent = "";
+
+      currentNickname = nicknameInput.value.trim();
+
+      if (!currentNickname) {
+        throw new Error("닉네임을 입력해 주세요.");
+      }
+
+      if (currentNickname.length > 20) {
+        throw new Error("닉네임은 20자 이하로 입력해 주세요.");
+      }
+
+      localStorage.setItem("ccfolia-bgm-nickname", currentNickname);
+
       currentRoomCode = extractRoomCode(roomUrlInput.value);
       currentRoomId = await sha256(`ccfolia:${currentRoomCode}`);
 
@@ -826,7 +1209,7 @@
     }
 
     function validatePin(pin) {
-      return /^[0-9]{4,12}$/.test(pin);
+      return /^[0-9]{4}$/.test(pin);
     }
 
     function openPin(mode) {
@@ -907,7 +1290,7 @@
 
       if (!validatePin(pin)) {
         pinError.textContent =
-          "PIN은 4~12자리 숫자로 입력해 주세요.";
+          "PIN은 정확히 4자리 숫자로 입력해 주세요.";
         return;
       }
 
@@ -979,15 +1362,26 @@
       if (master) {
         masterControls.classList.remove("hidden");
         playerOnlyPanel.classList.add("hidden");
+        subscribeMasterPlaylist();
       } else {
         masterControls.classList.add("hidden");
         playerOnlyPanel.classList.remove("hidden");
+
+        if (playlistUnsubscribe) {
+          playlistUnsubscribe();
+          playlistUnsubscribe = null;
+        }
+
+        playlistData = {};
+        renderPlaylist();
 
         playerRoleMessage.textContent =
           wasDowngraded
             ? "마스터 권한이 다른 브라우저로 이전되어 PLAYER로 전환되었습니다."
             : "룸마스터가 선택한 BGM이 이 화면에 동기화됩니다.";
       }
+
+      renderPresence();
     }
 
     function enterApplication(initialMaster) {
@@ -996,10 +1390,10 @@
       entryView.classList.add("hidden");
       appView.classList.remove("hidden");
 
-      roomLine.textContent =
-        `Room ID ${currentRoomId.slice(0, 16)}…`;
-
+      updateRoomHeader();
       updateRoleUi(initialMaster);
+
+      setupPresence();
 
       // 페이지를 새로 열 때마다 한 번은 사용자의 클릭을 받는다.
       audioActivated = false;
@@ -1021,14 +1415,39 @@
 
       onValue(ownerRef, (snapshot) => {
         const ownerUid = snapshot.val() ?? null;
+        currentOwnerUid = ownerUid;
         const shouldBeMaster =
           ownerUid === currentUser.uid;
+
+        renderPresence();
 
         if (isMaster && !shouldBeMaster) {
           updateRoleUi(false, true);
         } else if (!isMaster && shouldBeMaster) {
           updateRoleUi(true, false);
         }
+      });
+
+      const roomNameRef = ref(
+        db,
+        `rooms/${currentRoomId}/public/roomName`
+      );
+
+      onValue(roomNameRef, (snapshot) => {
+        currentRoomName = String(snapshot.val() ?? "").trim();
+        roomNameDisplay.textContent = currentRoomName || "이름 없는 방";
+        roomNameInput.value = currentRoomName;
+        updateRoomHeader();
+      });
+
+      const presenceRef = ref(
+        db,
+        `presence/${currentRoomId}`
+      );
+
+      onValue(presenceRef, (snapshot) => {
+        presenceData = snapshot.val() ?? {};
+        renderPresence();
       });
 
       const playbackRef = ref(
@@ -1316,7 +1735,10 @@
       const data =
         ytPlayer.getVideoData?.() ?? {};
 
-      if (data.title) {
+      if (currentPlayback?.publicTitle) {
+        trackTitle.textContent =
+          currentPlayback.publicTitle;
+      } else if (data.title) {
         trackTitle.textContent =
           data.title;
       } else if (currentVideoId) {
@@ -1729,7 +2151,7 @@
             : "";
       } else {
         trackTitle.textContent =
-          "YouTube BGM";
+          currentPlayback?.publicTitle || "YouTube BGM";
 
         trackMeta.textContent =
           currentYoutubeUrl;
@@ -1775,7 +2197,9 @@
       videoId,
       url,
       status,
-      position
+      position,
+      publicTitle = "",
+      trackId = null
     }) {
       if (!isMaster) {
         throw new Error(
@@ -1806,6 +2230,8 @@
                 position ?? 0
               )
             ),
+          publicTitle: String(publicTitle || ""),
+          trackId: trackId || null,
           updatedAt:
             serverTimestamp()
         }
@@ -1838,7 +2264,9 @@
               videoId
             ),
           status: "playing",
-          position: 0
+          position: 0,
+          publicTitle: quickPublicTitleInput.value.trim() || "BGM",
+          trackId: null
         });
 
         masterStatus.textContent =
@@ -1882,7 +2310,9 @@
           url:
             currentPlayback.url,
           status: "paused",
-          position
+          position,
+          publicTitle: currentPlayback.publicTitle || "",
+          trackId: currentPlayback.trackId || null
         });
 
         masterStatus.textContent =
@@ -1920,7 +2350,9 @@
           url:
             currentPlayback.url,
           status: "playing",
-          position
+          position,
+          publicTitle: currentPlayback.publicTitle || "",
+          trackId: currentPlayback.trackId || null
         });
 
         masterStatus.textContent =
@@ -1947,7 +2379,9 @@
           url:
             currentPlayback.url,
           status: "playing",
-          position: 0
+          position: 0,
+          publicTitle: currentPlayback.publicTitle || "",
+          trackId: currentPlayback.trackId || null
         });
 
         masterStatus.textContent =
@@ -1984,7 +2418,9 @@
             Math.max(
               0,
               Number(target)
-            )
+            ),
+          publicTitle: currentPlayback.publicTitle || "",
+          trackId: currentPlayback.trackId || null
         });
 
         masterStatus.textContent =
@@ -1995,6 +2431,613 @@
           error?.message ??
           "재생 위치 변경에 실패했습니다.";
       }
+    }
+
+
+    function updateRoomHeader() {
+      const name = currentRoomName || "이름 없는 방";
+      roomLine.textContent = `${name} · Room ID ${currentRoomId ? currentRoomId.slice(0, 16) + "…" : ""}`;
+    }
+
+    function setupPresence() {
+      const connectedRef = ref(db, ".info/connected");
+
+      onValue(connectedRef, async (snapshot) => {
+        if (snapshot.val() !== true || !currentUser || !currentRoomId) {
+          return;
+        }
+
+        const basePath = `presence/${currentRoomId}/${currentUser.uid}`;
+        const nicknameRef = ref(db, `${basePath}/nickname`);
+        const connectionRef = push(ref(db, `${basePath}/connections`));
+        const lastSeenRef = ref(db, `${basePath}/lastSeen`);
+
+        try {
+          await onDisconnect(connectionRef).remove();
+          await onDisconnect(lastSeenRef).set(serverTimestamp());
+
+          await set(nicknameRef, currentNickname);
+          await set(connectionRef, true);
+        } catch (error) {
+          console.error("presence setup failed", error);
+        }
+      });
+    }
+
+    function renderPresence() {
+      if (!presenceList) return;
+
+      const entries = Object.entries(presenceData || {}).map(([uid, value]) => {
+        const connections = value?.connections && typeof value.connections === "object"
+          ? Object.keys(value.connections).length
+          : 0;
+
+        return {
+          uid,
+          nickname: String(value?.nickname || "이름 없음"),
+          online: connections > 0,
+          isRoomMaster: uid === currentOwnerUid
+        };
+      });
+
+      entries.sort((a, b) => {
+        if (a.online !== b.online) return a.online ? -1 : 1;
+        if (a.isRoomMaster !== b.isRoomMaster) return a.isRoomMaster ? -1 : 1;
+        return a.nickname.localeCompare(b.nickname, "ko");
+      });
+
+      presenceList.replaceChildren();
+
+      if (!entries.length) {
+        const empty = document.createElement("div");
+        empty.className = "small";
+        empty.textContent = "아직 등록된 접속자가 없습니다.";
+        presenceList.appendChild(empty);
+        onlineCount.textContent = "0 online";
+        return;
+      }
+
+      const online = entries.filter((entry) => entry.online).length;
+      onlineCount.textContent = `${online} online`;
+
+      for (const entry of entries) {
+        const row = document.createElement("div");
+        row.className = "person-row";
+
+        const dot = document.createElement("span");
+        dot.className = `presence-dot${entry.online ? " online" : ""}`;
+
+        const name = document.createElement("span");
+        name.className = "person-name";
+        name.textContent =
+          entry.uid === currentUser?.uid
+            ? `${entry.nickname} (나)`
+            : entry.nickname;
+
+        const role = document.createElement("span");
+        role.className = "person-role";
+        role.textContent = entry.isRoomMaster ? "MASTER" : "PLAYER";
+
+        row.append(dot, name, role);
+        presenceList.appendChild(row);
+      }
+    }
+
+    async function saveRoomName() {
+      if (!isMaster) return;
+
+      const name = roomNameInput.value.trim();
+
+      if (!name) {
+        roomNameStatus.textContent = "방 이름을 입력해 주세요.";
+        return;
+      }
+
+      if (name.length > 40) {
+        roomNameStatus.textContent = "방 이름은 40자 이하로 입력해 주세요.";
+        return;
+      }
+
+      try {
+        saveRoomNameButton.disabled = true;
+        await set(
+          ref(db, `rooms/${currentRoomId}/public/roomName`),
+          name
+        );
+        roomNameStatus.textContent = "방 이름을 저장했습니다.";
+      } catch (error) {
+        console.error(error);
+        roomNameStatus.textContent = error?.message ?? "방 이름 저장에 실패했습니다.";
+      } finally {
+        saveRoomNameButton.disabled = false;
+      }
+    }
+
+    function subscribeMasterPlaylist() {
+      if (!currentRoomId || !currentUser || !isMaster || playlistUnsubscribe) {
+        return;
+      }
+
+      const playlistRef = ref(
+        db,
+        `rooms/${currentRoomId}/master/playlist`
+      );
+
+      playlistUnsubscribe = onValue(
+        playlistRef,
+        (snapshot) => {
+          playlistData = snapshot.val() ?? {};
+          renderPlaylist();
+        },
+        (error) => {
+          console.error("playlist read failed", error);
+          playlistAddStatus.textContent = "플레이리스트를 읽을 권한이 없습니다.";
+        }
+      );
+    }
+
+    function orderedTracks() {
+      return Object.entries(playlistData || {})
+        .map(([id, value]) => ({
+          id,
+          ...(value || {})
+        }))
+        .sort((a, b) => {
+          const ao = Number(a.order ?? 0);
+          const bo = Number(b.order ?? 0);
+          if (ao !== bo) return ao - bo;
+          return String(a.privateTitle || "").localeCompare(String(b.privateTitle || ""), "ko");
+        });
+    }
+
+    function parseTimeInput(value) {
+      const raw = String(value || "").trim();
+
+      if (!raw) return null;
+
+      if (/^\d+(\.\d+)?$/.test(raw)) {
+        return Math.max(0, Number(raw));
+      }
+
+      const parts = raw.split(":").map((part) => Number(part));
+
+      if (parts.some((part) => !Number.isFinite(part) || part < 0)) {
+        return null;
+      }
+
+      if (parts.length === 2) {
+        return parts[0] * 60 + parts[1];
+      }
+
+      if (parts.length === 3) {
+        return parts[0] * 3600 + parts[1] * 60 + parts[2];
+      }
+
+      return null;
+    }
+
+    async function addPlaylistTrack() {
+      if (!isMaster) return;
+
+      const privateTitle = newPrivateTitle.value.trim();
+      const publicTitle = newPublicTitle.value.trim();
+      const rawUrl = newYoutubeUrl.value.trim();
+      const videoId = extractYoutubeVideoId(rawUrl);
+
+      if (!privateTitle) {
+        playlistAddStatus.textContent = "내 제목을 입력해 주세요.";
+        return;
+      }
+
+      if (!videoId) {
+        playlistAddStatus.textContent = "올바른 YouTube 링크를 입력해 주세요.";
+        return;
+      }
+
+      try {
+        addPlaylistButton.disabled = true;
+
+        const tracks = orderedTracks();
+        const maxOrder = tracks.reduce(
+          (max, track) => Math.max(max, Number(track.order ?? 0)),
+          0
+        );
+
+        const trackRef = push(
+          ref(db, `rooms/${currentRoomId}/master/playlist`)
+        );
+
+        await set(trackRef, {
+          privateTitle,
+          publicTitle,
+          youtubeUrl: canonicalYoutubeUrl(videoId),
+          videoId,
+          order: maxOrder + 10,
+          createdAt: serverTimestamp()
+        });
+
+        newPrivateTitle.value = "";
+        newPublicTitle.value = "";
+        newYoutubeUrl.value = "";
+        playlistAddStatus.textContent = "플레이리스트에 추가했습니다.";
+      } catch (error) {
+        console.error(error);
+        playlistAddStatus.textContent = error?.message ?? "플레이리스트 추가에 실패했습니다.";
+      } finally {
+        addPlaylistButton.disabled = false;
+      }
+    }
+
+    async function savePlaylistTrack(trackId, fields) {
+      if (!isMaster) return;
+
+      const videoId = extractYoutubeVideoId(fields.youtubeUrl);
+
+      if (!fields.privateTitle.trim()) {
+        throw new Error("내 제목을 입력해 주세요.");
+      }
+
+      if (!videoId) {
+        throw new Error("올바른 YouTube 링크를 입력해 주세요.");
+      }
+
+      await update(
+        ref(db, `rooms/${currentRoomId}/master/playlist/${trackId}`),
+        {
+          privateTitle: fields.privateTitle.trim(),
+          publicTitle: fields.publicTitle.trim(),
+          youtubeUrl: canonicalYoutubeUrl(videoId),
+          videoId
+        }
+      );
+    }
+
+    async function playPlaylistTrack(track) {
+      if (!isMaster || !track?.videoId) return;
+
+      try {
+        await writePlayback({
+          videoId: track.videoId,
+          url: track.youtubeUrl || canonicalYoutubeUrl(track.videoId),
+          status: "playing",
+          position: 0,
+          publicTitle: String(track.publicTitle || "").trim() || "BGM",
+          trackId: track.id
+        });
+
+        masterStatus.textContent = `「${track.privateTitle || "BGM"}」을 재생했습니다.`;
+      } catch (error) {
+        masterStatus.textContent = error?.message ?? "플레이리스트 재생에 실패했습니다.";
+      }
+    }
+
+    async function movePlaylistTrack(trackId, direction) {
+      const tracks = orderedTracks();
+      const index = tracks.findIndex((track) => track.id === trackId);
+      const targetIndex = index + direction;
+
+      if (index < 0 || targetIndex < 0 || targetIndex >= tracks.length) {
+        return;
+      }
+
+      const current = tracks[index];
+      const target = tracks[targetIndex];
+
+      await update(
+        ref(db, `rooms/${currentRoomId}/master/playlist`),
+        {
+          [`${current.id}/order`]: Number(target.order ?? targetIndex * 10),
+          [`${target.id}/order`]: Number(current.order ?? index * 10)
+        }
+      );
+    }
+
+    async function deletePlaylistTrack(trackId) {
+      if (!confirm("이 BGM을 플레이리스트에서 삭제할까요?")) {
+        return;
+      }
+
+      await set(
+        ref(db, `rooms/${currentRoomId}/master/playlist/${trackId}`),
+        null
+      );
+      expandedTracks.delete(trackId);
+    }
+
+    async function addTimingNote(trackId, timeInput, textInput, statusEl) {
+      const seconds = parseTimeInput(timeInput.value);
+      const noteText = textInput.value.trim();
+
+      if (seconds === null) {
+        statusEl.textContent = "시간을 01:23 또는 초 단위로 입력해 주세요.";
+        return;
+      }
+
+      if (!noteText) {
+        statusEl.textContent = "메모 내용을 입력해 주세요.";
+        return;
+      }
+
+      const noteRef = push(
+        ref(db, `rooms/${currentRoomId}/master/playlist/${trackId}/notes`)
+      );
+
+      await set(noteRef, {
+        time: seconds,
+        text: noteText,
+        createdAt: serverTimestamp()
+      });
+
+      timeInput.value = "";
+      textInput.value = "";
+      statusEl.textContent = "타이밍 메모를 추가했습니다.";
+    }
+
+    async function deleteTimingNote(trackId, noteId) {
+      await set(
+        ref(db, `rooms/${currentRoomId}/master/playlist/${trackId}/notes/${noteId}`),
+        null
+      );
+    }
+
+    function renderPlaylist() {
+      if (!playlistList) return;
+
+      playlistList.replaceChildren();
+      const tracks = orderedTracks();
+
+      if (!tracks.length) {
+        const empty = document.createElement("div");
+        empty.className = "playlist-empty";
+        empty.textContent = "아직 저장된 BGM이 없습니다.";
+        playlistList.appendChild(empty);
+        return;
+      }
+
+      tracks.forEach((track, index) => {
+        const card = document.createElement("div");
+        card.className = "playlist-item";
+
+        const head = document.createElement("div");
+        head.className = "playlist-head";
+
+        const number = document.createElement("div");
+        number.className = "playlist-index";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        const titles = document.createElement("div");
+        titles.className = "playlist-titles";
+
+        const privateTitle = document.createElement("div");
+        privateTitle.className = "playlist-private-title";
+        privateTitle.textContent = track.privateTitle || "(제목 없음)";
+
+        const publicTitle = document.createElement("div");
+        publicTitle.className = "playlist-public-title";
+        publicTitle.textContent = `공개: ${track.publicTitle || "(비어 있음)"}`;
+
+        titles.append(privateTitle, publicTitle);
+
+        const actions = document.createElement("div");
+        actions.className = "playlist-head-actions";
+
+        const playBtn = document.createElement("button");
+        playBtn.className = "icon-btn";
+        playBtn.textContent = "▶";
+        playBtn.title = "재생";
+        playBtn.addEventListener("click", () => playPlaylistTrack(track));
+
+        const upBtn = document.createElement("button");
+        upBtn.className = "icon-btn";
+        upBtn.textContent = "↑";
+        upBtn.disabled = index === 0;
+        upBtn.addEventListener("click", () => movePlaylistTrack(track.id, -1));
+
+        const downBtn = document.createElement("button");
+        downBtn.className = "icon-btn";
+        downBtn.textContent = "↓";
+        downBtn.disabled = index === tracks.length - 1;
+        downBtn.addEventListener("click", () => movePlaylistTrack(track.id, 1));
+
+        const toggleBtn = document.createElement("button");
+        toggleBtn.className = "icon-btn";
+        toggleBtn.textContent = expandedTracks.has(track.id) ? "접기" : "편집";
+        toggleBtn.addEventListener("click", () => {
+          if (expandedTracks.has(track.id)) {
+            expandedTracks.delete(track.id);
+          } else {
+            expandedTracks.add(track.id);
+          }
+          renderPlaylist();
+        });
+
+        actions.append(playBtn, upBtn, downBtn, toggleBtn);
+        head.append(number, titles, actions);
+        card.appendChild(head);
+
+        const body = document.createElement("div");
+        body.className = `playlist-body${expandedTracks.has(track.id) ? "" : " hidden"}`;
+
+        const grid = document.createElement("div");
+        grid.className = "compact-grid";
+
+        const privateWrap = document.createElement("div");
+        const privateLabel = document.createElement("div");
+        privateLabel.className = "field-label";
+        privateLabel.textContent = "내 제목";
+        const privateInput = document.createElement("input");
+        privateInput.type = "text";
+        privateInput.maxLength = 80;
+        privateInput.value = track.privateTitle || "";
+        privateWrap.append(privateLabel, privateInput);
+
+        const publicWrap = document.createElement("div");
+        const publicLabel = document.createElement("div");
+        publicLabel.className = "field-label";
+        publicLabel.textContent = "공개 제목";
+        const publicInput = document.createElement("input");
+        publicInput.type = "text";
+        publicInput.maxLength = 80;
+        publicInput.value = track.publicTitle || "";
+        publicWrap.append(publicLabel, publicInput);
+
+        grid.append(privateWrap, publicWrap);
+
+        const urlLabel = document.createElement("div");
+        urlLabel.className = "field-label";
+        urlLabel.style.marginTop = "10px";
+        urlLabel.textContent = "YouTube 링크";
+
+        const urlInput = document.createElement("input");
+        urlInput.type = "url";
+        urlInput.value = track.youtubeUrl || canonicalYoutubeUrl(track.videoId || "");
+
+        const editActions = document.createElement("div");
+        editActions.className = "inline-actions";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "mini-btn";
+        copyBtn.textContent = "공개 제목 ← 내 제목";
+        copyBtn.addEventListener("click", () => {
+          publicInput.value = privateInput.value;
+        });
+
+        const saveBtn = document.createElement("button");
+        saveBtn.className = "mini-btn";
+        saveBtn.textContent = "저장";
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "mini-btn danger-mini";
+        deleteBtn.textContent = "삭제";
+
+        const editStatus = document.createElement("div");
+        editStatus.className = "status-line";
+
+        saveBtn.addEventListener("click", async () => {
+          try {
+            saveBtn.disabled = true;
+            await savePlaylistTrack(track.id, {
+              privateTitle: privateInput.value,
+              publicTitle: publicInput.value,
+              youtubeUrl: urlInput.value
+            });
+            editStatus.textContent = "저장했습니다.";
+          } catch (error) {
+            editStatus.textContent = error?.message ?? "저장에 실패했습니다.";
+          } finally {
+            saveBtn.disabled = false;
+          }
+        });
+
+        deleteBtn.addEventListener("click", async () => {
+          try {
+            await deletePlaylistTrack(track.id);
+          } catch (error) {
+            editStatus.textContent = error?.message ?? "삭제에 실패했습니다.";
+          }
+        });
+
+        editActions.append(copyBtn, saveBtn, deleteBtn);
+
+        const notesWrap = document.createElement("div");
+        notesWrap.className = "notes-wrap";
+
+        const noteTitle = document.createElement("div");
+        noteTitle.className = "field-label";
+        noteTitle.textContent = "▾ 타이밍 메모";
+
+        const noteAdd = document.createElement("div");
+        noteAdd.className = "note-add-row";
+
+        const timeInput = document.createElement("input");
+        timeInput.type = "text";
+        timeInput.placeholder = "01:23";
+
+        const memoInput = document.createElement("input");
+        memoInput.type = "text";
+        memoInput.maxLength = 120;
+        memoInput.placeholder = "이 타이밍에 할 일 / 장면 메모";
+
+        const noteAddBtn = document.createElement("button");
+        noteAddBtn.className = "mini-btn";
+        noteAddBtn.textContent = "＋";
+
+        const noteTools = document.createElement("div");
+        noteTools.className = "inline-actions";
+
+        const useCurrentBtn = document.createElement("button");
+        useCurrentBtn.className = "mini-btn";
+        useCurrentBtn.textContent = "현재 위치 넣기";
+        useCurrentBtn.addEventListener("click", () => {
+          const seconds = ytReady && ytPlayer
+            ? Number(ytPlayer.getCurrentTime?.() ?? 0)
+            : currentPlayback
+              ? estimatePlaybackPosition(currentPlayback)
+              : 0;
+          timeInput.value = formatTime(seconds);
+        });
+
+        const noteStatus = document.createElement("div");
+        noteStatus.className = "status-line";
+
+        noteAddBtn.addEventListener("click", async () => {
+          try {
+            noteAddBtn.disabled = true;
+            await addTimingNote(track.id, timeInput, memoInput, noteStatus);
+          } catch (error) {
+            noteStatus.textContent = error?.message ?? "메모 추가에 실패했습니다.";
+          } finally {
+            noteAddBtn.disabled = false;
+          }
+        });
+
+        noteAdd.append(timeInput, memoInput, noteAddBtn);
+        noteTools.appendChild(useCurrentBtn);
+
+        const noteList = document.createElement("div");
+        noteList.className = "note-list";
+
+        const notes = Object.entries(track.notes || {})
+          .map(([id, value]) => ({ id, ...(value || {}) }))
+          .sort((a, b) => Number(a.time ?? 0) - Number(b.time ?? 0));
+
+        if (!notes.length) {
+          const none = document.createElement("div");
+          none.className = "small";
+          none.textContent = "아직 타이밍 메모가 없습니다.";
+          noteList.appendChild(none);
+        } else {
+          for (const note of notes) {
+            const noteRow = document.createElement("div");
+            noteRow.className = "note-row";
+
+            const timeBtn = document.createElement("button");
+            timeBtn.className = "time-link";
+            timeBtn.textContent = formatTime(note.time || 0);
+            timeBtn.title = "클릭하면 전원의 BGM 위치를 이 시점으로 이동";
+            timeBtn.addEventListener("click", () => seekPlayback(Number(note.time || 0)));
+
+            const noteText = document.createElement("div");
+            noteText.className = "note-text";
+            noteText.textContent = note.text || "";
+
+            const noteDelete = document.createElement("button");
+            noteDelete.className = "icon-btn danger-mini";
+            noteDelete.textContent = "×";
+            noteDelete.addEventListener("click", () => deleteTimingNote(track.id, note.id));
+
+            noteRow.append(timeBtn, noteText, noteDelete);
+            noteList.appendChild(noteRow);
+          }
+        }
+
+        notesWrap.append(noteTitle, noteAdd, noteTools, noteStatus, noteList);
+
+        body.append(grid, urlLabel, urlInput, editActions, editStatus, notesWrap);
+        card.appendChild(body);
+
+        playlistList.appendChild(card);
+      });
     }
 
     function formatTime(seconds) {
@@ -2087,6 +3130,20 @@
         }, 500);
     }
 
+    saveRoomNameButton.addEventListener("click", saveRoomName);
+
+    copyNewTitleButton.addEventListener("click", () => {
+      newPublicTitle.value = newPrivateTitle.value;
+    });
+
+    addPlaylistButton.addEventListener("click", addPlaylistTrack);
+
+    newYoutubeUrl.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        addPlaylistTrack();
+      }
+    });
+
     masterButton.addEventListener(
       "click",
       beginMasterEntry
@@ -2123,6 +3180,15 @@
         if (
           event.key === "Enter"
         ) {
+          enterAsPlayer();
+        }
+      }
+    );
+
+    nicknameInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Enter") {
           enterAsPlayer();
         }
       }
