@@ -878,6 +878,197 @@
       font-size: 9px;
     }
 
+
+    .transport {
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft2);
+    }
+
+    .transport-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+    }
+
+    .transport .seek-wrap {
+      margin-top: 10px;
+    }
+
+    .quick-play-box {
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft2);
+    }
+
+    .quick-play-title {
+      margin-bottom: 9px;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .04em;
+    }
+
+    .quick-play-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .quick-play-box input {
+      min-height: 40px;
+      height: 40px;
+      font-size: 12px;
+    }
+
+    .mini-recover {
+      margin-top: 8px;
+    }
+
+    .mini-recover button {
+      min-height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .memo-button {
+      min-width: 42px !important;
+    }
+
+    .memo-button.has-memo {
+      border-color: #a9a59b;
+      background: #eceae5;
+      font-weight: 800;
+    }
+
+    .memo-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(0,0,0,.38);
+    }
+
+    .memo-modal-card {
+      width: min(620px, 100%);
+      max-height: min(78vh, 720px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--panel);
+      box-shadow: 0 24px 70px rgba(0,0,0,.18);
+    }
+
+    .memo-modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 19px 13px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .memo-modal-title-wrap {
+      min-width: 0;
+    }
+
+    .memo-modal-label {
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .06em;
+    }
+
+    .memo-modal-title {
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+      font-size: 17px;
+      font-weight: 850;
+      line-height: 1.4;
+    }
+
+    .memo-modal-close {
+      flex: 0 0 auto;
+      min-width: 34px;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--soft2);
+      color: var(--text);
+      font-size: 17px;
+    }
+
+    .memo-modal-body {
+      min-height: 0;
+      padding: 16px 19px;
+      overflow-y: auto;
+    }
+
+    .memo-modal textarea {
+      width: 100%;
+      min-height: 280px;
+      resize: vertical;
+      padding: 14px 15px;
+      border: 1px solid #c9c6bf;
+      border-radius: 12px;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .memo-modal textarea:focus {
+      border-color: #67645e;
+    }
+
+    .memo-modal-foot {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 12px 19px 17px;
+      border-top: 1px solid var(--line);
+    }
+
+    .memo-modal-status {
+      flex: 1;
+      align-self: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .video-frame iframe {
+      pointer-events: auto;
+    }
+
+    @media (max-width: 460px) {
+      .transport-buttons {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .memo-modal {
+        padding: 10px;
+      }
+
+      .memo-modal textarea {
+        min-height: 220px;
+      }
+    }
+
     @media (max-width: 760px) {
       .main-grid { grid-template-columns: 1fr; }
 
@@ -960,7 +1151,7 @@
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.1</span></div>
+          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.2</span></div>
           <div id="roomLine" class="room-line"></div>
         </div>
         <span id="roleBadge" class="badge">PLAYER</span>
@@ -989,6 +1180,22 @@
             </div>
           </div>
 
+          <div id="transport" class="transport">
+            <div class="transport-buttons">
+              <button id="resumeButton" class="btn secondary" disabled>▶ 재생</button>
+              <button id="pauseButton" class="btn secondary" disabled>Ⅱ 일시정지</button>
+              <button id="restartButton" class="btn secondary" disabled>↺ 처음부터</button>
+            </div>
+
+            <div class="seek-wrap">
+              <div class="seek-head">
+                <span>재생 위치</span>
+                <span id="seekTimeText" class="time-text">00:00 / 00:00</span>
+              </div>
+              <input id="seekSlider" type="range" min="0" max="100" step="0.1" value="0" disabled>
+            </div>
+          </div>
+
           <div class="track-info">
             <div class="track-label">CURRENT TRACK</div>
             <div id="trackTitle" class="track-title">재생 대기 중</div>
@@ -1007,6 +1214,20 @@
           </div>
 
           <div id="playerStatus" class="status-line"></div>
+
+          <div id="quickPlayBox" class="quick-play-box hidden">
+            <div class="quick-play-title">QUICK PLAY</div>
+            <div class="quick-play-grid">
+              <input id="quickPublicTitleInput" type="text" maxlength="80" placeholder="플레이어에게 보일 공개 제목">
+              <input id="youtubeUrlInput" type="url" placeholder="YouTube 링크">
+              <button id="loadAndPlayButton" class="btn primary">이 곡 재생</button>
+            </div>
+            <div id="masterError" class="error"></div>
+          </div>
+
+          <div id="recoverPlayback" class="mini-recover hidden">
+            <button id="recoverPlaybackButton">▶ 재생 권한 다시 활성화</button>
+          </div>
 
           <div id="diagnostics" class="diagnostics">
             YouTube 플레이어 준비 중…
@@ -1055,37 +1276,7 @@
                 <div id="roomNameStatus" class="status-line"></div>
               </div>
 
-              <div class="master-panel">
-                <div class="field-label">빠른 재생 · 공개 제목</div>
-                <input id="quickPublicTitleInput" type="text" maxlength="80" placeholder="플레이어에게 보일 제목">
-
-                <div class="field-label" style="margin-top:10px;">YouTube 링크</div>
-                <input id="youtubeUrlInput" type="url" placeholder="https://www.youtube.com/watch?v=...">
-
-                <button id="loadAndPlayButton" class="btn primary" style="width:100%; margin-top:10px;">
-                  이 곡 재생
-                </button>
-
-                <div id="masterError" class="error"></div>
-              </div>
-
-              <div class="master-panel">
-                <div class="button-grid three">
-                  <button id="resumeButton" class="btn secondary" disabled>▶ 재생</button>
-                  <button id="pauseButton" class="btn secondary" disabled>Ⅱ 일시정지</button>
-                  <button id="restartButton" class="btn secondary" disabled>↺ 처음부터</button>
-                </div>
-
-                <div class="seek-wrap">
-                  <div class="seek-head">
-                    <span>재생 위치</span>
-                    <span id="seekTimeText" class="time-text">00:00 / 00:00</span>
-                  </div>
-                  <input id="seekSlider" type="range" min="0" max="100" step="0.1" value="0" disabled>
-                </div>
-
-                <div id="masterStatus" class="status-line"></div>
-              </div>
+              <div id="masterStatus" class="status-line"></div>
             </div>
           </div>
 
@@ -1129,9 +1320,6 @@
                 </div>
               </div>
 
-              <div class="field-label" style="margin-top:10px;">BGM 메모 · MASTER 전용</div>
-              <textarea id="newTrackMemo" class="memo-input" maxlength="500" placeholder="예: NPC 사망 직후, 묘사 들어가기 전에 재생"></textarea>
-
               <div class="field-label" style="margin-top:10px;">YouTube 링크</div>
               <input id="newYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
 
@@ -1155,6 +1343,28 @@
       </div>
     </section>
 
+  </div>
+
+  <div id="memoModal" class="memo-modal hidden" aria-hidden="true">
+    <div class="memo-modal-card" role="dialog" aria-modal="true" aria-labelledby="memoModalTitle">
+      <div class="memo-modal-head">
+        <div class="memo-modal-title-wrap">
+          <div class="memo-modal-label">MASTER MEMO</div>
+          <div id="memoModalTitle" class="memo-modal-title">BGM 메모</div>
+        </div>
+        <button id="memoModalClose" class="memo-modal-close" aria-label="닫기">×</button>
+      </div>
+
+      <div class="memo-modal-body">
+        <textarea id="memoModalTextarea" maxlength="2000" placeholder="이 BGM을 언제, 어떤 상황에서 사용할지 자유롭게 메모하세요. 줄바꿈도 그대로 저장됩니다."></textarea>
+      </div>
+
+      <div class="memo-modal-foot">
+        <div id="memoModalStatus" class="memo-modal-status"></div>
+        <button id="memoModalCancel" class="btn secondary">닫기</button>
+        <button id="memoModalSave" class="btn primary">저장</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1241,6 +1451,9 @@
 
     const trackTitle = $("#trackTitle");
     const trackMeta = $("#trackMeta");
+    const quickPlayBox = $("#quickPlayBox");
+    const recoverPlayback = $("#recoverPlayback");
+    const recoverPlaybackButton = $("#recoverPlaybackButton");
     const volumeSlider = $("#volumeSlider");
     const volumeValue = $("#volumeValue");
     const openYoutube = $("#openYoutube");
@@ -1279,12 +1492,19 @@
 
     const newPrivateTitle = $("#newPrivateTitle");
     const newPublicTitle = $("#newPublicTitle");
-    const newTrackMemo = $("#newTrackMemo");
     const newYoutubeUrl = $("#newYoutubeUrl");
     const copyNewTitleButton = $("#copyNewTitleButton");
     const addPlaylistButton = $("#addPlaylistButton");
     const playlistAddStatus = $("#playlistAddStatus");
     const playlistList = $("#playlistList");
+
+    const memoModal = $("#memoModal");
+    const memoModalTitle = $("#memoModalTitle");
+    const memoModalTextarea = $("#memoModalTextarea");
+    const memoModalStatus = $("#memoModalStatus");
+    const memoModalClose = $("#memoModalClose");
+    const memoModalCancel = $("#memoModalCancel");
+    const memoModalSave = $("#memoModalSave");
 
     let currentUser = null;
     let currentRoomId = null;
@@ -1323,6 +1543,14 @@
     let seekUiTimer = null;
     let driftTimer = null;
     let lastCorrectionAt = 0;
+
+    let suppressMasterVideoEventUntil = 0;
+    let lastMasterPlayerState = null;
+    let masterVideoWatchTimer = null;
+    let lastMasterObservedTime = 0;
+    let lastMasterObservedAt = 0;
+
+    let memoEditingTrackId = null;
 
     const SYNC_CHECK_MS = 4000;
     const DRIFT_THRESHOLD_SEC = 1.8;
@@ -1624,12 +1852,14 @@
       if (master) {
         masterTabs.classList.remove("hidden");
         masterControls.classList.remove("hidden");
+        quickPlayBox.classList.remove("hidden");
         playerOnlyPanel.classList.add("hidden");
         subscribeMasterPlaylist();
         setMasterTab(activeMasterTab);
       } else {
         masterTabs.classList.add("hidden");
         masterControls.classList.add("hidden");
+        quickPlayBox.classList.add("hidden");
         playerOnlyPanel.classList.remove("hidden");
         playlistPanel.classList.add("hidden");
         roomPanel.classList.remove("hidden");
@@ -1686,6 +1916,7 @@
       ensureYoutubePlayer();
       startSeekUiLoop();
       startDriftCorrectionLoop();
+      startMasterVideoWatchLoop();
     }
 
     function subscribeRoom() {
@@ -1896,13 +2127,22 @@
               refreshVideoMetadata();
 
               if (
+                isMaster &&
+                audioActivated &&
+                Date.now() >= suppressMasterVideoEventUntil
+              ) {
+                handleMasterVideoStateChange(event.data);
+              } else if (
+                !isMaster &&
                 audioActivated &&
                 currentPlayback?.status === "playing" &&
                 event.data === YT.PlayerState.PAUSED
               ) {
                 playerStatus.textContent =
-                  "플레이어가 멈춰 있습니다. 자동재생 제한이 의심되면 BGM 재생 활성화를 다시 눌러 주세요.";
+                  "현재 PLAYER 화면의 영상이 멈춰 있습니다. 룸 상태와 다시 맞추는 중입니다.";
               }
+
+              lastMasterPlayerState = event.data;
             },
 
             onError: (event) => {
@@ -1936,17 +2176,20 @@
 
             onAutoplayBlocked: () => {
               autoplayBlocked = true;
-              audioActivated = false;
 
-              showUnlockOverlay(
-                "브라우저가 스크립트 재생을 차단했습니다. 아래 버튼을 직접 눌러 다시 허용해 주세요."
-              );
+              if (!audioActivated) {
+                showUnlockOverlay(
+                  "브라우저가 스크립트 재생을 차단했습니다. 아래 버튼을 직접 눌러 다시 허용해 주세요."
+                );
+              } else {
+                recoverPlayback.classList.remove("hidden");
+              }
 
               playerStatus.textContent =
-                "브라우저가 자동재생을 차단했습니다.";
+                "브라우저가 재생 요청을 차단했습니다.";
 
               setDiagnostics(
-                "자동재생 차단됨 · 사용자 클릭 필요",
+                "재생 차단됨 · 필요하면 재생 권한을 다시 활성화해 주세요.",
                 "error"
               );
             }
@@ -2040,6 +2283,8 @@
       const target =
         estimatePlaybackPosition(state);
 
+      suppressMasterVideoEvents(900);
+
       const loadedId =
         ytPlayer
           .getVideoData?.()
@@ -2100,6 +2345,7 @@
       applySavedVolume();
 
       hideUnlockOverlay();
+      recoverPlayback.classList.add("hidden");
 
       setDiagnostics(
         "BGM 활성화됨 · 룸 동기화 대기",
@@ -2116,6 +2362,8 @@
         estimatePlaybackPosition(
           currentPlayback
         );
+
+      suppressMasterVideoEvents(1200);
 
       const loadedId =
         ytPlayer
@@ -2187,6 +2435,145 @@
       }
     }
 
+    function suppressMasterVideoEvents(ms = 1200) {
+      suppressMasterVideoEventUntil =
+        Math.max(suppressMasterVideoEventUntil, Date.now() + ms);
+    }
+
+    async function handleMasterVideoStateChange(stateCode) {
+      if (
+        !isMaster ||
+        !audioActivated ||
+        !ytReady ||
+        !ytPlayer ||
+        !currentPlayback?.videoId
+      ) {
+        return;
+      }
+
+      if (Date.now() < suppressMasterVideoEventUntil) {
+        return;
+      }
+
+      const position =
+        Number(ytPlayer.getCurrentTime?.() ?? 0);
+
+      try {
+        if (stateCode === YT.PlayerState.PAUSED) {
+          await writePlayback({
+            videoId: currentPlayback.videoId,
+            url: currentPlayback.url,
+            status: "paused",
+            position,
+            publicTitle: currentPlayback.publicTitle || "",
+            trackId: currentPlayback.trackId || null
+          });
+
+          masterStatus.textContent =
+            "YouTube 영상에서 일시정지한 상태를 방 전체에 반영했습니다.";
+
+        } else if (stateCode === YT.PlayerState.PLAYING) {
+          await writePlayback({
+            videoId: currentPlayback.videoId,
+            url: currentPlayback.url,
+            status: "playing",
+            position,
+            publicTitle: currentPlayback.publicTitle || "",
+            trackId: currentPlayback.trackId || null
+          });
+
+          masterStatus.textContent =
+            "YouTube 영상에서 재생한 상태를 방 전체에 반영했습니다.";
+
+        } else if (stateCode === YT.PlayerState.ENDED) {
+          await writePlayback({
+            videoId: currentPlayback.videoId,
+            url: currentPlayback.url,
+            status: "paused",
+            position,
+            publicTitle: currentPlayback.publicTitle || "",
+            trackId: currentPlayback.trackId || null
+          });
+        }
+      } catch (error) {
+        console.error("master iframe state sync failed", error);
+      }
+    }
+
+    function startMasterVideoWatchLoop() {
+      if (masterVideoWatchTimer) {
+        clearInterval(masterVideoWatchTimer);
+      }
+
+      lastMasterObservedTime = 0;
+      lastMasterObservedAt = Date.now();
+
+      masterVideoWatchTimer = setInterval(() => {
+        if (
+          !isMaster ||
+          !audioActivated ||
+          !ytReady ||
+          !ytPlayer ||
+          !currentPlayback?.videoId ||
+          Date.now() < suppressMasterVideoEventUntil
+        ) {
+          lastMasterObservedTime =
+            ytReady && ytPlayer
+              ? Number(ytPlayer.getCurrentTime?.() ?? 0)
+              : 0;
+
+          lastMasterObservedAt = Date.now();
+          return;
+        }
+
+        const playerState = ytPlayer.getPlayerState?.();
+
+        if (playerState !== YT.PlayerState.PLAYING) {
+          lastMasterObservedTime =
+            Number(ytPlayer.getCurrentTime?.() ?? 0);
+
+          lastMasterObservedAt = Date.now();
+          return;
+        }
+
+        const now = Date.now();
+        const current =
+          Number(ytPlayer.getCurrentTime?.() ?? 0);
+
+        const elapsed =
+          Math.max(0, (now - lastMasterObservedAt) / 1000);
+
+        const expectedLocal =
+          lastMasterObservedTime + elapsed;
+
+        const jump =
+          current - expectedLocal;
+
+        lastMasterObservedTime = current;
+        lastMasterObservedAt = now;
+
+        if (Math.abs(jump) >= 2.0) {
+          suppressMasterVideoEvents(500);
+
+          writePlayback({
+            videoId: currentPlayback.videoId,
+            url: currentPlayback.url,
+            status: "playing",
+            position: current,
+            publicTitle: currentPlayback.publicTitle || "",
+            trackId: currentPlayback.trackId || null
+          })
+          .then(() => {
+            masterStatus.textContent =
+              "YouTube 영상에서 이동한 재생 위치를 방 전체에 반영했습니다.";
+          })
+          .catch((error) => {
+            console.error("master iframe seek sync failed", error);
+          });
+        }
+      }, 700);
+    }
+
     async function applyRemotePlayback(
       state,
       force = false
@@ -2223,6 +2610,8 @@
 
       lastAppliedSignature =
         signature;
+
+      suppressMasterVideoEvents(1200);
 
       const target =
         estimatePlaybackPosition(state);
@@ -2538,6 +2927,8 @@
         loadAndPlayButton.disabled =
           true;
 
+        suppressMasterVideoEvents(1200);
+
         await writePlayback({
           videoId,
           url:
@@ -2566,6 +2957,8 @@
     }
 
     async function pausePlayback() {
+      suppressMasterVideoEvents(1200);
+
       if (
         !currentPlayback?.videoId
       ) {
@@ -2607,6 +3000,8 @@
     }
 
     async function resumePlayback() {
+      suppressMasterVideoEvents(1200);
+
       if (
         !currentPlayback?.videoId
       ) {
@@ -2647,6 +3042,8 @@
     }
 
     async function restartPlayback() {
+      suppressMasterVideoEvents(1200);
+
       if (
         !currentPlayback?.videoId
       ) {
@@ -2678,6 +3075,8 @@
     async function seekPlayback(
       target
     ) {
+      suppressMasterVideoEvents(1200);
+
       if (
         !currentPlayback?.videoId
       ) {
@@ -3158,7 +3557,6 @@
 
       const privateTitle = newPrivateTitle.value.trim();
       const publicTitle = newPublicTitle.value.trim();
-      const memo = newTrackMemo.value.trim();
       const rawUrl = newYoutubeUrl.value.trim();
       const videoId = extractYoutubeVideoId(rawUrl);
 
@@ -3182,7 +3580,7 @@
         const data = {
           privateTitle,
           publicTitle,
-          memo,
+          memo: "",
           youtubeUrl: canonicalYoutubeUrl(videoId),
           videoId,
           order: maxTrackOrderInFolder(selectedFolderId) + 10,
@@ -3197,7 +3595,6 @@
 
         newPrivateTitle.value = "";
         newPublicTitle.value = "";
-        newTrackMemo.value = "";
         newYoutubeUrl.value = "";
 
         playlistAddStatus.textContent =
@@ -3238,7 +3635,6 @@
       const data = {
         privateTitle: fields.privateTitle.trim(),
         publicTitle: fields.publicTitle.trim(),
-        memo: fields.memo.trim(),
         youtubeUrl: canonicalYoutubeUrl(videoId),
         videoId
       };
@@ -3347,6 +3743,77 @@
       return select;
     }
 
+    function openMemoModal(trackId) {
+      if (!isMaster || !playlistData[trackId]) {
+        return;
+      }
+
+      memoEditingTrackId = trackId;
+
+      const track = playlistData[trackId];
+
+      memoModalTitle.textContent =
+        track.privateTitle || "BGM 메모";
+
+      memoModalTextarea.value =
+        String(track.memo || "");
+
+      memoModalStatus.textContent = "";
+
+      memoModal.classList.remove("hidden");
+      memoModal.setAttribute("aria-hidden", "false");
+
+      setTimeout(() => {
+        memoModalTextarea.focus();
+      }, 0);
+    }
+
+    function closeMemoModal() {
+      memoEditingTrackId = null;
+      memoModal.classList.add("hidden");
+      memoModal.setAttribute("aria-hidden", "true");
+      memoModalStatus.textContent = "";
+    }
+
+    async function saveMemoModal() {
+      if (
+        !isMaster ||
+        !memoEditingTrackId ||
+        !playlistData[memoEditingTrackId]
+      ) {
+        return;
+      }
+
+      try {
+        memoModalSave.disabled = true;
+
+        await update(
+          ref(
+            db,
+            `rooms/${currentRoomId}/master/playlist/${memoEditingTrackId}`
+          ),
+          {
+            memo: memoModalTextarea.value
+          }
+        );
+
+        memoModalStatus.textContent =
+          "메모를 저장했습니다.";
+
+        setTimeout(() => {
+          closeMemoModal();
+        }, 300);
+
+      } catch (error) {
+        console.error(error);
+
+        memoModalStatus.textContent =
+          error?.message ?? "메모 저장에 실패했습니다.";
+      } finally {
+        memoModalSave.disabled = false;
+      }
+    }
+
     function renderPlaylist() {
       if (!playlistList) return;
 
@@ -3394,15 +3861,17 @@
 
         titles.append(privateTitle, publicTitle);
 
-        if (String(track.memo || "").trim()) {
-          const memoPreview = document.createElement("div");
-          memoPreview.className = "memo-preview";
-          memoPreview.textContent = track.memo;
-          titles.appendChild(memoPreview);
-        }
-
         const actions = document.createElement("div");
         actions.className = "playlist-head-actions";
+
+        const memoBtn = document.createElement("button");
+        memoBtn.className =
+          `icon-btn memo-button${String(track.memo || "").trim() ? " has-memo" : ""}`;
+        memoBtn.textContent = "메모";
+        memoBtn.title = "BGM 메모 열기";
+        memoBtn.addEventListener("click", () => {
+          openMemoModal(track.id);
+        });
 
         const playBtn = document.createElement("button");
         playBtn.className = "icon-btn";
@@ -3449,6 +3918,7 @@
         });
 
         actions.append(
+          memoBtn,
           playBtn,
           upBtn,
           downBtn,
@@ -3509,18 +3979,6 @@
           normalizeTrackFolderId(track)
         );
 
-        const memoLabel = document.createElement("div");
-        memoLabel.className = "field-label";
-        memoLabel.style.marginTop = "10px";
-        memoLabel.textContent = "BGM 메모 · MASTER 전용";
-
-        const memoInput = document.createElement("textarea");
-        memoInput.className = "memo-input";
-        memoInput.maxLength = 500;
-        memoInput.placeholder =
-          "이 곡을 언제 / 어떻게 쓸지 메모";
-        memoInput.value = track.memo || "";
-
         const urlLabel = document.createElement("div");
         urlLabel.className = "field-label";
         urlLabel.style.marginTop = "10px";
@@ -3564,7 +4022,6 @@
               {
                 privateTitle: privateInput.value,
                 publicTitle: publicInput.value,
-                memo: memoInput.value,
                 youtubeUrl: urlInput.value,
                 folderId: folderSelect.value
               }
@@ -3602,8 +4059,6 @@
           grid,
           folderLabel,
           folderSelect,
-          memoLabel,
-          memoInput,
           urlLabel,
           urlInput,
           editActions,
@@ -3704,6 +4159,29 @@
 
         }, 500);
     }
+
+    recoverPlaybackButton.addEventListener("click", () => {
+      activateAudioFromGesture();
+    });
+
+    memoModalClose.addEventListener("click", closeMemoModal);
+    memoModalCancel.addEventListener("click", closeMemoModal);
+    memoModalSave.addEventListener("click", saveMemoModal);
+
+    memoModal.addEventListener("click", (event) => {
+      if (event.target === memoModal) {
+        closeMemoModal();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        !memoModal.classList.contains("hidden")
+      ) {
+        closeMemoModal();
+      }
+    });
 
     playlistTabButton.addEventListener("click", () => {
       setMasterTab("playlist");
