@@ -2549,6 +2549,25 @@
       }
     }
 
+  
+    .session-name.session-open-link {
+      display: inline-block;
+      max-width: 100%;
+      cursor: pointer;
+      text-decoration: none;
+      text-underline-offset: 2px;
+    }
+
+    .session-name.session-open-link:hover {
+      text-decoration: underline;
+    }
+
+    .session-name.session-open-link:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
   </style>
 </head>
 
@@ -2682,7 +2701,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.9.2</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.9.3</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -4133,6 +4152,49 @@
             meta
           );
 
+          const openSavedSession = () => {
+            enterSavedSession(
+              session
+            );
+          };
+
+          name.classList.add(
+            "session-open-link"
+          );
+
+          name.setAttribute(
+            "role",
+            "button"
+          );
+
+          name.setAttribute(
+            "tabindex",
+            "0"
+          );
+
+          name.setAttribute(
+            "title",
+            "이 세션 열기"
+          );
+
+          name.addEventListener(
+            "click",
+            openSavedSession
+          );
+
+          name.addEventListener(
+            "keydown",
+            (event) => {
+              if (
+                event.key === "Enter" ||
+                event.key === " "
+              ) {
+                event.preventDefault();
+                openSavedSession();
+              }
+            }
+          );
+
           const actions =
             document.createElement("div");
 
@@ -4150,11 +4212,7 @@
 
           enterBtn.addEventListener(
             "click",
-            () => {
-              enterSavedSession(
-                session
-              );
-            }
+            openSavedSession
           );
 
           const removeBtn =
