@@ -1069,6 +1069,208 @@
       }
     }
 
+
+    .account-box {
+      margin-bottom: 20px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft2);
+    }
+
+    .account-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .account-state {
+      min-width: 0;
+    }
+
+    .account-label {
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .06em;
+    }
+
+    .account-name {
+      margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .account-actions {
+      display: flex;
+      flex: 0 0 auto;
+      gap: 6px;
+    }
+
+    .session-hub {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .session-hub-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 9px;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .session-group + .session-group {
+      margin-top: 13px;
+    }
+
+    .session-group-title {
+      margin-bottom: 6px;
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .07em;
+    }
+
+    .session-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .session-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .session-main {
+      min-width: 0;
+    }
+
+    .session-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .session-meta {
+      margin-top: 2px;
+      color: var(--faint);
+      font-size: 9px;
+    }
+
+    .session-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .session-empty {
+      padding: 9px 10px;
+      border: 1px dashed #d7d3cb;
+      border-radius: 9px;
+      color: var(--faint);
+      font-size: 10px;
+    }
+
+    .playlist-memo-toggle {
+      width: 100%;
+      min-height: 38px;
+      margin: 8px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft2);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 800;
+      text-align: left;
+      padding: 0 12px;
+    }
+
+    .playlist-memo-panel {
+      margin-bottom: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--soft2);
+    }
+
+    .large-memo-input {
+      width: 100%;
+      min-height: 150px;
+      resize: vertical;
+      padding: 12px 13px;
+      border: 1px solid #cbc9c3;
+      border-radius: 10px;
+      outline: none;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .large-memo-input:focus {
+      border-color: #68655f;
+    }
+
+    .track-memo-panel {
+      padding: 13px;
+      border-top: 1px solid var(--line);
+      background: #fbfaf8;
+    }
+
+    .track-memo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .track-memo-title {
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .track-memo-status {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    @media (max-width: 520px) {
+      .account-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .account-actions {
+        width: 100%;
+      }
+
+      .account-actions .mini-btn {
+        flex: 1;
+      }
+
+      .session-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 760px) {
       .main-grid { grid-template-columns: 1fr; }
 
@@ -1107,6 +1309,39 @@
         코코포리아 룸 링크를 같은 BGM 방의 식별자로 사용합니다.
         플레이어가 먼저 들어와도 자동으로 룸마스터가 되지 않습니다.
       </p>
+
+      <div class="account-box">
+        <div class="account-row">
+          <div class="account-state">
+            <div class="account-label">ACCOUNT</div>
+            <div id="accountName" class="account-name">게스트로 사용할 수 있습니다.</div>
+          </div>
+
+          <div class="account-actions">
+            <button id="googleLoginButton" class="mini-btn">Google 로그인</button>
+            <button id="logoutButton" class="mini-btn hidden">로그아웃</button>
+          </div>
+        </div>
+
+        <div id="accountStatus" class="status-line"></div>
+
+        <div id="sessionHub" class="session-hub hidden">
+          <div class="session-hub-title">
+            <span>내 세션</span>
+            <span class="version-text">Google 계정에 저장됨</span>
+          </div>
+
+          <div class="session-group">
+            <div class="session-group-title">ROOM MASTER</div>
+            <div id="masterSessionList" class="session-list"></div>
+          </div>
+
+          <div class="session-group">
+            <div class="session-group-title">PLAYER</div>
+            <div id="playerSessionList" class="session-list"></div>
+          </div>
+        </div>
+      </div>
 
       <div class="field">
         <label for="roomUrl">코코포리아 룸 링크</label>
@@ -1151,7 +1386,7 @@
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.2</span></div>
+          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.3</span></div>
           <div id="roomLine" class="room-line"></div>
         </div>
         <span id="roleBadge" class="badge">PLAYER</span>
@@ -1289,6 +1524,19 @@
               <span class="version-text">방에 저장됨</span>
             </div>
 
+            <button id="playlistMemoToggle" class="playlist-memo-toggle">
+              ▸ 플레이리스트 메모
+            </button>
+
+            <div id="playlistMemoPanel" class="playlist-memo-panel hidden">
+              <div class="field-label">플레이리스트 전체 메모 · MASTER 전용</div>
+              <textarea id="playlistMemoTextarea" class="large-memo-input" maxlength="5000" placeholder="세션 전체의 BGM 운영 메모, 장면 순서, 주의사항 등을 자유롭게 적어두세요."></textarea>
+              <div class="inline-actions">
+                <button id="savePlaylistMemoButton" class="mini-btn">메모 저장</button>
+              </div>
+              <div id="playlistMemoStatus" class="status-line"></div>
+            </div>
+
             <div class="folder-toolbar">
               <div id="folderStrip" class="folder-strip"></div>
               <button id="addFolderButton" class="folder-add-btn" title="폴더 추가">＋</button>
@@ -1345,28 +1593,6 @@
 
   </div>
 
-  <div id="memoModal" class="memo-modal hidden" aria-hidden="true">
-    <div class="memo-modal-card" role="dialog" aria-modal="true" aria-labelledby="memoModalTitle">
-      <div class="memo-modal-head">
-        <div class="memo-modal-title-wrap">
-          <div class="memo-modal-label">MASTER MEMO</div>
-          <div id="memoModalTitle" class="memo-modal-title">BGM 메모</div>
-        </div>
-        <button id="memoModalClose" class="memo-modal-close" aria-label="닫기">×</button>
-      </div>
-
-      <div class="memo-modal-body">
-        <textarea id="memoModalTextarea" maxlength="2000" placeholder="이 BGM을 언제, 어떤 상황에서 사용할지 자유롭게 메모하세요. 줄바꿈도 그대로 저장됩니다."></textarea>
-      </div>
-
-      <div class="memo-modal-foot">
-        <div id="memoModalStatus" class="memo-modal-status"></div>
-        <button id="memoModalCancel" class="btn secondary">닫기</button>
-        <button id="memoModalSave" class="btn primary">저장</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     // YouTube IFrame API가 요구하는 전역 콜백을 API 스크립트보다 먼저 만든다.
     window.__ccfYtApiReadyPromise = new Promise((resolve) => {
@@ -1383,7 +1609,15 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    import {
+      getAuth,
+      signInAnonymously,
+      onAuthStateChanged,
+      GoogleAuthProvider,
+      signInWithPopup,
+      linkWithPopup,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
     import {
       getDatabase,
       ref,
@@ -1414,6 +1648,14 @@
 
     const entryView = $("#entryView");
     const appView = $("#appView");
+
+    const accountName = $("#accountName");
+    const googleLoginButton = $("#googleLoginButton");
+    const logoutButton = $("#logoutButton");
+    const accountStatus = $("#accountStatus");
+    const sessionHub = $("#sessionHub");
+    const masterSessionList = $("#masterSessionList");
+    const playerSessionList = $("#playerSessionList");
     const roomUrlInput = $("#roomUrl");
     const nicknameInput = $("#nicknameInput");
     const masterButton = $("#masterButton");
@@ -1498,13 +1740,11 @@
     const playlistAddStatus = $("#playlistAddStatus");
     const playlistList = $("#playlistList");
 
-    const memoModal = $("#memoModal");
-    const memoModalTitle = $("#memoModalTitle");
-    const memoModalTextarea = $("#memoModalTextarea");
-    const memoModalStatus = $("#memoModalStatus");
-    const memoModalClose = $("#memoModalClose");
-    const memoModalCancel = $("#memoModalCancel");
-    const memoModalSave = $("#memoModalSave");
+    const playlistMemoToggle = $("#playlistMemoToggle");
+    const playlistMemoPanel = $("#playlistMemoPanel");
+    const playlistMemoTextarea = $("#playlistMemoTextarea");
+    const savePlaylistMemoButton = $("#savePlaylistMemoButton");
+    const playlistMemoStatus = $("#playlistMemoStatus");
 
     let currentUser = null;
     let currentRoomId = null;
@@ -1514,9 +1754,14 @@
     let currentOwnerUid = null;
     let pendingMasterMode = null;
 
+    let currentAccountUser = null;
+    let savedSessions = {};
+    let sessionListUnsubscribe = null;
+
     let presenceData = {};
     let playlistData = {};
     let folderData = {};
+    let playlistMemo = "";
     let playlistUnsubscribe = null;
 
     const UNFILED_FOLDER_ID = "__unfiled__";
@@ -1550,7 +1795,8 @@
     let lastMasterObservedTime = 0;
     let lastMasterObservedAt = 0;
 
-    let memoEditingTrackId = null;
+    let playlistMemoExpanded = false;
+    const memoExpandedTracks = new Set();
 
     const SYNC_CHECK_MS = 4000;
     const DRIFT_THRESHOLD_SEC = 1.8;
@@ -1576,6 +1822,514 @@
 
     const rememberedNickname = localStorage.getItem("ccfolia-bgm-nickname") ?? "";
     nicknameInput.value = rememberedNickname;
+
+    function isPersistentAccount(user = auth.currentUser) {
+      return Boolean(user && !user.isAnonymous);
+    }
+
+    function providerDisplayName(user) {
+      if (!user) return "게스트로 사용할 수 있습니다.";
+
+      if (user.isAnonymous) {
+        return "게스트 모드";
+      }
+
+      return (
+        user.displayName ||
+        user.email ||
+        "Google 로그인 사용자"
+      );
+    }
+
+    async function googleSignIn() {
+      accountStatus.textContent = "";
+
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: "select_account"
+      });
+
+      try {
+        googleLoginButton.disabled = true;
+
+        let result;
+
+        if (auth.currentUser?.isAnonymous) {
+          try {
+            result = await linkWithPopup(
+              auth.currentUser,
+              provider
+            );
+          } catch (error) {
+            const code = String(error?.code || "");
+
+            if (
+              code === "auth/credential-already-in-use" ||
+              code === "auth/email-already-in-use"
+            ) {
+              result = await signInWithPopup(
+                auth,
+                provider
+              );
+            } else {
+              throw error;
+            }
+          }
+        } else {
+          result = await signInWithPopup(
+            auth,
+            provider
+          );
+        }
+
+        accountStatus.textContent =
+          "Google 계정으로 로그인했습니다.";
+
+        const profileNickname =
+          String(
+            result.user.displayName || ""
+          ).trim();
+
+        if (
+          !nicknameInput.value.trim() &&
+          profileNickname
+        ) {
+          nicknameInput.value =
+            profileNickname.slice(0, 20);
+        }
+
+      } catch (error) {
+        console.error("Google sign-in failed", error);
+
+        const code = String(error?.code || "");
+
+        if (code === "auth/popup-closed-by-user") {
+          accountStatus.textContent =
+            "Google 로그인이 취소되었습니다.";
+        } else if (code === "auth/unauthorized-domain") {
+          accountStatus.textContent =
+            "이 GitHub Pages 주소가 Firebase 승인 도메인에 등록되지 않았습니다.";
+        } else if (code === "auth/operation-not-allowed") {
+          accountStatus.textContent =
+            "Firebase에서 Google 로그인 제공업체가 아직 활성화되지 않았습니다.";
+        } else {
+          accountStatus.textContent =
+            error?.message ?? "Google 로그인에 실패했습니다.";
+        }
+      } finally {
+        googleLoginButton.disabled = false;
+      }
+    }
+
+    async function logoutAccount() {
+      try {
+        await signOut(auth);
+        accountStatus.textContent =
+          "로그아웃했습니다. 계속 게스트로 사용할 수 있습니다.";
+      } catch (error) {
+        accountStatus.textContent =
+          error?.message ?? "로그아웃에 실패했습니다.";
+      }
+    }
+
+    function updateAccountUi(user) {
+      currentAccountUser = user || null;
+
+      accountName.textContent =
+        providerDisplayName(user);
+
+      const account = isPersistentAccount(user);
+
+      googleLoginButton.classList.toggle(
+        "hidden",
+        account
+      );
+
+      logoutButton.classList.toggle(
+        "hidden",
+        !account
+      );
+
+      sessionHub.classList.toggle(
+        "hidden",
+        !account
+      );
+
+      if (account) {
+        subscribeSavedSessions(user.uid);
+        loadAccountProfileNickname(user.uid);
+      } else {
+        if (sessionListUnsubscribe) {
+          sessionListUnsubscribe();
+          sessionListUnsubscribe = null;
+        }
+
+        savedSessions = {};
+        renderSavedSessions();
+      }
+    }
+
+    async function loadAccountProfileNickname(uid) {
+      try {
+        const snapshot = await get(
+          ref(db, `users/${uid}/profile/nickname`)
+        );
+
+        const nickname =
+          String(snapshot.val() || "").trim();
+
+        if (
+          nickname &&
+          !nicknameInput.value.trim()
+        ) {
+          nicknameInput.value = nickname;
+        }
+      } catch (error) {
+        console.error("profile nickname load failed", error);
+      }
+    }
+
+    async function saveAccountNickname() {
+      const user = auth.currentUser;
+
+      if (
+        !isPersistentAccount(user) ||
+        !currentNickname
+      ) {
+        return;
+      }
+
+      try {
+        await set(
+          ref(
+            db,
+            `users/${user.uid}/profile/nickname`
+          ),
+          currentNickname
+        );
+      } catch (error) {
+        console.error("profile nickname save failed", error);
+      }
+    }
+
+    function subscribeSavedSessions(uid) {
+      if (sessionListUnsubscribe) {
+        sessionListUnsubscribe();
+        sessionListUnsubscribe = null;
+      }
+
+      sessionListUnsubscribe = onValue(
+        ref(db, `users/${uid}/sessions`),
+        (snapshot) => {
+          savedSessions = snapshot.val() ?? {};
+          renderSavedSessions();
+        },
+        (error) => {
+          console.error("session list read failed", error);
+          accountStatus.textContent =
+            "내 세션 목록을 읽지 못했습니다.";
+        }
+      );
+    }
+
+    async function currentPublicRoomName(roomId, fallback = "") {
+      try {
+        const snapshot = await get(
+          ref(db, `rooms/${roomId}/public/roomName`)
+        );
+
+        return (
+          String(snapshot.val() || "").trim() ||
+          fallback ||
+          "이름 없는 방"
+        );
+      } catch {
+        return fallback || "이름 없는 방";
+      }
+    }
+
+    function formatVisitedTime(value) {
+      const timestamp = Number(value || 0);
+
+      if (!timestamp) return "";
+
+      try {
+        return new Intl.DateTimeFormat(
+          "ko-KR",
+          {
+            month: "numeric",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        ).format(new Date(timestamp));
+      } catch {
+        return "";
+      }
+    }
+
+    async function renderSavedSessions() {
+      if (!masterSessionList || !playerSessionList) {
+        return;
+      }
+
+      masterSessionList.replaceChildren();
+      playerSessionList.replaceChildren();
+
+      const entries =
+        Object.entries(savedSessions || {})
+          .map(([roomId, value]) => ({
+            roomId,
+            ...(value || {})
+          }))
+          .sort(
+            (a, b) =>
+              Number(b.lastVisited || 0) -
+              Number(a.lastVisited || 0)
+          );
+
+      const masterEntries =
+        entries.filter(
+          (entry) => entry.role === "master"
+        );
+
+      const playerEntries =
+        entries.filter(
+          (entry) => entry.role !== "master"
+        );
+
+      async function fillList(
+        container,
+        list,
+        role
+      ) {
+        if (!list.length) {
+          const empty =
+            document.createElement("div");
+
+          empty.className =
+            "session-empty";
+
+          empty.textContent =
+            role === "master"
+              ? "룸마스터로 저장된 세션이 없습니다."
+              : "플레이어로 저장된 세션이 없습니다.";
+
+          container.appendChild(empty);
+          return;
+        }
+
+        for (const session of list) {
+          const row =
+            document.createElement("div");
+
+          row.className =
+            "session-row";
+
+          const main =
+            document.createElement("div");
+
+          main.className =
+            "session-main";
+
+          const name =
+            document.createElement("div");
+
+          name.className =
+            "session-name";
+
+          name.textContent =
+            await currentPublicRoomName(
+              session.roomId,
+              session.roomName || ""
+            );
+
+          const meta =
+            document.createElement("div");
+
+          meta.className =
+            "session-meta";
+
+          const visited =
+            formatVisitedTime(
+              session.lastVisited
+            );
+
+          meta.textContent =
+            visited
+              ? `마지막 접속 ${visited}`
+              : "저장된 세션";
+
+          main.append(
+            name,
+            meta
+          );
+
+          const actions =
+            document.createElement("div");
+
+          actions.className =
+            "session-actions";
+
+          const enterBtn =
+            document.createElement("button");
+
+          enterBtn.className =
+            "mini-btn";
+
+          enterBtn.textContent =
+            "입장";
+
+          enterBtn.addEventListener(
+            "click",
+            () => {
+              enterSavedSession(
+                session
+              );
+            }
+          );
+
+          const removeBtn =
+            document.createElement("button");
+
+          removeBtn.className =
+            "mini-btn danger-mini";
+
+          removeBtn.textContent =
+            "삭제";
+
+          removeBtn.addEventListener(
+            "click",
+            () => {
+              removeSavedSession(
+                session.roomId
+              );
+            }
+          );
+
+          actions.append(
+            enterBtn,
+            removeBtn
+          );
+
+          row.append(
+            main,
+            actions
+          );
+
+          container.appendChild(row);
+        }
+      }
+
+      await fillList(
+        masterSessionList,
+        masterEntries,
+        "master"
+      );
+
+      await fillList(
+        playerSessionList,
+        playerEntries,
+        "player"
+      );
+    }
+
+    async function removeSavedSession(roomId) {
+      const user = auth.currentUser;
+
+      if (!isPersistentAccount(user)) {
+        return;
+      }
+
+      if (
+        !confirm(
+          "이 세션을 내 목록에서 삭제할까요?\n실제 BGM 방과 플레이리스트 데이터는 삭제되지 않습니다."
+        )
+      ) {
+        return;
+      }
+
+      try {
+        await set(
+          ref(
+            db,
+            `users/${user.uid}/sessions/${roomId}`
+          ),
+          null
+        );
+      } catch (error) {
+        accountStatus.textContent =
+          error?.message ?? "목록에서 삭제하지 못했습니다.";
+      }
+    }
+
+    function enterSavedSession(session) {
+      const roomCode =
+        String(
+          session.roomCode || ""
+        ).trim();
+
+      if (!roomCode) {
+        accountStatus.textContent =
+          "이 저장 항목에는 코코포리아 룸 코드가 없어 바로 입장할 수 없습니다.";
+        return;
+      }
+
+      roomUrlInput.value =
+        `https://ccfolia.com/rooms/${roomCode}`;
+
+      const savedNickname =
+        String(
+          session.nickname || ""
+        ).trim();
+
+      if (savedNickname) {
+        nicknameInput.value =
+          savedNickname;
+      }
+
+      if (session.role === "master") {
+        beginMasterEntry();
+      } else {
+        enterAsPlayer();
+      }
+    }
+
+    async function saveSessionHistory(role) {
+      const user = auth.currentUser;
+
+      if (
+        !isPersistentAccount(user) ||
+        !currentRoomId ||
+        !currentRoomCode
+      ) {
+        return;
+      }
+
+      try {
+        await update(
+          ref(
+            db,
+            `users/${user.uid}/sessions/${currentRoomId}`
+          ),
+          {
+            role:
+              role === "master"
+                ? "master"
+                : "player",
+            roomCode: currentRoomCode,
+            roomName:
+              currentRoomName || "",
+            nickname:
+              currentNickname || "",
+            lastVisited:
+              serverTimestamp()
+          }
+        );
+      } catch (error) {
+        console.error("session history save failed", error);
+      }
+    }
 
     function setEntryBusy(busy) {
       masterButton.disabled = busy;
@@ -1686,6 +2440,8 @@
       }
 
       localStorage.setItem("ccfolia-bgm-nickname", currentNickname);
+
+      await saveAccountNickname();
 
       currentRoomCode = extractRoomCode(roomUrlInput.value);
       currentRoomId = await sha256(`ccfolia:${currentRoomCode}`);
@@ -1881,6 +2637,15 @@
       }
 
       renderPresence();
+
+      if (
+        currentRoomId &&
+        currentRoomCode
+      ) {
+        saveSessionHistory(
+          master ? "master" : "player"
+        );
+      }
     }
 
     function setMasterTab(tab) {
@@ -3225,6 +3990,18 @@
           name
         );
         roomNameStatus.textContent = "방 이름을 저장했습니다.";
+
+        if (isPersistentAccount(auth.currentUser)) {
+          await update(
+            ref(
+              db,
+              `users/${auth.currentUser.uid}/sessions/${currentRoomId}`
+            ),
+            {
+              roomName: name
+            }
+          );
+        }
       } catch (error) {
         console.error(error);
         roomNameStatus.textContent = error?.message ?? "방 이름 저장에 실패했습니다.";
@@ -3250,6 +4027,13 @@
 
           playlistData = value.playlist ?? {};
           folderData = value.folders ?? {};
+          playlistMemo = String(value.playlistMemo ?? "");
+
+          if (
+            document.activeElement !== playlistMemoTextarea
+          ) {
+            playlistMemoTextarea.value = playlistMemo;
+          }
 
           if (
             selectedFolderId !== UNFILED_FOLDER_ID &&
@@ -3743,74 +4527,78 @@
       return select;
     }
 
-    function openMemoModal(trackId) {
-      if (!isMaster || !playlistData[trackId]) {
-        return;
+    function togglePlaylistMemo() {
+      playlistMemoExpanded =
+        !playlistMemoExpanded;
+
+      playlistMemoPanel.classList.toggle(
+        "hidden",
+        !playlistMemoExpanded
+      );
+
+      playlistMemoToggle.textContent =
+        playlistMemoExpanded
+          ? "▾ 플레이리스트 메모"
+          : "▸ 플레이리스트 메모";
+
+      if (playlistMemoExpanded) {
+        playlistMemoTextarea.value =
+          playlistMemo || "";
       }
-
-      memoEditingTrackId = trackId;
-
-      const track = playlistData[trackId];
-
-      memoModalTitle.textContent =
-        track.privateTitle || "BGM 메모";
-
-      memoModalTextarea.value =
-        String(track.memo || "");
-
-      memoModalStatus.textContent = "";
-
-      memoModal.classList.remove("hidden");
-      memoModal.setAttribute("aria-hidden", "false");
-
-      setTimeout(() => {
-        memoModalTextarea.focus();
-      }, 0);
     }
 
-    function closeMemoModal() {
-      memoEditingTrackId = null;
-      memoModal.classList.add("hidden");
-      memoModal.setAttribute("aria-hidden", "true");
-      memoModalStatus.textContent = "";
+    async function savePlaylistMemo() {
+      if (!isMaster) return;
+
+      try {
+        savePlaylistMemoButton.disabled =
+          true;
+
+        await set(
+          ref(
+            db,
+            `rooms/${currentRoomId}/master/playlistMemo`
+          ),
+          playlistMemoTextarea.value
+        );
+
+        playlistMemoStatus.textContent =
+          "플레이리스트 메모를 저장했습니다.";
+
+      } catch (error) {
+        playlistMemoStatus.textContent =
+          error?.message ?? "메모 저장에 실패했습니다.";
+      } finally {
+        savePlaylistMemoButton.disabled =
+          false;
+      }
     }
 
-    async function saveMemoModal() {
+    async function saveTrackMemo(trackId, textarea, statusEl) {
       if (
         !isMaster ||
-        !memoEditingTrackId ||
-        !playlistData[memoEditingTrackId]
+        !playlistData[trackId]
       ) {
         return;
       }
 
       try {
-        memoModalSave.disabled = true;
-
         await update(
           ref(
             db,
-            `rooms/${currentRoomId}/master/playlist/${memoEditingTrackId}`
+            `rooms/${currentRoomId}/master/playlist/${trackId}`
           ),
           {
-            memo: memoModalTextarea.value
+            memo: textarea.value
           }
         );
 
-        memoModalStatus.textContent =
-          "메모를 저장했습니다.";
-
-        setTimeout(() => {
-          closeMemoModal();
-        }, 300);
+        statusEl.textContent =
+          "곡 메모를 저장했습니다.";
 
       } catch (error) {
-        console.error(error);
-
-        memoModalStatus.textContent =
+        statusEl.textContent =
           error?.message ?? "메모 저장에 실패했습니다.";
-      } finally {
-        memoModalSave.disabled = false;
       }
     }
 
@@ -3867,10 +4655,19 @@
         const memoBtn = document.createElement("button");
         memoBtn.className =
           `icon-btn memo-button${String(track.memo || "").trim() ? " has-memo" : ""}`;
-        memoBtn.textContent = "메모";
-        memoBtn.title = "BGM 메모 열기";
+        memoBtn.textContent =
+          memoExpandedTracks.has(track.id)
+            ? "메모 닫기"
+            : "메모";
+        memoBtn.title = "BGM 메모 접기/펼치기";
         memoBtn.addEventListener("click", () => {
-          openMemoModal(track.id);
+          if (memoExpandedTracks.has(track.id)) {
+            memoExpandedTracks.delete(track.id);
+          } else {
+            memoExpandedTracks.add(track.id);
+          }
+
+          renderPlaylist();
         });
 
         const playBtn = document.createElement("button");
@@ -3927,6 +4724,69 @@
 
         head.append(number, titles, actions);
         card.appendChild(head);
+
+        if (memoExpandedTracks.has(track.id)) {
+          const memoPanel = document.createElement("div");
+          memoPanel.className = "track-memo-panel";
+
+          const memoHead = document.createElement("div");
+          memoHead.className = "track-memo-head";
+
+          const memoTitle = document.createElement("div");
+          memoTitle.className = "track-memo-title";
+          memoTitle.textContent =
+            "BGM 메모 · MASTER 전용";
+
+          const memoStatus = document.createElement("div");
+          memoStatus.className = "track-memo-status";
+
+          memoHead.append(
+            memoTitle,
+            memoStatus
+          );
+
+          const memoTextarea = document.createElement("textarea");
+          memoTextarea.className = "large-memo-input";
+          memoTextarea.maxLength = 2000;
+          memoTextarea.placeholder =
+            "이 곡을 언제, 어떤 장면에서 사용할지 자유롭게 적어두세요. 줄바꿈도 그대로 저장됩니다.";
+          memoTextarea.value =
+            String(track.memo || "");
+
+          const memoActions = document.createElement("div");
+          memoActions.className = "inline-actions";
+
+          const memoSaveButton = document.createElement("button");
+          memoSaveButton.className = "mini-btn";
+          memoSaveButton.textContent = "메모 저장";
+
+          memoSaveButton.addEventListener(
+            "click",
+            async () => {
+              memoSaveButton.disabled = true;
+
+              await saveTrackMemo(
+                track.id,
+                memoTextarea,
+                memoStatus
+              );
+
+              memoSaveButton.disabled = false;
+            }
+          );
+
+          memoActions.appendChild(
+            memoSaveButton
+          );
+
+          memoPanel.append(
+            memoHead,
+            memoTextarea,
+            memoActions
+          );
+
+          card.appendChild(memoPanel);
+        }
 
         const body = document.createElement("div");
         body.className =
@@ -4160,28 +5020,37 @@
         }, 500);
     }
 
+    onAuthStateChanged(
+      auth,
+      (user) => {
+        currentUser = user || null;
+        updateAccountUi(user);
+      }
+    );
+
+    googleLoginButton.addEventListener(
+      "click",
+      googleSignIn
+    );
+
+    logoutButton.addEventListener(
+      "click",
+      logoutAccount
+    );
+
     recoverPlaybackButton.addEventListener("click", () => {
       activateAudioFromGesture();
     });
 
-    memoModalClose.addEventListener("click", closeMemoModal);
-    memoModalCancel.addEventListener("click", closeMemoModal);
-    memoModalSave.addEventListener("click", saveMemoModal);
+    playlistMemoToggle.addEventListener(
+      "click",
+      togglePlaylistMemo
+    );
 
-    memoModal.addEventListener("click", (event) => {
-      if (event.target === memoModal) {
-        closeMemoModal();
-      }
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (
-        event.key === "Escape" &&
-        !memoModal.classList.contains("hidden")
-      ) {
-        closeMemoModal();
-      }
-    });
+    savePlaylistMemoButton.addEventListener(
+      "click",
+      savePlaylistMemo
+    );
 
     playlistTabButton.addEventListener("click", () => {
       setMasterTab("playlist");
