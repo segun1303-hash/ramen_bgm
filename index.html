@@ -2682,7 +2682,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.9</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.9.1</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -3167,6 +3167,7 @@
 
     let lastAppliedSignature = "";
     let seekUiTimer = null;
+    let seekSliderDragging = false;
     let driftTimer = null;
     let lastCorrectionAt = 0;
 
@@ -5082,11 +5083,23 @@
 
       onValue(playbackRef, (snapshot) => {
         const state = snapshot.val() ?? null;
+        const previousVideoId =
+          currentVideoId;
+
         currentPlayback = state;
 
         if (!state || !state.videoId) {
           currentVideoId = "";
           currentYoutubeUrl = "";
+
+          seekSliderDragging = false;
+          seekSlider.min = "0";
+          seekSlider.max = "100";
+          seekSlider.value = "0";
+          seekSlider.disabled = true;
+          seekTimeText.textContent =
+            "00:00 / 00:00";
+
           updateTrackUi();
           return;
         }
@@ -5095,6 +5108,37 @@
         currentYoutubeUrl =
           state.url ||
           canonicalYoutubeUrl(state.videoId);
+
+        if (
+          previousVideoId !==
+          currentVideoId
+        ) {
+          seekSliderDragging = false;
+
+          const initialPosition =
+            Math.max(
+              0,
+              Number(
+                state.position ?? 0
+              )
+            );
+
+          // 새 영상의 duration이 아직 준비되지 않은 순간에는
+          // 이전 곡의 max/value가 화면에 남지 않게 임시 범위를 사용한다.
+          seekSlider.min = "0";
+          seekSlider.max =
+            String(
+              Math.max(
+                100,
+                initialPosition + 1
+              )
+            );
+          seekSlider.value =
+            String(initialPosition);
+
+          seekTimeText.textContent =
+            `${formatTime(initialPosition)} / --:--`;
+        }
 
         updateTrackUi();
 
@@ -6209,8 +6253,31 @@
         !(duration > 0);
 
       if (duration > 0) {
+        seekSlider.min = "0";
         seekSlider.max =
           String(duration);
+      } else if (!seekSliderDragging) {
+        // YouTube가 새 영상의 duration을 아직 알려주지 않았을 때
+        // 이전 곡의 끝 위치가 잠깐 남는 현상을 방지한다.
+        const safePosition =
+          Math.max(
+            0,
+            Number(
+              currentPlayback?.position ??
+              0
+            )
+          );
+
+        seekSlider.min = "0";
+        seekSlider.max =
+          String(
+            Math.max(
+              100,
+              safePosition + 1
+            )
+          );
+        seekSlider.value =
+          String(safePosition);
       }
     }
 
@@ -8400,27 +8467,53 @@
             );
 
           if (duration > 0) {
+            seekSlider.min = "0";
             seekSlider.max =
               String(duration);
 
-            if (
-              document.activeElement !==
-              seekSlider
-            ) {
-              seekSlider.value =
-                String(
-                  Math.min(
-                    duration,
-                    Math.max(
-                      0,
-                      current
-                    )
+            if (!seekSliderDragging) {
+              const safeCurrent =
+                Math.min(
+                  duration,
+                  Math.max(
+                    0,
+                    current
                   )
                 );
+
+              seekSlider.value =
+                String(safeCurrent);
             }
 
             seekTimeText.textContent =
               `${formatTime(current)} / ${formatTime(duration)}`;
+          } else if (!seekSliderDragging) {
+            const estimated =
+              currentPlayback
+                ? estimatePlaybackPosition(
+                    currentPlayback
+                  )
+                : 0;
+
+            const safeEstimated =
+              Math.max(
+                0,
+                estimated
+              );
+
+            seekSlider.min = "0";
+            seekSlider.max =
+              String(
+                Math.max(
+                  100,
+                  safeEstimated + 1
+                )
+              );
+            seekSlider.value =
+              String(safeEstimated);
+
+            seekTimeText.textContent =
+              `${formatTime(safeEstimated)} / --:--`;
           }
 
           updateControlsEnabled();
@@ -8814,13 +8907,62 @@
     );
 
     seekSlider.addEventListener(
-      "change",
+      "pointerdown",
       () => {
-        seekPlayback(
+        seekSliderDragging = true;
+      }
+    );
+
+    seekSlider.addEventListener(
+      "input",
+      () => {
+        seekSliderDragging = true;
+
+        const preview =
           Number(
             seekSlider.value
-          )
-        );
+          );
+
+        const duration =
+          Number(
+            seekSlider.max
+          );
+
+        seekTimeText.textContent =
+          `${formatTime(preview)} / ${duration > 0 ? formatTime(duration) : "--:--"}`;
+      }
+    );
+
+    const finishSeekSliderDrag = () => {
+      seekSliderDragging = false;
+    };
+
+    seekSlider.addEventListener(
+      "pointerup",
+      finishSeekSliderDrag
+    );
+
+    seekSlider.addEventListener(
+      "pointercancel",
+      finishSeekSliderDrag
+    );
+
+    seekSlider.addEventListener(
+      "blur",
+      finishSeekSliderDrag
+    );
+
+    seekSlider.addEventListener(
+      "change",
+      () => {
+        const target =
+          Number(
+            seekSlider.value
+          );
+
+        seekSliderDragging = false;
+
+        seekPlayback(target);
       }
     );
   </script>
