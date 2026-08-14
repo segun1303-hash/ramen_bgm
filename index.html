@@ -1991,6 +1991,480 @@
         grid-template-columns: 1fr;
       }
     }
+  
+    /* =========================================================
+       v3.7 final layout cleanup
+       ========================================================= */
+
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ---------- Login workspace ---------- */
+
+    .entry-stage {
+      width: min(1120px, calc(100vw - 32px));
+      max-width: 1120px;
+      margin: 40px auto 0;
+    }
+
+    .account-workspace {
+      width: 100%;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .account-workspace.guest-workspace {
+      width: min(520px, 100%);
+      display: block;
+      margin: 0 auto;
+    }
+
+    .account-workspace > .entry-pane,
+    .account-workspace > .library-pane {
+      min-width: 0;
+      padding: 28px 30px !important;
+    }
+
+    .account-workspace > .library-pane {
+      border-left: 1px solid var(--line);
+      border-top: 0;
+      background: #fff;
+    }
+
+    .session-library-card {
+      min-width: 0;
+      min-height: 0;
+      padding: 0 !important;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .session-library-card .session-columns {
+      height: 335px;
+    }
+
+    /* Folder/sort text: normal readable size */
+    .session-folder-chip {
+      min-height: 34px;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .session-folder-current {
+      max-width: 180px;
+      font-size: 12px;
+      line-height: 32px;
+    }
+
+    .session-sort {
+      min-height: 34px;
+      font-size: 12px;
+    }
+
+    .session-folder-select {
+      min-height: 30px;
+      font-size: 11px;
+    }
+
+    .session-group-title {
+      font-size: 11px;
+    }
+
+    .session-library-card .session-name {
+      font-size: 12px;
+    }
+
+    .session-library-card .session-meta {
+      font-size: 10px;
+    }
+
+    /* ---------- Presence ---------- */
+
+    .presence-online-list,
+    .presence-offline-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .presence-offline-toggle {
+      width: 100%;
+      min-height: 34px;
+      margin-top: 8px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--soft2);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-align: left;
+    }
+
+    .presence-offline-section {
+      margin-top: 7px;
+      padding-top: 7px;
+      border-top: 1px solid var(--line);
+    }
+
+    .presence-connection-count {
+      flex: 0 0 auto;
+      color: var(--faint);
+      font-size: 9px;
+      white-space: nowrap;
+    }
+
+    .presence-delete {
+      flex: 0 0 auto;
+      min-width: 30px;
+      min-height: 28px;
+      padding: 0 7px;
+      border: 1px solid #e0c9c5;
+      border-radius: 7px;
+      background: #fff;
+      color: #a13d34;
+      font-size: 9px;
+    }
+
+    .presence-clear-all {
+      width: 100%;
+      min-height: 32px;
+      margin-top: 7px;
+      border: 1px solid #e0c9c5;
+      border-radius: 8px;
+      background: #fff;
+      color: #9a4138;
+      font-size: 10px;
+    }
+
+    /* ---------- App layout safety ---------- */
+
+    .app-card,
+    .main-grid,
+    .main-grid > .pane {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .video-frame {
+      width: 100%;
+      max-width: 520px;
+      min-width: 0;
+    }
+
+    #youtubePlayer,
+    iframe#youtubePlayer,
+    #youtubePlayer iframe {
+      display: block;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      min-width: 0 !important;
+    }
+
+    /* ---------- Tablet ---------- */
+
+    @media (max-width: 900px) {
+      .entry-stage {
+        width: min(680px, calc(100vw - 24px));
+        margin-top: 20px;
+      }
+
+      .account-workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .account-workspace > .library-pane {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .session-library-card .session-columns {
+        height: 360px;
+      }
+
+      .app-card {
+        width: min(760px, calc(100vw - 24px));
+      }
+
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .main-grid > .pane + .pane {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+    }
+
+    /* ---------- Mobile ---------- */
+
+    @media (max-width: 620px) {
+      body {
+        width: 100%;
+        min-width: 0;
+        padding: 8px;
+      }
+
+      .shell,
+      .entry-stage,
+      .app-card {
+        width: 100%;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .entry-stage {
+        margin-top: 0;
+      }
+
+      .account-workspace,
+      .account-workspace.guest-workspace {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 16px;
+      }
+
+      .account-workspace > .entry-pane,
+      .account-workspace > .library-pane,
+      .pane {
+        width: 100%;
+        min-width: 0;
+        padding: 16px !important;
+      }
+
+      .library-pane {
+        overflow: hidden;
+      }
+
+      .session-library-head {
+        margin-bottom: 12px;
+      }
+
+      .session-library-title {
+        font-size: 18px;
+      }
+
+      .session-library-desc {
+        font-size: 11px;
+      }
+
+      .session-toolbar-top {
+        gap: 6px;
+      }
+
+      .session-folder-strip {
+        min-width: 0;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+      }
+
+      .session-folder-chip {
+        min-height: 36px;
+        font-size: 13px;
+      }
+
+      .session-folder-add {
+        width: 36px;
+        height: 36px;
+      }
+
+      .session-toolbar-bottom {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .session-folder-manage {
+        flex-wrap: wrap;
+      }
+
+      .session-folder-current {
+        max-width: 100%;
+        font-size: 13px;
+      }
+
+      .session-sort {
+        width: 100%;
+        min-height: 40px;
+        font-size: 13px;
+      }
+
+      .session-library-card .session-columns {
+        height: auto;
+        grid-template-columns: 1fr;
+      }
+
+      .session-library-card .session-list {
+        max-height: 220px;
+      }
+
+      .session-folder-select {
+        min-height: 36px;
+        font-size: 12px;
+      }
+
+      .session-actions .mini-btn {
+        min-height: 36px;
+      }
+
+      /* Main player must never be wider than viewport */
+      .main-grid {
+        display: block;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .main-grid > .pane {
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .video-frame {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+        margin: 0;
+      }
+
+      #youtubePlayer,
+      iframe#youtubePlayer,
+      #youtubePlayer iframe {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: 100% !important;
+      }
+
+      .unlock {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px;
+      }
+
+      .unlock-inner {
+        width: 100%;
+        max-width: 290px;
+      }
+
+      .unlock-title {
+        font-size: 15px;
+        line-height: 1.35;
+      }
+
+      .unlock-desc {
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      .unlock button {
+        width: min(100%, 250px);
+        min-width: 0;
+        min-height: 44px;
+        padding: 0 10px;
+        font-size: 13px;
+      }
+
+      /* Three transport buttons stay compact instead of stacking vertically */
+      .transport-buttons {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 6px;
+      }
+
+      .transport-buttons .btn {
+        min-height: 42px;
+        padding: 0 5px;
+        font-size: 12px;
+      }
+
+      .role-grid,
+      .link-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      .compact-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .track-info,
+      .transport,
+      .quick-play-box,
+      .room-summary,
+      .master-panel,
+      .playlist-add,
+      .playlist-item {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .volume-row {
+        grid-template-columns: auto minmax(0, 1fr) 40px;
+      }
+
+      .master-tabs {
+        position: sticky;
+        top: 4px;
+        z-index: 5;
+      }
+
+      .playlist-scroll {
+        max-height: 52vh;
+      }
+
+      .playlist-head {
+        min-width: 0;
+        flex-wrap: wrap;
+      }
+
+      .playlist-titles {
+        min-width: 0;
+      }
+
+      .playlist-head-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+
+      .large-memo-input {
+        min-height: 170px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .transport-buttons .btn {
+        font-size: 11px;
+      }
+
+      .session-actions {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .session-folder-select {
+        grid-column: 1 / -1;
+        grid-row: 1;
+      }
+
+      .topbar {
+        padding: 15px 14px;
+      }
+
+      .brand-title {
+        font-size: 14px;
+      }
+    }
+
   </style>
 </head>
 
@@ -2122,7 +2596,7 @@
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.6</span></div>
+          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.7</span></div>
           <div id="roomLine" class="room-line"></div>
         </div>
         <span id="roleBadge" class="badge">PLAYER</span>
@@ -2546,6 +3020,8 @@
     const roomNameRepairAttempted = new Set();
 
     let presenceData = {};
+    let offlinePresenceExpanded = false;
+
     let playlistData = {};
     let folderData = {};
     let playlistMemo = "";
@@ -5468,63 +5944,444 @@
       });
     }
 
-    function renderPresence() {
-      if (!presenceList) return;
-
-      const entries = Object.entries(presenceData || {}).map(([uid, value]) => {
-        const connections = value?.connections && typeof value.connections === "object"
-          ? Object.keys(value.connections).length
-          : 0;
-
-        return {
-          uid,
-          nickname: String(value?.nickname || "이름 없음"),
-          online: connections > 0,
-          isRoomMaster: uid === currentOwnerUid
-        };
-      });
-
-      entries.sort((a, b) => {
-        if (a.online !== b.online) return a.online ? -1 : 1;
-        if (a.isRoomMaster !== b.isRoomMaster) return a.isRoomMaster ? -1 : 1;
-        return a.nickname.localeCompare(b.nickname, "ko");
-      });
-
-      presenceList.replaceChildren();
-
-      if (!entries.length) {
-        const empty = document.createElement("div");
-        empty.className = "small";
-        empty.textContent = "아직 등록된 접속자가 없습니다.";
-        presenceList.appendChild(empty);
-        onlineCount.textContent = "0 online";
+    async function deleteOfflinePresence(uid) {
+      if (
+        !isMaster ||
+        !currentRoomId ||
+        !uid
+      ) {
         return;
       }
 
-      const online = entries.filter((entry) => entry.online).length;
-      onlineCount.textContent = `${online} online`;
+      const target =
+        presenceData?.[uid];
 
-      for (const entry of entries) {
-        const row = document.createElement("div");
-        row.className = "person-row";
+      const connections =
+        target?.connections &&
+        typeof target.connections === "object"
+          ? Object.keys(target.connections).length
+          : 0;
 
-        const dot = document.createElement("span");
-        dot.className = `presence-dot${entry.online ? " online" : ""}`;
-
-        const name = document.createElement("span");
-        name.className = "person-name";
-        name.textContent =
-          entry.uid === currentUser?.uid
-            ? `${entry.nickname} (나)`
-            : entry.nickname;
-
-        const role = document.createElement("span");
-        role.className = "person-role";
-        role.textContent = entry.isRoomMaster ? "MASTER" : "PLAYER";
-
-        row.append(dot, name, role);
-        presenceList.appendChild(row);
+      if (connections > 0) {
+        alert(
+          "현재 온라인 상태인 접속자는 삭제할 수 없습니다."
+        );
+        return;
       }
+
+      const nickname =
+        String(
+          target?.nickname || "이름 없음"
+        );
+
+      if (
+        !confirm(
+          `「${nickname}」의 오프라인 접속 기록을 삭제할까요?\n방 데이터나 세션 목록에는 영향이 없습니다.`
+        )
+      ) {
+        return;
+      }
+
+      try {
+        await set(
+          ref(
+            db,
+            `presence/${currentRoomId}/${uid}`
+          ),
+          null
+        );
+      } catch (error) {
+        console.error(
+          "presence delete failed",
+          error
+        );
+
+        alert(
+          error?.message ??
+          "접속 기록 삭제에 실패했습니다."
+        );
+      }
+    }
+
+    async function clearOfflinePresence() {
+      if (
+        !isMaster ||
+        !currentRoomId
+      ) {
+        return;
+      }
+
+      const offlineUids =
+        Object.entries(
+          presenceData || {}
+        )
+        .filter(([, value]) => {
+          const connections =
+            value?.connections &&
+            typeof value.connections === "object"
+              ? Object.keys(value.connections).length
+              : 0;
+
+          return connections === 0;
+        })
+        .map(([uid]) => uid);
+
+      if (!offlineUids.length) {
+        return;
+      }
+
+      if (
+        !confirm(
+          `오프라인 접속 기록 ${offlineUids.length}개를 모두 정리할까요?\n현재 온라인인 사용자는 삭제되지 않습니다.`
+        )
+      ) {
+        return;
+      }
+
+      const updates = {};
+
+      for (const uid of offlineUids) {
+        updates[
+          `presence/${currentRoomId}/${uid}`
+        ] = null;
+      }
+
+      try {
+        await update(
+          ref(db),
+          updates
+        );
+      } catch (error) {
+        console.error(
+          "offline presence cleanup failed",
+          error
+        );
+
+        alert(
+          error?.message ??
+          "오프라인 접속 기록 정리에 실패했습니다."
+        );
+      }
+    }
+
+    function makePresenceRow(entry) {
+      const row =
+        document.createElement("div");
+
+      row.className = "person-row";
+
+      const dot =
+        document.createElement("span");
+
+      dot.className =
+        `presence-dot${entry.online ? " online" : ""}`;
+
+      const name =
+        document.createElement("span");
+
+      name.className =
+        "person-name";
+
+      name.textContent =
+        entry.uid === currentUser?.uid
+          ? `${entry.nickname} (나)`
+          : entry.nickname;
+
+      const connectionText =
+        document.createElement("span");
+
+      connectionText.className =
+        "presence-connection-count";
+
+      if (entry.online && entry.connections > 1) {
+        connectionText.textContent =
+          `${entry.connections}개 연결`;
+      } else if (!entry.online && entry.lastSeen) {
+        try {
+          connectionText.textContent =
+            new Intl.DateTimeFormat(
+              "ko-KR",
+              {
+                month: "numeric",
+                day: "numeric"
+              }
+            ).format(
+              new Date(
+                Number(entry.lastSeen)
+              )
+            );
+        } catch {
+          connectionText.textContent = "";
+        }
+      }
+
+      const role =
+        document.createElement("span");
+
+      role.className =
+        "person-role";
+
+      role.textContent =
+        entry.isRoomMaster
+          ? "MASTER"
+          : "PLAYER";
+
+      row.append(
+        dot,
+        name
+      );
+
+      if (connectionText.textContent) {
+        row.appendChild(
+          connectionText
+        );
+      }
+
+      row.appendChild(role);
+
+      if (
+        isMaster &&
+        !entry.online
+      ) {
+        const deleteButton =
+          document.createElement("button");
+
+        deleteButton.className =
+          "presence-delete";
+
+        deleteButton.textContent =
+          "삭제";
+
+        deleteButton.addEventListener(
+          "click",
+          () => {
+            deleteOfflinePresence(
+              entry.uid
+            );
+          }
+        );
+
+        row.appendChild(
+          deleteButton
+        );
+      }
+
+      return row;
+    }
+
+    function renderPresence() {
+      if (!presenceList) return;
+
+      const entries =
+        Object.entries(
+          presenceData || {}
+        ).map(([uid, value]) => {
+          const connections =
+            value?.connections &&
+            typeof value.connections === "object"
+              ? Object.keys(
+                  value.connections
+                ).length
+              : 0;
+
+          return {
+            uid,
+            nickname:
+              String(
+                value?.nickname ||
+                "이름 없음"
+              ),
+            connections,
+            online:
+              connections > 0,
+            lastSeen:
+              Number(
+                value?.lastSeen || 0
+              ),
+            isRoomMaster:
+              uid === currentOwnerUid
+          };
+        });
+
+      entries.sort((a, b) => {
+        if (a.online !== b.online) {
+          return a.online ? -1 : 1;
+        }
+
+        if (
+          a.isRoomMaster !==
+          b.isRoomMaster
+        ) {
+          return a.isRoomMaster
+            ? -1
+            : 1;
+        }
+
+        if (
+          !a.online &&
+          !b.online &&
+          a.lastSeen !== b.lastSeen
+        ) {
+          return b.lastSeen -
+            a.lastSeen;
+        }
+
+        return a.nickname.localeCompare(
+          b.nickname,
+          "ko"
+        );
+      });
+
+      const onlineEntries =
+        entries.filter(
+          (entry) => entry.online
+        );
+
+      const offlineEntries =
+        entries.filter(
+          (entry) => !entry.online
+        );
+
+      presenceList.replaceChildren();
+
+      onlineCount.textContent =
+        `${onlineEntries.length} online`;
+
+      if (!entries.length) {
+        const empty =
+          document.createElement("div");
+
+        empty.className =
+          "small";
+
+        empty.textContent =
+          "아직 등록된 접속자가 없습니다.";
+
+        presenceList.appendChild(
+          empty
+        );
+
+        return;
+      }
+
+      const onlineList =
+        document.createElement("div");
+
+      onlineList.className =
+        "presence-online-list";
+
+      if (!onlineEntries.length) {
+        const none =
+          document.createElement("div");
+
+        none.className =
+          "small";
+
+        none.textContent =
+          "현재 온라인 접속자가 없습니다.";
+
+        onlineList.appendChild(
+          none
+        );
+      } else {
+        for (
+          const entry of
+          onlineEntries
+        ) {
+          onlineList.appendChild(
+            makePresenceRow(entry)
+          );
+        }
+      }
+
+      presenceList.appendChild(
+        onlineList
+      );
+
+      if (!offlineEntries.length) {
+        return;
+      }
+
+      const toggle =
+        document.createElement("button");
+
+      toggle.className =
+        "presence-offline-toggle";
+
+      toggle.textContent =
+        offlinePresenceExpanded
+          ? `▾ 오프라인 ${offlineEntries.length}명`
+          : `▸ 오프라인 ${offlineEntries.length}명`;
+
+      toggle.addEventListener(
+        "click",
+        () => {
+          offlinePresenceExpanded =
+            !offlinePresenceExpanded;
+
+          renderPresence();
+        }
+      );
+
+      presenceList.appendChild(
+        toggle
+      );
+
+      if (!offlinePresenceExpanded) {
+        return;
+      }
+
+      const offlineSection =
+        document.createElement("div");
+
+      offlineSection.className =
+        "presence-offline-section";
+
+      const offlineList =
+        document.createElement("div");
+
+      offlineList.className =
+        "presence-offline-list";
+
+      for (
+        const entry of
+        offlineEntries
+      ) {
+        offlineList.appendChild(
+          makePresenceRow(entry)
+        );
+      }
+
+      offlineSection.appendChild(
+        offlineList
+      );
+
+      if (
+        isMaster &&
+        offlineEntries.length > 0
+      ) {
+        const clearButton =
+          document.createElement("button");
+
+        clearButton.className =
+          "presence-clear-all";
+
+        clearButton.textContent =
+          `오프라인 기록 ${offlineEntries.length}개 전체 정리`;
+
+        clearButton.addEventListener(
+          "click",
+          clearOfflinePresence
+        );
+
+        offlineSection.appendChild(
+          clearButton
+        );
+      }
+
+      presenceList.appendChild(
+        offlineSection
+      );
     }
 
     async function saveRoomName() {
