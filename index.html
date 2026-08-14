@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCFOLIA BGM</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f4f2;
+      --panel: #ffffff;
+      --text: #1f1f1f;
+      --muted: #77756f;
+      --line: #e6e4df;
+      --button: #232323;
+      --button-text: #fff;
+      --soft: #f1f0ec;
+      --danger: #b42318;
+      --success: #246b43;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+    }
+    .card {
+      width: min(520px, 100%);
+      padding: 30px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.05);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 25px;
+      letter-spacing: -.02em;
+    }
+    .lead {
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .field { margin-top: 16px; }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    input {
+      width: 100%;
+      height: 46px;
+      padding: 0 14px;
+      border: 1px solid #cbc9c3;
+      border-radius: 11px;
+      outline: none;
+      background: #fff;
+      font: inherit;
+      font-size: 14px;
+    }
+    input:focus { border-color: #66635d; }
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    button {
+      min-height: 46px;
+      border: 0;
+      border-radius: 11px;
+      padding: 0 15px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+    .primary {
+      background: var(--button);
+      color: var(--button-text);
+    }
+    .secondary {
+      background: var(--soft);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .hidden { display: none !important; }
+    .notice, .error {
+      margin-top: 14px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .notice { color: var(--muted); }
+    .error { color: var(--danger); }
+    .pin-box, .status {
+      margin-top: 22px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+    .pin-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .status h2 {
+      margin: 12px 0 6px;
+      font-size: 18px;
+    }
+    .status p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .room-id {
+      margin-top: 12px;
+      color: #99968f;
+      font-size: 11px;
+      word-break: break-all;
+    }
+    .small {
+      margin-top: 8px;
+      color: #99968f;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <section id="entryView">
+      <h1>CCFOLIA BGM</h1>
+      <p class="lead">
+        코코포리아 룸 링크를 같은 BGM 방의 식별자로 사용합니다.
+        플레이어가 먼저 들어와도 자동으로 룸마스터가 되지 않습니다.
+      </p>
+
+      <div class="field">
+        <label for="roomUrl">코코포리아 룸 링크</label>
+        <input id="roomUrl" type="url" placeholder="https://ccfolia.com/rooms/..." autocomplete="off">
+      </div>
+
+      <div class="role-grid">
+        <button id="masterButton" class="primary">룸마스터로 입장</button>
+        <button id="playerButton" class="secondary">플레이어로 입장</button>
+      </div>
+
+      <div id="entryError" class="error"></div>
+
+      <section id="pinBox" class="pin-box hidden">
+        <div id="pinIntro" class="notice"></div>
+
+        <div class="field">
+          <label for="pinInput">마스터 PIN</label>
+          <input id="pinInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="4~12자리 숫자">
+        </div>
+
+        <div id="pinConfirmField" class="field hidden">
+          <label for="pinConfirm">PIN 확인</label>
+          <input id="pinConfirm" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="같은 PIN을 한 번 더 입력">
+        </div>
+
+        <div class="pin-actions">
+          <button id="pinSubmit" class="primary">확인</button>
+          <button id="pinCancel" class="secondary">취소</button>
+        </div>
+
+        <div id="pinError" class="error"></div>
+        <div class="small">PIN 원문은 저장하지 않고 브라우저에서 SHA-256 해시로 바꿔 전송합니다.</div>
+      </section>
+    </section>
+
+    <section id="statusView" class="status hidden">
+      <span id="roleBadge" class="badge"></span>
+      <h2 id="statusTitle"></h2>
+      <p id="statusMessage"></p>
+      <div id="masterState" class="notice"></div>
+      <div id="roomId" class="room-id"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+    import {
+      getDatabase,
+      ref,
+      get,
+      update,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwCfqqnI-iM1mA2tx_ZEoNskNbbXfvAFA",
+      authDomain: "ccforia-bgm.firebaseapp.com",
+      databaseURL: "https://ccforia-bgm-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "ccforia-bgm",
+      storageBucket: "ccforia-bgm.firebasestorage.app",
+      messagingSenderId: "690078808838",
+      appId: "1:690078808838:web:ae538f7f249de38168bc87"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const $ = (selector) => document.querySelector(selector);
+
+    const entryView = $("#entryView");
+    const statusView = $("#statusView");
+    const roomUrlInput = $("#roomUrl");
+    const masterButton = $("#masterButton");
+    const playerButton = $("#playerButton");
+    const entryError = $("#entryError");
+
+    const pinBox = $("#pinBox");
+    const pinIntro = $("#pinIntro");
+    const pinInput = $("#pinInput");
+    const pinConfirmField = $("#pinConfirmField");
+    const pinConfirm = $("#pinConfirm");
+    const pinSubmit = $("#pinSubmit");
+    const pinCancel = $("#pinCancel");
+    const pinError = $("#pinError");
+
+    const roleBadge = $("#roleBadge");
+    const statusTitle = $("#statusTitle");
+    const statusMessage = $("#statusMessage");
+    const masterState = $("#masterState");
+    const roomIdBox = $("#roomId");
+
+    let currentUser = null;
+    let currentRoomId = null;
+    let currentRoomCode = null;
+    let pendingMasterMode = null; // "setup" | "login"
+
+    function setBusy(busy) {
+      masterButton.disabled = busy;
+      playerButton.disabled = busy;
+      pinSubmit.disabled = busy;
+    }
+
+    function extractRoomCode(value) {
+      let url;
+      try {
+        url = new URL(value.trim());
+      } catch {
+        throw new Error("올바른 URL을 입력해 주세요.");
+      }
+
+      const hostname = url.hostname.toLowerCase();
+      if (hostname !== "ccfolia.com" && hostname !== "www.ccfolia.com") {
+        throw new Error("코코포리아 룸 링크만 사용할 수 있습니다.");
+      }
+
+      const match = url.pathname.match(/^\/rooms\/([^/]+)/);
+      if (!match) {
+        throw new Error("코코포리아 룸 주소 형식을 확인해 주세요.");
+      }
+      return match[1];
+    }
+
+    async function sha256(text) {
+      const bytes = new TextEncoder().encode(text);
+      const digest = await crypto.subtle.digest("SHA-256", bytes);
+      return Array.from(new Uint8Array(digest))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+    }
+
+    async function prepareRoom() {
+      entryError.textContent = "";
+      currentRoomCode = extractRoomCode(roomUrlInput.value);
+      currentRoomId = await sha256(`ccfolia:${currentRoomCode}`);
+
+      if (!auth.currentUser) {
+        const credential = await signInAnonymously(auth);
+        currentUser = credential.user;
+      } else {
+        currentUser = auth.currentUser;
+      }
+    }
+
+    function showStatus(role, title, message) {
+      entryView.classList.add("hidden");
+      statusView.classList.remove("hidden");
+
+      roleBadge.textContent = role;
+      statusTitle.textContent = title;
+      statusMessage.textContent = message;
+      roomIdBox.textContent = `Room ID: ${currentRoomId.slice(0, 16)}…`;
+
+      window.ccfoliaBgmRoom = {
+        roomId: currentRoomId,
+        roomCode: currentRoomCode,
+        userUid: currentUser.uid,
+        role
+      };
+
+      const ownerRef = ref(db, `rooms/${currentRoomId}/ownerUid`);
+      onValue(ownerRef, (snapshot) => {
+        if (role === "MASTER") {
+          masterState.textContent = "현재 이 브라우저가 룸마스터 권한을 가지고 있습니다.";
+        } else {
+          masterState.textContent = snapshot.exists()
+            ? "룸마스터가 설정된 방입니다."
+            : "아직 룸마스터가 설정되지 않았습니다. 플레이어 상태로 기다릴 수 있습니다.";
+        }
+      });
+    }
+
+    function openPin(mode) {
+      pendingMasterMode = mode;
+      pinBox.classList.remove("hidden");
+      pinInput.value = "";
+      pinConfirm.value = "";
+      pinError.textContent = "";
+
+      if (mode === "setup") {
+        pinIntro.textContent = "이 방에는 아직 룸마스터가 없습니다. 사용할 마스터 PIN을 정해 주세요.";
+        pinConfirmField.classList.remove("hidden");
+        pinSubmit.textContent = "룸마스터로 설정";
+      } else {
+        pinIntro.textContent = "이미 룸마스터가 설정된 방입니다. 기존 마스터 PIN을 입력해 주세요.";
+        pinConfirmField.classList.add("hidden");
+        pinSubmit.textContent = "룸마스터로 입장";
+      }
+
+      pinInput.focus();
+    }
+
+    function validatePin(pin) {
+      return /^[0-9]{4,12}$/.test(pin);
+    }
+
+    async function enterAsPlayer() {
+      try {
+        setBusy(true);
+        await prepareRoom();
+
+        showStatus(
+          "PLAYER",
+          "플레이어로 입장했습니다.",
+          "이 버전에서는 아직 BGM 기능 없이 방 연결과 권한만 확인합니다."
+        );
+      } catch (error) {
+        console.error(error);
+        entryError.textContent = error?.message ?? "입장 중 오류가 발생했습니다.";
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function beginMasterEntry() {
+      try {
+        setBusy(true);
+        await prepareRoom();
+
+        const ownerRef = ref(db, `rooms/${currentRoomId}/ownerUid`);
+        const ownerSnapshot = await get(ownerRef);
+
+        if (ownerSnapshot.exists() && ownerSnapshot.val() === currentUser.uid) {
+          showStatus(
+            "MASTER",
+            "룸마스터로 입장했습니다.",
+            "이 브라우저는 이미 이 방의 룸마스터 권한을 가지고 있습니다."
+          );
+          return;
+        }
+
+        openPin(ownerSnapshot.exists() ? "login" : "setup");
+      } catch (error) {
+        console.error(error);
+        entryError.textContent = error?.message ?? "입장 중 오류가 발생했습니다.";
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function submitPin() {
+      pinError.textContent = "";
+      const pin = pinInput.value.trim();
+
+      if (!validatePin(pin)) {
+        pinError.textContent = "PIN은 4~12자리 숫자로 입력해 주세요.";
+        return;
+      }
+
+      if (pendingMasterMode === "setup" && pin !== pinConfirm.value.trim()) {
+        pinError.textContent = "PIN 확인 값이 일치하지 않습니다.";
+        return;
+      }
+
+      try {
+        setBusy(true);
+
+        const pinHash = await sha256(`ccfolia-bgm-master:${currentRoomId}:${pin}`);
+        const roomRef = ref(db, `rooms/${currentRoomId}`);
+
+        if (pendingMasterMode === "setup") {
+          await update(roomRef, {
+            ownerUid: currentUser.uid,
+            "masterAuth/pinHash": pinHash,
+            "masterAuth/proof": pinHash
+          });
+        } else {
+          await update(roomRef, {
+            ownerUid: currentUser.uid,
+            "masterAuth/proof": pinHash
+          });
+        }
+
+        // 인증에만 쓴 proof는 성공 후 바로 제거한다.
+        await update(roomRef, {
+          "masterAuth/proof": null
+        });
+
+        pinBox.classList.add("hidden");
+
+        showStatus(
+          "MASTER",
+          "룸마스터로 입장했습니다.",
+          pendingMasterMode === "setup"
+            ? "새 마스터 PIN이 설정되었습니다."
+            : "마스터 PIN 확인이 완료되었습니다."
+        );
+      } catch (error) {
+        console.error(error);
+
+        if (error?.code === "PERMISSION_DENIED" || String(error?.message).includes("PERMISSION_DENIED")) {
+          pinError.textContent =
+            pendingMasterMode === "setup"
+              ? "다른 사용자가 먼저 룸마스터를 설정했거나 권한 규칙이 맞지 않습니다."
+              : "PIN이 올바르지 않거나 권한 규칙이 맞지 않습니다.";
+        } else {
+          pinError.textContent = error?.message ?? "마스터 인증 중 오류가 발생했습니다.";
+        }
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    masterButton.addEventListener("click", beginMasterEntry);
+    playerButton.addEventListener("click", enterAsPlayer);
+    pinSubmit.addEventListener("click", submitPin);
+
+    pinCancel.addEventListener("click", () => {
+      pinBox.classList.add("hidden");
+      pinError.textContent = "";
+      pendingMasterMode = null;
+    });
+
+    roomUrlInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") enterAsPlayer();
+    });
+
+    pinInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") submitPin();
+    });
+    pinConfirm.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") submitPin();
+    });
+  </script>
+</body>
+</html>
