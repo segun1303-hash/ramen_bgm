@@ -1315,6 +1315,121 @@
       font-variant-numeric: tabular-nums;
     }
 
+
+    .session-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 9px;
+    }
+
+    .session-group {
+      min-width: 0;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+    }
+
+    .session-group + .session-group {
+      margin-top: 0;
+    }
+
+    .session-group-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 7px;
+      font-size: 9px;
+    }
+
+    .session-list {
+      max-height: 230px;
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+    }
+
+    .session-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5px;
+      padding: 7px 7px;
+      border-radius: 8px;
+    }
+
+    .session-name {
+      font-size: 10px;
+    }
+
+    .session-meta {
+      font-size: 8px;
+    }
+
+    .session-actions {
+      gap: 3px;
+    }
+
+    .session-actions .mini-btn {
+      min-height: 27px;
+      padding: 0 7px;
+      border-radius: 7px;
+      font-size: 9px;
+    }
+
+    .session-empty {
+      padding: 8px;
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .danger-zone {
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid #e1c4c0;
+      border-radius: 12px;
+      background: #fff9f8;
+    }
+
+    .danger-zone-title {
+      color: #9a3129;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .danger-zone-desc {
+      margin-top: 6px;
+      color: #8a5b56;
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    .danger-zone button {
+      width: 100%;
+      margin-top: 10px;
+      min-height: 38px;
+      border: 1px solid #d9aaa4;
+      border-radius: 9px;
+      background: #fff;
+      color: #a3332a;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .iframe-warning {
+      color: #b42318;
+      font-weight: 800;
+    }
+
+    @media (max-width: 620px) {
+      .session-columns {
+        grid-template-columns: 1fr;
+      }
+
+      .session-list {
+        max-height: 190px;
+      }
+    }
+
     @media (max-width: 760px) {
       .main-grid { grid-template-columns: 1fr; }
 
@@ -1375,14 +1490,22 @@
             <span class="version-text">Google 계정에 저장됨</span>
           </div>
 
-          <div class="session-group">
-            <div class="session-group-title">ROOM MASTER</div>
-            <div id="masterSessionList" class="session-list"></div>
-          </div>
+          <div class="session-columns">
+            <div class="session-group">
+              <div class="session-group-title">
+                <span>ROOM MASTER</span>
+                <span id="masterSessionCount" class="version-text">0</span>
+              </div>
+              <div id="masterSessionList" class="session-list"></div>
+            </div>
 
-          <div class="session-group">
-            <div class="session-group-title">PLAYER</div>
-            <div id="playerSessionList" class="session-list"></div>
+            <div class="session-group">
+              <div class="session-group-title">
+                <span>PLAYER</span>
+                <span id="playerSessionCount" class="version-text">0</span>
+              </div>
+              <div id="playerSessionList" class="session-list"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1430,7 +1553,7 @@
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.3.1</span></div>
+          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.4</span></div>
           <div id="roomLine" class="room-line"></div>
         </div>
         <span id="roleBadge" class="badge">PLAYER</span>
@@ -1557,6 +1680,16 @@
               </div>
 
               <div id="masterStatus" class="status-line"></div>
+
+              <div class="danger-zone">
+                <div class="danger-zone-title">방 자체 삭제</div>
+                <div class="danger-zone-desc">
+                  이 BGM 방의 플레이리스트, 폴더, 메모, PIN, 방 이름, 현재 재생 상태를 모두 삭제합니다.
+                  내 세션 목록에서 지우는 것과 달리 되돌릴 수 없습니다.
+                </div>
+                <button id="deleteRoomButton">이 방의 모든 데이터 삭제</button>
+                <div id="deleteRoomStatus" class="status-line"></div>
+              </div>
             </div>
           </div>
 
@@ -1713,6 +1846,8 @@
     const sessionHub = $("#sessionHub");
     const masterSessionList = $("#masterSessionList");
     const playerSessionList = $("#playerSessionList");
+    const masterSessionCount = $("#masterSessionCount");
+    const playerSessionCount = $("#playerSessionCount");
     const roomUrlInput = $("#roomUrl");
     const nicknameInput = $("#nicknameInput");
     const masterButton = $("#masterButton");
@@ -1775,6 +1910,8 @@
     const seekTimeText = $("#seekTimeText");
     const masterStatus = $("#masterStatus");
     const masterError = $("#masterError");
+    const deleteRoomButton = $("#deleteRoomButton");
+    const deleteRoomStatus = $("#deleteRoomStatus");
 
     const folderStrip = $("#folderStrip");
     const addFolderButton = $("#addFolderButton");
@@ -1837,6 +1974,7 @@
     let ytPlayer = null;
     let ytReady = false;
     let ytApiReadyPromise = null;
+    let ytPlayerInitPromise = null;
 
     let currentPlayback = null;
     let currentYoutubeUrl = "";
@@ -2165,6 +2303,12 @@
           (entry) => entry.role !== "master"
         );
 
+      masterSessionCount.textContent =
+        String(masterEntries.length);
+
+      playerSessionCount.textContent =
+        String(playerEntries.length);
+
       async function fillList(
         container,
         list,
@@ -2206,10 +2350,8 @@
             "session-name";
 
           name.textContent =
-            await currentPublicRoomName(
-              session.roomId,
-              session.roomName || ""
-            );
+            String(session.roomName || "").trim() ||
+            "이름 없는 방";
 
           const meta =
             document.createElement("div");
@@ -2245,7 +2387,7 @@
             "mini-btn";
 
           enterBtn.textContent =
-            "입장";
+            "열기";
 
           enterBtn.addEventListener(
             "click",
@@ -2885,35 +3027,71 @@
       ]);
     }
 
+    function cleanupDuplicateYoutubeIframes() {
+      const frames = Array.from(
+        document.querySelectorAll(
+          '.video-frame iframe[src*="youtube.com/embed"], .video-frame iframe[src*="youtube-nocookie.com/embed"]'
+        )
+      );
+
+      const mainFrame =
+        ytPlayer?.getIframe?.() ?? null;
+
+      for (const frame of frames) {
+        if (
+          mainFrame &&
+          frame !== mainFrame
+        ) {
+          console.warn(
+            "Removing duplicate YouTube iframe",
+            frame
+          );
+          frame.remove();
+        }
+      }
+
+      return frames.length;
+    }
+
     async function ensureYoutubePlayer() {
       if (ytPlayer) {
+        cleanupDuplicateYoutubeIframes();
         return ytPlayer;
       }
 
-      setDiagnostics(
-        "YouTube 플레이어 준비 중…",
-        "normal"
-      );
-
-      try {
-        await loadYoutubeApi();
-      } catch (error) {
-        console.error(error);
-
-        unlockButton.disabled = false;
-        unlockButton.textContent = "↻ YouTube 플레이어 다시 시도";
-
-        showUnlockOverlay(
-          "YouTube 플레이어 API를 불러오지 못했습니다. 다시 시도해 주세요. 계속 실패하면 광고 차단/추적 차단 기능이 YouTube 스크립트를 막고 있는지 확인해 주세요."
-        );
-
-        setDiagnostics(
-          error?.message ?? "YouTube 플레이어 API 로드 실패",
-          "error"
-        );
-
-        throw error;
+      if (ytPlayerInitPromise) {
+        return ytPlayerInitPromise;
       }
+
+      ytPlayerInitPromise = (async () => {
+        setDiagnostics(
+          "YouTube 플레이어 준비 중…",
+          "normal"
+        );
+
+        try {
+          await loadYoutubeApi();
+        } catch (error) {
+          console.error(error);
+
+          unlockButton.disabled = false;
+          unlockButton.textContent = "↻ YouTube 플레이어 다시 시도";
+
+          showUnlockOverlay(
+            "YouTube 플레이어 API를 불러오지 못했습니다. 다시 시도해 주세요. 계속 실패하면 광고 차단/추적 차단 기능이 YouTube 스크립트를 막고 있는지 확인해 주세요."
+          );
+
+          setDiagnostics(
+            error?.message ?? "YouTube 플레이어 API 로드 실패",
+            "error"
+          );
+
+          throw error;
+        }
+
+        if (ytPlayer) {
+          return ytPlayer;
+        }
 
       ytPlayer = new YT.Player(
         "youtubePlayer",
@@ -2930,6 +3108,7 @@
           events: {
             onReady: () => {
               ytReady = true;
+              cleanupDuplicateYoutubeIframes();
               unlockButton.disabled = false;
               unlockButton.textContent = "▶ BGM 재생 활성화";
               applySavedVolume();
@@ -3036,7 +3215,16 @@
         }
       );
 
-      return ytPlayer;
+
+        return ytPlayer;
+      })();
+
+      try {
+        return await ytPlayerInitPromise;
+      } catch (error) {
+        ytPlayerInitPromise = null;
+        throw error;
+      }
     }
 
     function showUnlockOverlay(description) {
@@ -3054,6 +3242,61 @@
       );
     }
 
+    function youtubeIframes() {
+      return Array.from(
+        document.querySelectorAll(
+          'iframe[src*="youtube.com/embed"], iframe[src*="youtube-nocookie.com/embed"]'
+        )
+      );
+    }
+
+    function sendYoutubeCommand(frame, func, args = []) {
+      try {
+        frame.contentWindow?.postMessage(
+          JSON.stringify({
+            event: "command",
+            func,
+            args
+          }),
+          "*"
+        );
+      } catch {
+        // Ignore inaccessible/disposed frames.
+      }
+    }
+
+    function forceSilenceOnAllLocalMedia() {
+      if (ytReady && ytPlayer) {
+        try {
+          ytPlayer.setVolume(0);
+          ytPlayer.mute();
+        } catch {}
+      }
+
+      for (const frame of youtubeIframes()) {
+        sendYoutubeCommand(
+          frame,
+          "setVolume",
+          [0]
+        );
+        sendYoutubeCommand(
+          frame,
+          "mute",
+          []
+        );
+      }
+
+      for (
+        const media of
+        document.querySelectorAll("audio, video")
+      ) {
+        try {
+          media.volume = 0;
+          media.muted = true;
+        } catch {}
+      }
+    }
+
     function applySavedVolume({ userInitiated = false } = {}) {
       if (!ytReady || !ytPlayer) {
         return;
@@ -3068,16 +3311,14 @@
           )
         );
 
-      ytPlayer.setVolume(desiredVolume);
-
       if (desiredVolume <= 0) {
-        // 0%는 setVolume(0)만 믿지 않고 mute까지 함께 유지한다.
-        ytPlayer.mute();
-      } else if (userInitiated) {
-        // 사용자가 앱 슬라이더를 직접 0보다 크게 움직였을 때만
-        // 명시적으로 음소거를 해제한다.
-        // YouTube 플레이어 자체에서 누른 mute를 앱이 멋대로 풀지 않는다.
-        ytPlayer.unMute();
+        forceSilenceOnAllLocalMedia();
+      } else {
+        ytPlayer.setVolume(desiredVolume);
+
+        if (userInitiated) {
+          ytPlayer.unMute();
+        }
       }
 
       updateVolumeDiagnostics();
@@ -3096,8 +3337,16 @@
         const muted =
           Boolean(ytPlayer.isMuted?.());
 
+        const frames =
+          youtubeIframes().length;
+
         volumeDebug.textContent =
-          `player ${apiVolume}% · ${muted ? "muted" : "sound on"}`;
+          `player ${apiVolume}% · ${muted ? "muted" : "sound on"} · iframe ${frames}`;
+
+        volumeDebug.classList.toggle(
+          "iframe-warning",
+          frames > 1
+        );
       } catch {
         volumeDebug.textContent = "";
       }
@@ -3114,29 +3363,20 @@
         }
 
         try {
-          const apiVolume =
-            Number(ytPlayer.getVolume?.() ?? -1);
+          cleanupDuplicateYoutubeIframes();
 
-          const muted =
-            Boolean(ytPlayer.isMuted?.());
-
-          // 앱 슬라이더가 0이면 재생 상태 변화/영상 교체 후에도
-          // 실제 플레이어가 반드시 음소거 상태를 유지하도록 보정한다.
           if (desiredVolume <= 0) {
-            if (apiVolume !== 0) {
-              ytPlayer.setVolume(0);
-            }
-
-            if (!muted) {
-              ytPlayer.mute();
-            }
+            forceSilenceOnAllLocalMedia();
           }
 
           updateVolumeDiagnostics();
         } catch (error) {
-          console.error("volume guard failed", error);
+          console.error(
+            "volume guard failed",
+            error
+          );
         }
-      }, 500);
+      }, 350);
     }
 
     function setDiagnostics(text, kind) {
@@ -5211,6 +5451,84 @@
       });
     }
 
+    async function deleteCurrentRoom() {
+      if (
+        !isMaster ||
+        !currentRoomId ||
+        currentOwnerUid !== currentUser?.uid
+      ) {
+        deleteRoomStatus.textContent =
+          "현재 이 브라우저에는 방 삭제 권한이 없습니다.";
+        return;
+      }
+
+      const roomLabel =
+        currentRoomName || "이름 없는 방";
+
+      const confirmation = prompt(
+        `이 작업은 되돌릴 수 없습니다.\n\n「${roomLabel}」의 플레이리스트, 폴더, 메모, PIN, 방 이름, 현재 재생 상태가 모두 삭제됩니다.\n\n계속하려면 아래 입력칸에 정확히 '삭제'라고 입력해 주세요.`,
+        ""
+      );
+
+      if (confirmation === null) {
+        return;
+      }
+
+      if (confirmation.trim() !== "삭제") {
+        deleteRoomStatus.textContent =
+          "삭제가 취소되었습니다. 확인 문구가 일치하지 않습니다.";
+        return;
+      }
+
+      const second = confirm(
+        "정말 이 BGM 방의 모든 데이터를 삭제할까요?\n이 작업은 복구할 수 없습니다."
+      );
+
+      if (!second) {
+        return;
+      }
+
+      try {
+        deleteRoomButton.disabled = true;
+        deleteRoomStatus.textContent =
+          "방 데이터를 삭제하는 중…";
+
+        const updates = {
+          [`rooms/${currentRoomId}`]: null,
+          [`presence/${currentRoomId}`]: null
+        };
+
+        if (isPersistentAccount(auth.currentUser)) {
+          updates[
+            `users/${auth.currentUser.uid}/sessions/${currentRoomId}`
+          ] = null;
+        }
+
+        await update(
+          ref(db),
+          updates
+        );
+
+        alert(
+          "BGM 방 데이터가 삭제되었습니다."
+        );
+
+        window.location.reload();
+
+      } catch (error) {
+        console.error(
+          "room deletion failed",
+          error
+        );
+
+        deleteRoomStatus.textContent =
+          error?.message ??
+          "방 삭제에 실패했습니다.";
+      } finally {
+        deleteRoomButton.disabled = false;
+      }
+    }
+
     function formatTime(seconds) {
       const safe =
         Math.max(
@@ -5307,6 +5625,11 @@
         currentUser = user || null;
         updateAccountUi(user);
       }
+    );
+
+    deleteRoomButton.addEventListener(
+      "click",
+      deleteCurrentRoom
     );
 
     googleLoginButton.addEventListener(
