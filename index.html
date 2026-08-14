@@ -2465,6 +2465,45 @@
       }
     }
 
+  
+    .topbar-left {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-to-sessions {
+      flex: 0 0 auto;
+      min-width: 34px;
+      min-height: 34px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--soft2);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 750;
+    }
+
+    @media (max-width: 620px) {
+      .topbar-left {
+        gap: 7px;
+      }
+
+      .back-to-sessions {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 0 8px;
+        font-size: 0;
+      }
+
+      .back-to-sessions::before {
+        content: "←";
+        font-size: 18px;
+      }
+    }
+
   </style>
 </head>
 
@@ -2595,9 +2634,12 @@
 
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
-        <div class="brand">
-          <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.7</span></div>
-          <div id="roomLine" class="room-line"></div>
+        <div class="topbar-left">
+          <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
+          <div class="brand">
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.8</span></div>
+            <div id="roomLine" class="room-line"></div>
+          </div>
         </div>
         <span id="roleBadge" class="badge">PLAYER</span>
       </header>
@@ -2916,6 +2958,7 @@
     const pinError = $("#pinError");
 
     const roomLine = $("#roomLine");
+    const backToSessionsButton = $("#backToSessionsButton");
     const masterTabs = $("#masterTabs");
     const playlistTabButton = $("#playlistTabButton");
     const roomTabButton = $("#roomTabButton");
@@ -2996,6 +3039,12 @@
     const savePlaylistMemoButton = $("#savePlaylistMemoButton");
     const cancelPlaylistMemoButton = $("#cancelPlaylistMemoButton");
     const playlistMemoStatus = $("#playlistMemoStatus");
+
+    const ACTIVE_ROOM_SESSION_KEY =
+      "ccfolia-bgm-active-room-v1";
+
+    let restoreAttempted = false;
+    let restoreInProgress = false;
 
     let currentUser = null;
     let currentRoomId = null;
@@ -4284,6 +4333,229 @@
         .join("");
     }
 
+    function ensureInitialHistoryState() {
+      const view =
+        history.state?.ccfoliaBgmView;
+
+      if (
+        view !== "entry" &&
+        view !== "room"
+      ) {
+        history.replaceState(
+          {
+            ...(history.state || {}),
+            ccfoliaBgmView: "entry"
+          },
+          "",
+          window.location.href
+        );
+      }
+    }
+
+    function saveActiveRoomSession(role = null) {
+      if (
+        !currentRoomCode ||
+        !currentNickname
+      ) {
+        return;
+      }
+
+      sessionStorage.setItem(
+        ACTIVE_ROOM_SESSION_KEY,
+        JSON.stringify({
+          roomCode: currentRoomCode,
+          nickname: currentNickname,
+          role:
+            role ||
+            (isMaster
+              ? "master"
+              : "player"),
+          savedAt: Date.now()
+        })
+      );
+    }
+
+    function readActiveRoomSession() {
+      try {
+        const raw =
+          sessionStorage.getItem(
+            ACTIVE_ROOM_SESSION_KEY
+          );
+
+        if (!raw) return null;
+
+        const value =
+          JSON.parse(raw);
+
+        if (
+          !value ||
+          typeof value.roomCode !== "string" ||
+          !value.roomCode.trim() ||
+          typeof value.nickname !== "string"
+        ) {
+          return null;
+        }
+
+        return value;
+      } catch {
+        return null;
+      }
+    }
+
+    function clearActiveRoomSession() {
+      sessionStorage.removeItem(
+        ACTIVE_ROOM_SESSION_KEY
+      );
+    }
+
+    function pushRoomHistoryState() {
+      if (
+        history.state?.ccfoliaBgmView ===
+        "room"
+      ) {
+        return;
+      }
+
+      history.pushState(
+        {
+          ...(history.state || {}),
+          ccfoliaBgmView: "room"
+        },
+        "",
+        window.location.href
+      );
+    }
+
+    function returnToEntryViaHistory() {
+      clearActiveRoomSession();
+
+      if (
+        history.state?.ccfoliaBgmView ===
+        "room"
+      ) {
+        history.back();
+        return;
+      }
+
+      history.replaceState(
+        {
+          ...(history.state || {}),
+          ccfoliaBgmView: "entry"
+        },
+        "",
+        window.location.href
+      );
+
+      window.location.reload();
+    }
+
+    async function restoreActiveRoomAfterRefresh() {
+      if (
+        restoreAttempted ||
+        restoreInProgress
+      ) {
+        return;
+      }
+
+      restoreAttempted = true;
+
+      if (
+        history.state?.ccfoliaBgmView !==
+        "room"
+      ) {
+        return;
+      }
+
+      const saved =
+        readActiveRoomSession();
+
+      if (!saved) {
+        history.replaceState(
+          {
+            ...(history.state || {}),
+            ccfoliaBgmView: "entry"
+          },
+          "",
+          window.location.href
+        );
+        return;
+      }
+
+      restoreInProgress = true;
+
+      try {
+        roomUrlInput.value =
+          `https://ccfolia.com/rooms/${saved.roomCode}`;
+
+        nicknameInput.value =
+          saved.nickname;
+
+        await prepareRoom();
+
+        let restoreAsMaster = false;
+
+        if (saved.role === "master") {
+          const ownerSnapshot =
+            await get(
+              ref(
+                db,
+                `rooms/${currentRoomId}/ownerUid`
+              )
+            );
+
+          restoreAsMaster =
+            ownerSnapshot.exists() &&
+            ownerSnapshot.val() ===
+              currentUser.uid;
+        }
+
+        enterApplication(
+          restoreAsMaster,
+          {
+            restoring: true
+          }
+        );
+
+        if (
+          saved.role === "master" &&
+          !restoreAsMaster
+        ) {
+          playerRoleMessage.textContent =
+            "새로고침하는 동안 MASTER 권한이 다른 사용자에게 이전되어 PLAYER로 복귀했습니다.";
+        }
+
+      } catch (error) {
+        console.error(
+          "Room restore failed",
+          error
+        );
+
+        clearActiveRoomSession();
+
+        history.replaceState(
+          {
+            ...(history.state || {}),
+            ccfoliaBgmView: "entry"
+          },
+          "",
+          window.location.href
+        );
+
+        entryView.classList.remove(
+          "hidden"
+        );
+
+        appView.classList.add(
+          "hidden"
+        );
+
+        entryError.textContent =
+          "이전 방으로 자동 복귀하지 못했습니다. 목록에서 다시 입장해 주세요.";
+      } finally {
+        restoreInProgress = false;
+      }
+    }
+
     async function prepareRoom() {
       entryError.textContent = "";
 
@@ -4357,12 +4629,18 @@
         setEntryBusy(true);
         await prepareRoom();
 
-        const ownerRef = ref(
+        const roomRef = ref(
           db,
-          `rooms/${currentRoomId}/ownerUid`
+          `rooms/${currentRoomId}`
         );
 
-        const ownerSnapshot = await get(ownerRef);
+        const ownerSnapshot =
+          await get(
+            ref(
+              db,
+              `rooms/${currentRoomId}/ownerUid`
+            )
+          );
 
         if (
           ownerSnapshot.exists() &&
@@ -4372,16 +4650,68 @@
           return;
         }
 
-        openPin(
-          ownerSnapshot.exists()
-            ? "login"
-            : "setup"
-        );
+        if (!ownerSnapshot.exists()) {
+          if (
+            isPersistentAccount(
+              currentUser
+            )
+          ) {
+            await update(
+              roomRef,
+              {
+                ownerUid:
+                  currentUser.uid,
+                masterMode:
+                  "account"
+              }
+            );
+
+            enterApplication(true);
+            return;
+          }
+
+          openPin("setup");
+          return;
+        }
+
+        const modeSnapshot =
+          await get(
+            ref(
+              db,
+              `rooms/${currentRoomId}/masterMode`
+            )
+          );
+
+        const masterMode =
+          String(
+            modeSnapshot.val() || ""
+          );
+
+        if (masterMode === "account") {
+          entryError.textContent =
+            "이 방은 다른 로그인 계정이 룸마스터로 소유하고 있습니다. 플레이어로 입장하거나 현재 룸마스터 계정으로 로그인해 주세요.";
+          return;
+        }
+
+        // 기존 PIN 방식 방 또는 masterMode가 없던 구버전 방.
+        openPin("login");
 
       } catch (error) {
         console.error(error);
-        entryError.textContent =
-          error?.message ?? "입장 중 오류가 발생했습니다.";
+
+        if (
+          error?.code === "PERMISSION_DENIED" ||
+          String(error?.message).includes(
+            "PERMISSION_DENIED"
+          )
+        ) {
+          entryError.textContent =
+            "룸마스터 권한을 설정하지 못했습니다. Firebase 규칙이 v3.8인지 확인해 주세요.";
+        } else {
+          entryError.textContent =
+            error?.message ??
+            "입장 중 오류가 발생했습니다.";
+        }
       } finally {
         setEntryBusy(false);
       }
@@ -4422,6 +4752,7 @@
         if (pendingMasterMode === "setup") {
           await update(roomRef, {
             ownerUid: currentUser.uid,
+            masterMode: "pin",
             "masterAuth/pinHash": pinHash,
             "masterAuth/proof": pinHash
           });
@@ -4500,8 +4831,16 @@
         currentRoomId &&
         currentRoomCode
       ) {
+        saveActiveRoomSession(
+          master
+            ? "master"
+            : "player"
+        );
+
         saveSessionHistory(
-          master ? "master" : "player"
+          master
+            ? "master"
+            : "player"
         );
       }
     }
@@ -4518,21 +4857,51 @@
       roomPanel.classList.toggle("hidden", playlistActive);
     }
 
-    function enterApplication(initialMaster) {
+    function enterApplication(
+      initialMaster,
+      {
+        restoring = false
+      } = {}
+    ) {
       isMaster = initialMaster;
 
       entryView.classList.add("hidden");
       appView.classList.remove("hidden");
+
+      if (!restoring) {
+        pushRoomHistoryState();
+      } else if (
+        history.state?.ccfoliaBgmView !==
+        "room"
+      ) {
+        history.replaceState(
+          {
+            ...(history.state || {}),
+            ccfoliaBgmView: "room"
+          },
+          "",
+          window.location.href
+        );
+      }
+
+      saveActiveRoomSession(
+        initialMaster
+          ? "master"
+          : "player"
+      );
 
       updateRoomHeader();
       updateRoleUi(initialMaster);
 
       setupPresence();
 
-      // 페이지를 새로 열 때마다 한 번은 사용자의 클릭을 받는다.
+      // 방 자체는 새로고침 후 자동 복귀하지만,
+      // 실제 음원은 브라우저 자동재생 정책 때문에 다시 한 번 클릭이 필요할 수 있다.
       audioActivated = false;
       showUnlockOverlay(
-        "브라우저의 자동재생 제한 때문에 입장 후 한 번의 클릭이 필요합니다."
+        restoring
+          ? "방에는 자동으로 복귀했습니다. BGM 재생은 한 번만 다시 활성화해 주세요."
+          : "브라우저의 자동재생 제한 때문에 입장 후 한 번의 클릭이 필요합니다."
       );
 
       subscribeRoom();
@@ -7547,6 +7916,17 @@
           "BGM 방 데이터가 삭제되었습니다."
         );
 
+        clearActiveRoomSession();
+
+        history.replaceState(
+          {
+            ...(history.state || {}),
+            ccfoliaBgmView: "entry"
+          },
+          "",
+          window.location.href
+        );
+
         window.location.reload();
 
       } catch (error) {
@@ -7653,12 +8033,42 @@
         }, 500);
     }
 
+    ensureInitialHistoryState();
+
+    window.addEventListener(
+      "popstate",
+      () => {
+        if (
+          history.state?.ccfoliaBgmView ===
+          "entry"
+        ) {
+          clearActiveRoomSession();
+
+          // Firebase/YouTube 실시간 리스너까지 확실히 정리하기 위해
+          // 로그인/목록 화면 상태에서 한 번 다시 로드한다.
+          window.location.reload();
+        }
+      }
+    );
+
     onAuthStateChanged(
       auth,
-      (user) => {
+      async (user) => {
         currentUser = user || null;
         updateAccountUi(user);
+
+        if (
+          history.state?.ccfoliaBgmView ===
+          "room"
+        ) {
+          await restoreActiveRoomAfterRefresh();
+        }
       }
+    );
+
+    backToSessionsButton.addEventListener(
+      "click",
+      returnToEntryViaHistory
     );
 
     addSessionFolderButton.addEventListener(
