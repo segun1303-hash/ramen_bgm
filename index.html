@@ -2682,7 +2682,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.9.1</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.9.2</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5686,15 +5686,27 @@
       autoplayBlocked = false;
       lastPlayerError = null;
 
-      applySavedVolume();
+      // 이 함수는 사용자가 'BGM 재생 활성화' 버튼을 직접 누른
+      // 클릭 이벤트에서 호출된다. 새로고침 뒤 YouTube iframe이
+      // muted 상태로 복원됐더라도 저장 음량이 1 이상이면 여기서
+      // 확실히 unMute()까지 적용한다.
+      applySavedVolume({
+        userInitiated: true
+      });
 
       hideUnlockOverlay();
       recoverPlayback.classList.add("hidden");
 
       setDiagnostics(
-        "BGM 활성화됨 · 룸 동기화 대기",
-        "ok"
+        desiredVolume > 0 && ytPlayer?.isMuted?.()
+          ? "BGM 활성화됨 · 음소거 상태 확인 필요"
+          : "BGM 활성화됨 · 룸 동기화 대기",
+        desiredVolume > 0 && ytPlayer?.isMuted?.()
+          ? "error"
+          : "ok"
       );
+
+      updateVolumeDiagnostics();
 
       if (!currentPlayback?.videoId) {
         playerStatus.textContent =
