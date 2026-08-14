@@ -4,116 +4,217 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CCFOLIA BGM</title>
+
   <style>
     :root {
       color-scheme: light;
       --bg: #f4f4f2;
       --panel: #ffffff;
-      --text: #1f1f1f;
+      --text: #20201f;
       --muted: #77756f;
-      --line: #e6e4df;
-      --button: #232323;
-      --button-text: #fff;
-      --soft: #f1f0ec;
+      --faint: #9a978f;
+      --line: #e5e3de;
+      --button: #242424;
+      --buttonText: #ffffff;
+      --soft: #f0efeb;
+      --soft2: #faf9f7;
       --danger: #b42318;
-      --success: #246b43;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
+      padding: 28px 18px;
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans KR",
+        sans-serif;
     }
+
+    button, input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .42;
+      cursor: default;
+    }
+
+    .shell {
+      width: min(920px, 100%);
+      margin: 0 auto;
+    }
+
     .card {
-      width: min(520px, 100%);
-      padding: 30px;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 20px;
-      box-shadow: 0 12px 34px rgba(0,0,0,.05);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, .045);
     }
+
+    .entry-card {
+      width: min(520px, 100%);
+      margin: 10vh auto 0;
+      padding: 30px;
+    }
+
     h1 {
-      margin: 0 0 8px;
-      font-size: 25px;
-      letter-spacing: -.02em;
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: -.025em;
     }
+
     .lead {
-      margin: 0 0 26px;
+      margin: 8px 0 26px;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.65;
     }
-    .field { margin-top: 16px; }
-    label {
+
+    .field {
+      margin-top: 16px;
+    }
+
+    label,
+    .field-label {
       display: block;
       margin-bottom: 8px;
       font-size: 13px;
       font-weight: 700;
     }
-    input {
+
+    input[type="url"],
+    input[type="text"],
+    input[type="password"] {
       width: 100%;
-      height: 46px;
+      min-height: 46px;
       padding: 0 14px;
       border: 1px solid #cbc9c3;
       border-radius: 11px;
       outline: none;
       background: #fff;
-      font: inherit;
+      color: var(--text);
       font-size: 14px;
     }
-    input:focus { border-color: #66635d; }
-    .role-grid {
+
+    input:focus {
+      border-color: #68655f;
+    }
+
+    .role-grid,
+    .button-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+
+    .role-grid {
+      grid-template-columns: 1fr 1fr;
       margin-top: 18px;
     }
-    button {
-      min-height: 46px;
+
+    .button-grid.two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .button-grid.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 0 14px;
       border: 0;
       border-radius: 11px;
-      padding: 0 15px;
-      font: inherit;
       font-size: 14px;
-      cursor: pointer;
     }
-    button:disabled {
-      opacity: .45;
-      cursor: default;
-    }
+
     .primary {
       background: var(--button);
-      color: var(--button-text);
+      color: var(--buttonText);
     }
+
     .secondary {
       background: var(--soft);
       color: var(--text);
       border: 1px solid var(--line);
     }
-    .hidden { display: none !important; }
-    .notice, .error {
-      margin-top: 14px;
+
+    .ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .error {
+      margin-top: 12px;
+      color: var(--danger);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notice {
+      margin-top: 12px;
+      color: var(--muted);
       font-size: 13px;
       line-height: 1.55;
     }
-    .notice { color: var(--muted); }
-    .error { color: var(--danger); }
-    .pin-box, .status {
+
+    .small {
+      margin-top: 7px;
+      color: var(--faint);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .pin-box {
       margin-top: 22px;
       padding-top: 22px;
       border-top: 1px solid var(--line);
     }
-    .pin-actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-      margin-top: 14px;
+
+    .app-card {
+      overflow: hidden;
     }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+    }
+
+    .room-line {
+      margin-top: 4px;
+      color: var(--faint);
+      font-size: 11px;
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -121,37 +222,226 @@
       padding: 0 10px;
       border-radius: 999px;
       background: var(--soft);
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .055em;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(300px, .92fr);
+    }
+
+    .pane {
+      padding: 22px;
+    }
+
+    .pane + .pane {
+      border-left: 1px solid var(--line);
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 13px;
+      font-weight: 900;
       letter-spacing: .04em;
     }
-    .status h2 {
-      margin: 12px 0 6px;
-      font-size: 18px;
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      min-height: 200px;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #111;
     }
-    .status p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
+
+    #youtubePlayer,
+    #youtubePlayer iframe {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .player-placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: #aaa;
+      text-align: center;
+      font-size: 13px;
       line-height: 1.6;
+      pointer-events: none;
     }
-    .room-id {
-      margin-top: 12px;
-      color: #99968f;
+
+    .unlock {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(0,0,0,.62);
+      z-index: 5;
+    }
+
+    .unlock button {
+      min-width: 160px;
+      min-height: 44px;
+      border: 0;
+      border-radius: 10px;
+      background: #fff;
+      color: #222;
+      font-weight: 800;
+    }
+
+    .track-info {
+      margin-top: 16px;
+    }
+
+    .track-label {
+      color: var(--faint);
       font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+
+    .track-title {
+      margin-top: 5px;
+      min-height: 24px;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .track-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
       word-break: break-all;
     }
-    .small {
-      margin-top: 8px;
-      color: #99968f;
+
+    .volume-row {
+      display: grid;
+      grid-template-columns: auto 1fr 44px;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .volume-row label {
+      margin: 0;
+      font-size: 12px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .volume-value,
+    .time-text {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      text-align: right;
+    }
+
+    .link-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .master-panel {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--soft2);
+    }
+
+    .master-panel + .master-panel {
+      margin-top: 14px;
+    }
+
+    .seek-wrap {
+      margin-top: 14px;
+    }
+
+    .seek-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+
+    .seek-head span:first-child {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-line {
+      min-height: 18px;
+      margin-top: 10px;
+      color: var(--muted);
       font-size: 12px;
       line-height: 1.5;
     }
+
+    .role-warning {
+      margin-bottom: 14px;
+      padding: 12px 13px;
+      border-radius: 11px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 760px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pane + .pane {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .entry-card {
+        margin-top: 4vh;
+      }
+    }
+
+    @media (max-width: 460px) {
+      body {
+        padding: 12px;
+      }
+
+      .entry-card,
+      .pane {
+        padding: 18px;
+      }
+
+      .role-grid,
+      .button-grid.two,
+      .button-grid.three,
+      .link-actions {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <main class="card">
-    <section id="entryView">
+  <div class="shell">
+
+    <section id="entryView" class="card entry-card">
       <h1>CCFOLIA BGM</h1>
       <p class="lead">
         코코포리아 룸 링크를 같은 BGM 방의 식별자로 사용합니다.
@@ -164,8 +454,8 @@
       </div>
 
       <div class="role-grid">
-        <button id="masterButton" class="primary">룸마스터로 입장</button>
-        <button id="playerButton" class="secondary">플레이어로 입장</button>
+        <button id="masterButton" class="btn primary">룸마스터로 입장</button>
+        <button id="playerButton" class="btn secondary">플레이어로 입장</button>
       </div>
 
       <div id="entryError" class="error"></div>
@@ -183,24 +473,114 @@
           <input id="pinConfirm" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="같은 PIN을 한 번 더 입력">
         </div>
 
-        <div class="pin-actions">
-          <button id="pinSubmit" class="primary">확인</button>
-          <button id="pinCancel" class="secondary">취소</button>
+        <div class="button-grid two" style="margin-top:14px;">
+          <button id="pinSubmit" class="btn primary">확인</button>
+          <button id="pinCancel" class="btn secondary">취소</button>
         </div>
 
         <div id="pinError" class="error"></div>
-        <div class="small">PIN 원문은 저장하지 않고 브라우저에서 SHA-256 해시로 바꿔 전송합니다.</div>
+        <div class="small">PIN 원문은 저장하지 않고 SHA-256 해시로 바꿔 전송합니다.</div>
       </section>
     </section>
 
-    <section id="statusView" class="status hidden">
-      <span id="roleBadge" class="badge"></span>
-      <h2 id="statusTitle"></h2>
-      <p id="statusMessage"></p>
-      <div id="masterState" class="notice"></div>
-      <div id="roomId" class="room-id"></div>
+    <section id="appView" class="card app-card hidden">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-title">CCFOLIA BGM</div>
+          <div id="roomLine" class="room-line"></div>
+        </div>
+        <span id="roleBadge" class="badge">PLAYER</span>
+      </header>
+
+      <div class="main-grid">
+
+        <section class="pane">
+          <h2 class="section-title">NOW PLAYING</h2>
+
+          <div class="video-frame">
+            <div id="youtubePlayer"></div>
+            <div id="playerPlaceholder" class="player-placeholder">
+              아직 재생 중인 BGM이 없습니다.
+            </div>
+            <div id="unlockOverlay" class="unlock hidden">
+              <button id="unlockButton">▶ BGM 듣기 시작</button>
+            </div>
+          </div>
+
+          <div class="track-info">
+            <div class="track-label">CURRENT TRACK</div>
+            <div id="trackTitle" class="track-title">재생 대기 중</div>
+            <div id="trackMeta" class="track-meta"></div>
+          </div>
+
+          <div class="volume-row">
+            <label for="volumeSlider">내 음량</label>
+            <input id="volumeSlider" type="range" min="0" max="100" step="1" value="70">
+            <span id="volumeValue" class="volume-value">70%</span>
+          </div>
+
+          <div class="link-actions">
+            <button id="openYoutube" class="btn secondary" disabled>원본 YouTube 열기</button>
+            <button id="copyYoutube" class="btn secondary" disabled>링크 복사</button>
+          </div>
+
+          <div id="playerStatus" class="status-line"></div>
+        </section>
+
+        <section class="pane">
+          <div id="playerOnlyPanel">
+            <h2 class="section-title">ROOM</h2>
+            <div id="playerRoleMessage" class="role-warning">
+              룸마스터가 선택한 BGM이 이 화면에 동기화됩니다.
+            </div>
+            <div class="notice">
+              재생/일시정지와 곡 변경은 룸마스터만 할 수 있습니다.
+              음량은 이 브라우저에만 적용됩니다.
+            </div>
+          </div>
+
+          <div id="masterControls" class="hidden">
+            <h2 class="section-title">MASTER CONTROL</h2>
+
+            <div id="masterRoleWarning" class="role-warning hidden">
+              마스터 권한이 다른 브라우저로 이전되어 PLAYER로 전환되었습니다.
+            </div>
+
+            <div class="master-panel">
+              <div class="field-label">YouTube 링크</div>
+              <input id="youtubeUrlInput" type="url" placeholder="https://www.youtube.com/watch?v=...">
+
+              <button id="loadAndPlayButton" class="btn primary" style="width:100%; margin-top:10px;">
+                이 곡 재생
+              </button>
+
+              <div id="masterError" class="error"></div>
+            </div>
+
+            <div class="master-panel">
+              <div class="button-grid three">
+                <button id="resumeButton" class="btn secondary" disabled>▶ 재생</button>
+                <button id="pauseButton" class="btn secondary" disabled>Ⅱ 일시정지</button>
+                <button id="restartButton" class="btn secondary" disabled>↺ 처음부터</button>
+              </div>
+
+              <div class="seek-wrap">
+                <div class="seek-head">
+                  <span>재생 위치</span>
+                  <span id="seekTimeText" class="time-text">00:00 / 00:00</span>
+                </div>
+                <input id="seekSlider" type="range" min="0" max="100" step="0.1" value="0" disabled>
+              </div>
+
+              <div id="masterStatus" class="status-line"></div>
+            </div>
+          </div>
+        </section>
+
+      </div>
     </section>
-  </main>
+
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
@@ -209,8 +589,10 @@
       getDatabase,
       ref,
       get,
+      set,
       update,
-      onValue
+      onValue,
+      serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
 
     const firebaseConfig = {
@@ -223,14 +605,14 @@
       appId: "1:690078808838:web:ae538f7f249de38168bc87"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+    const firebaseApp = initializeApp(firebaseConfig);
+    const auth = getAuth(firebaseApp);
+    const db = getDatabase(firebaseApp);
 
     const $ = (selector) => document.querySelector(selector);
 
     const entryView = $("#entryView");
-    const statusView = $("#statusView");
+    const appView = $("#appView");
     const roomUrlInput = $("#roomUrl");
     const masterButton = $("#masterButton");
     const playerButton = $("#playerButton");
@@ -245,18 +627,60 @@
     const pinCancel = $("#pinCancel");
     const pinError = $("#pinError");
 
+    const roomLine = $("#roomLine");
     const roleBadge = $("#roleBadge");
-    const statusTitle = $("#statusTitle");
-    const statusMessage = $("#statusMessage");
-    const masterState = $("#masterState");
-    const roomIdBox = $("#roomId");
+    const playerOnlyPanel = $("#playerOnlyPanel");
+    const playerRoleMessage = $("#playerRoleMessage");
+    const masterControls = $("#masterControls");
+    const masterRoleWarning = $("#masterRoleWarning");
+
+    const playerPlaceholder = $("#playerPlaceholder");
+    const unlockOverlay = $("#unlockOverlay");
+    const unlockButton = $("#unlockButton");
+    const trackTitle = $("#trackTitle");
+    const trackMeta = $("#trackMeta");
+    const volumeSlider = $("#volumeSlider");
+    const volumeValue = $("#volumeValue");
+    const openYoutube = $("#openYoutube");
+    const copyYoutube = $("#copyYoutube");
+    const playerStatus = $("#playerStatus");
+
+    const youtubeUrlInput = $("#youtubeUrlInput");
+    const loadAndPlayButton = $("#loadAndPlayButton");
+    const resumeButton = $("#resumeButton");
+    const pauseButton = $("#pauseButton");
+    const restartButton = $("#restartButton");
+    const seekSlider = $("#seekSlider");
+    const seekTimeText = $("#seekTimeText");
+    const masterStatus = $("#masterStatus");
+    const masterError = $("#masterError");
 
     let currentUser = null;
     let currentRoomId = null;
     let currentRoomCode = null;
-    let pendingMasterMode = null; // "setup" | "login"
+    let pendingMasterMode = null;
 
-    function setBusy(busy) {
+    let isMaster = false;
+    let serverOffsetMs = 0;
+
+    let ytPlayer = null;
+    let ytReady = false;
+    let ytApiReadyPromise = null;
+
+    let currentPlayback = null;
+    let currentYoutubeUrl = "";
+    let currentVideoId = "";
+    let applyingRemoteState = false;
+    let lastAppliedSignature = "";
+    let autoplayWasBlocked = false;
+
+    let seekUiTimer = null;
+
+    const savedVolume = Number(localStorage.getItem("ccfolia-bgm-volume") ?? "70");
+    volumeSlider.value = String(Number.isFinite(savedVolume) ? Math.min(100, Math.max(0, savedVolume)) : 70);
+    volumeValue.textContent = `${volumeSlider.value}%`;
+
+    function setEntryBusy(busy) {
       masterButton.disabled = busy;
       playerButton.disabled = busy;
       pinSubmit.disabled = busy;
@@ -270,8 +694,8 @@
         throw new Error("올바른 URL을 입력해 주세요.");
       }
 
-      const hostname = url.hostname.toLowerCase();
-      if (hostname !== "ccfolia.com" && hostname !== "www.ccfolia.com") {
+      const host = url.hostname.toLowerCase();
+      if (host !== "ccfolia.com" && host !== "www.ccfolia.com") {
         throw new Error("코코포리아 룸 링크만 사용할 수 있습니다.");
       }
 
@@ -279,14 +703,59 @@
       if (!match) {
         throw new Error("코코포리아 룸 주소 형식을 확인해 주세요.");
       }
+
       return match[1];
+    }
+
+    function extractYoutubeVideoId(value) {
+      const raw = value.trim();
+      if (!raw) return null;
+
+      if (/^[A-Za-z0-9_-]{11}$/.test(raw)) return raw;
+
+      let url;
+      try {
+        url = new URL(raw);
+      } catch {
+        return null;
+      }
+
+      const host = url.hostname.toLowerCase().replace(/^www\./, "");
+
+      if (host === "youtu.be") {
+        const id = url.pathname.split("/").filter(Boolean)[0];
+        return /^[A-Za-z0-9_-]{11}$/.test(id ?? "") ? id : null;
+      }
+
+      if (
+        host === "youtube.com" ||
+        host === "m.youtube.com" ||
+        host === "music.youtube.com"
+      ) {
+        const v = url.searchParams.get("v");
+        if (/^[A-Za-z0-9_-]{11}$/.test(v ?? "")) return v;
+
+        const parts = url.pathname.split("/").filter(Boolean);
+        const specialIndex = parts.findIndex((part) => ["embed", "shorts", "live"].includes(part));
+        if (specialIndex >= 0) {
+          const id = parts[specialIndex + 1];
+          if (/^[A-Za-z0-9_-]{11}$/.test(id ?? "")) return id;
+        }
+      }
+
+      return null;
+    }
+
+    function canonicalYoutubeUrl(videoId) {
+      return `https://www.youtube.com/watch?v=${videoId}`;
     }
 
     async function sha256(text) {
       const bytes = new TextEncoder().encode(text);
       const digest = await crypto.subtle.digest("SHA-256", bytes);
+
       return Array.from(new Uint8Array(digest))
-        .map((b) => b.toString(16).padStart(2, "0"))
+        .map((byte) => byte.toString(16).padStart(2, "0"))
         .join("");
     }
 
@@ -303,32 +772,8 @@
       }
     }
 
-    function showStatus(role, title, message) {
-      entryView.classList.add("hidden");
-      statusView.classList.remove("hidden");
-
-      roleBadge.textContent = role;
-      statusTitle.textContent = title;
-      statusMessage.textContent = message;
-      roomIdBox.textContent = `Room ID: ${currentRoomId.slice(0, 16)}…`;
-
-      window.ccfoliaBgmRoom = {
-        roomId: currentRoomId,
-        roomCode: currentRoomCode,
-        userUid: currentUser.uid,
-        role
-      };
-
-      const ownerRef = ref(db, `rooms/${currentRoomId}/ownerUid`);
-      onValue(ownerRef, (snapshot) => {
-        if (role === "MASTER") {
-          masterState.textContent = "현재 이 브라우저가 룸마스터 권한을 가지고 있습니다.";
-        } else {
-          masterState.textContent = snapshot.exists()
-            ? "룸마스터가 설정된 방입니다."
-            : "아직 룸마스터가 설정되지 않았습니다. 플레이어 상태로 기다릴 수 있습니다.";
-        }
-      });
+    function validatePin(pin) {
+      return /^[0-9]{4,12}$/.test(pin);
     }
 
     function openPin(mode) {
@@ -351,42 +796,29 @@
       pinInput.focus();
     }
 
-    function validatePin(pin) {
-      return /^[0-9]{4,12}$/.test(pin);
-    }
-
     async function enterAsPlayer() {
       try {
-        setBusy(true);
+        setEntryBusy(true);
         await prepareRoom();
-
-        showStatus(
-          "PLAYER",
-          "플레이어로 입장했습니다.",
-          "이 버전에서는 아직 BGM 기능 없이 방 연결과 권한만 확인합니다."
-        );
+        enterApplication(false);
       } catch (error) {
         console.error(error);
         entryError.textContent = error?.message ?? "입장 중 오류가 발생했습니다.";
       } finally {
-        setBusy(false);
+        setEntryBusy(false);
       }
     }
 
     async function beginMasterEntry() {
       try {
-        setBusy(true);
+        setEntryBusy(true);
         await prepareRoom();
 
         const ownerRef = ref(db, `rooms/${currentRoomId}/ownerUid`);
         const ownerSnapshot = await get(ownerRef);
 
         if (ownerSnapshot.exists() && ownerSnapshot.val() === currentUser.uid) {
-          showStatus(
-            "MASTER",
-            "룸마스터로 입장했습니다.",
-            "이 브라우저는 이미 이 방의 룸마스터 권한을 가지고 있습니다."
-          );
+          enterApplication(true);
           return;
         }
 
@@ -395,12 +827,13 @@
         console.error(error);
         entryError.textContent = error?.message ?? "입장 중 오류가 발생했습니다.";
       } finally {
-        setBusy(false);
+        setEntryBusy(false);
       }
     }
 
     async function submitPin() {
       pinError.textContent = "";
+
       const pin = pinInput.value.trim();
 
       if (!validatePin(pin)) {
@@ -414,7 +847,7 @@
       }
 
       try {
-        setBusy(true);
+        setEntryBusy(true);
 
         const pinHash = await sha256(`ccfolia-bgm-master:${currentRoomId}:${pin}`);
         const roomRef = ref(db, `rooms/${currentRoomId}`);
@@ -432,34 +865,480 @@
           });
         }
 
-        // 인증에만 쓴 proof는 성공 후 바로 제거한다.
         await update(roomRef, {
           "masterAuth/proof": null
         });
 
         pinBox.classList.add("hidden");
+        enterApplication(true);
 
-        showStatus(
-          "MASTER",
-          "룸마스터로 입장했습니다.",
-          pendingMasterMode === "setup"
-            ? "새 마스터 PIN이 설정되었습니다."
-            : "마스터 PIN 확인이 완료되었습니다."
-        );
       } catch (error) {
         console.error(error);
 
-        if (error?.code === "PERMISSION_DENIED" || String(error?.message).includes("PERMISSION_DENIED")) {
+        if (
+          error?.code === "PERMISSION_DENIED" ||
+          String(error?.message).includes("PERMISSION_DENIED")
+        ) {
           pinError.textContent =
             pendingMasterMode === "setup"
               ? "다른 사용자가 먼저 룸마스터를 설정했거나 권한 규칙이 맞지 않습니다."
-              : "PIN이 올바르지 않거나 권한 규칙이 맞지 않습니다.";
+              : "PIN이 올바르지 않습니다.";
         } else {
           pinError.textContent = error?.message ?? "마스터 인증 중 오류가 발생했습니다.";
         }
       } finally {
-        setBusy(false);
+        setEntryBusy(false);
       }
+    }
+
+    function updateRoleUi(master, wasDowngraded = false) {
+      isMaster = master;
+      roleBadge.textContent = master ? "MASTER" : "PLAYER";
+
+      if (master) {
+        masterControls.classList.remove("hidden");
+        playerOnlyPanel.classList.add("hidden");
+        masterRoleWarning.classList.add("hidden");
+      } else {
+        masterControls.classList.add("hidden");
+        playerOnlyPanel.classList.remove("hidden");
+
+        playerRoleMessage.textContent = wasDowngraded
+          ? "마스터 권한이 다른 브라우저로 이전되어 PLAYER로 전환되었습니다."
+          : "룸마스터가 선택한 BGM이 이 화면에 동기화됩니다.";
+      }
+    }
+
+    function enterApplication(initialMaster) {
+      isMaster = initialMaster;
+
+      entryView.classList.add("hidden");
+      appView.classList.remove("hidden");
+
+      roomLine.textContent = `Room ID ${currentRoomId.slice(0, 16)}…`;
+      updateRoleUi(initialMaster);
+
+      subscribeRoom();
+      ensureYoutubePlayer();
+      startSeekUiLoop();
+    }
+
+    function subscribeRoom() {
+      const ownerRef = ref(db, `rooms/${currentRoomId}/ownerUid`);
+
+      onValue(ownerRef, (snapshot) => {
+        const ownerUid = snapshot.val() ?? null;
+        const shouldBeMaster = ownerUid === currentUser.uid;
+
+        if (isMaster && !shouldBeMaster) {
+          updateRoleUi(false, true);
+        } else if (!isMaster && shouldBeMaster) {
+          updateRoleUi(true, false);
+        }
+      });
+
+      const playbackRef = ref(db, `rooms/${currentRoomId}/public/playback`);
+
+      onValue(playbackRef, (snapshot) => {
+        const state = snapshot.val() ?? null;
+        currentPlayback = state;
+
+        if (!state || !state.videoId) {
+          currentVideoId = "";
+          currentYoutubeUrl = "";
+          updateTrackUi();
+          return;
+        }
+
+        currentVideoId = state.videoId;
+        currentYoutubeUrl = state.url || canonicalYoutubeUrl(state.videoId);
+
+        updateTrackUi();
+        applyRemotePlayback(state);
+      });
+
+      const offsetRef = ref(db, ".info/serverTimeOffset");
+      onValue(offsetRef, (snapshot) => {
+        serverOffsetMs = Number(snapshot.val() ?? 0);
+      });
+    }
+
+    function serverNowMs() {
+      return Date.now() + serverOffsetMs;
+    }
+
+    function estimatePlaybackPosition(state) {
+      const base = Number(state.position ?? 0);
+
+      if (state.status !== "playing") {
+        return Math.max(0, base);
+      }
+
+      const updatedAt = Number(state.updatedAt ?? serverNowMs());
+      const elapsed = Math.max(0, (serverNowMs() - updatedAt) / 1000);
+
+      return Math.max(0, base + elapsed);
+    }
+
+    function loadYoutubeApi() {
+      if (ytApiReadyPromise) return ytApiReadyPromise;
+
+      ytApiReadyPromise = new Promise((resolve) => {
+        if (window.YT?.Player) {
+          resolve(window.YT);
+          return;
+        }
+
+        const existing = document.querySelector('script[data-ccfolia-youtube-api="1"]');
+
+        window.onYouTubeIframeAPIReady = () => {
+          resolve(window.YT);
+        };
+
+        if (!existing) {
+          const script = document.createElement("script");
+          script.src = "https://www.youtube.com/iframe_api";
+          script.dataset.ccfoliaYoutubeApi = "1";
+          document.head.appendChild(script);
+        }
+      });
+
+      return ytApiReadyPromise;
+    }
+
+    async function ensureYoutubePlayer() {
+      if (ytPlayer) return ytPlayer;
+
+      await loadYoutubeApi();
+
+      ytPlayer = new YT.Player("youtubePlayer", {
+        width: "100%",
+        height: "100%",
+        playerVars: {
+          playsinline: 1,
+          rel: 0
+        },
+        events: {
+          onReady: () => {
+            ytReady = true;
+            applySavedVolume();
+
+            if (currentPlayback?.videoId) {
+              applyRemotePlayback(currentPlayback, true);
+            }
+          },
+          onStateChange: () => {
+            refreshVideoMetadata();
+          },
+          onError: (event) => {
+            const code = Number(event.data);
+            const messages = {
+              2: "YouTube 영상 주소를 확인해 주세요.",
+              5: "이 영상은 HTML5 플레이어에서 재생할 수 없습니다.",
+              100: "삭제되었거나 비공개인 영상입니다.",
+              101: "이 영상은 외부 사이트에서 재생할 수 없습니다.",
+              150: "이 영상은 외부 사이트에서 재생할 수 없습니다."
+            };
+
+            playerStatus.textContent = messages[code] ?? `YouTube 재생 오류 (${code})`;
+          },
+          onAutoplayBlocked: () => {
+            autoplayWasBlocked = true;
+            unlockOverlay.classList.remove("hidden");
+            playerStatus.textContent = "브라우저가 자동재생을 막았습니다. BGM 듣기 시작을 한 번 눌러 주세요.";
+          }
+        }
+      });
+
+      return ytPlayer;
+    }
+
+    function applySavedVolume() {
+      if (!ytReady || !ytPlayer) return;
+
+      const volume = Number(volumeSlider.value);
+      ytPlayer.setVolume(volume);
+
+      if (volume <= 0) {
+        ytPlayer.mute();
+      } else {
+        ytPlayer.unMute();
+      }
+    }
+
+    function refreshVideoMetadata() {
+      if (!ytReady || !ytPlayer) return;
+
+      const data = ytPlayer.getVideoData?.() ?? {};
+      if (data.title) {
+        trackTitle.textContent = data.title;
+      } else if (currentVideoId) {
+        trackTitle.textContent = "YouTube BGM";
+      }
+
+      updateControlsEnabled();
+    }
+
+    async function applyRemotePlayback(state, force = false) {
+      if (!state?.videoId) return;
+
+      await ensureYoutubePlayer();
+      if (!ytReady) return;
+
+      const signature = [
+        state.videoId,
+        state.status,
+        Number(state.position ?? 0).toFixed(2),
+        state.updatedAt ?? 0
+      ].join("|");
+
+      if (!force && signature === lastAppliedSignature) {
+        return;
+      }
+
+      lastAppliedSignature = signature;
+      applyingRemoteState = true;
+
+      try {
+        const target = estimatePlaybackPosition(state);
+        const loadedId = ytPlayer.getVideoData?.().video_id ?? "";
+
+        if (loadedId !== state.videoId) {
+          if (state.status === "playing") {
+            ytPlayer.loadVideoById({
+              videoId: state.videoId,
+              startSeconds: target
+            });
+          } else {
+            ytPlayer.cueVideoById({
+              videoId: state.videoId,
+              startSeconds: target
+            });
+          }
+        } else {
+          const localPosition = Number(ytPlayer.getCurrentTime?.() ?? 0);
+          const drift = Math.abs(localPosition - target);
+
+          if (drift > 1.35) {
+            ytPlayer.seekTo(target, true);
+          }
+
+          if (state.status === "playing") {
+            ytPlayer.playVideo();
+          } else {
+            ytPlayer.pauseVideo();
+          }
+        }
+
+        playerPlaceholder.classList.add("hidden");
+        playerStatus.textContent =
+          state.status === "playing"
+            ? "룸마스터와 재생 위치를 동기화했습니다."
+            : "룸마스터가 BGM을 일시정지했습니다.";
+
+        setTimeout(refreshVideoMetadata, 450);
+
+      } finally {
+        setTimeout(() => {
+          applyingRemoteState = false;
+        }, 80);
+      }
+    }
+
+    function updateTrackUi() {
+      const hasTrack = Boolean(currentVideoId);
+
+      playerPlaceholder.classList.toggle("hidden", hasTrack);
+      openYoutube.disabled = !hasTrack;
+      copyYoutube.disabled = !hasTrack;
+
+      if (!hasTrack) {
+        trackTitle.textContent = "재생 대기 중";
+        trackMeta.textContent = "";
+        playerStatus.textContent = "";
+      } else {
+        trackTitle.textContent = "YouTube BGM";
+        trackMeta.textContent = currentYoutubeUrl;
+      }
+
+      updateControlsEnabled();
+    }
+
+    function updateControlsEnabled() {
+      const hasTrack = Boolean(currentVideoId);
+      const masterCanControl = isMaster && hasTrack;
+
+      resumeButton.disabled = !masterCanControl;
+      pauseButton.disabled = !masterCanControl;
+      restartButton.disabled = !masterCanControl;
+
+      const duration = ytReady ? Number(ytPlayer?.getDuration?.() ?? 0) : 0;
+      seekSlider.disabled = !masterCanControl || !(duration > 0);
+
+      if (duration > 0) {
+        seekSlider.max = String(duration);
+      }
+    }
+
+    async function writePlayback({ videoId, url, status, position }) {
+      if (!isMaster) {
+        throw new Error("현재 브라우저에는 룸마스터 권한이 없습니다.");
+      }
+
+      const playbackRef = ref(db, `rooms/${currentRoomId}/public/playback`);
+
+      await set(playbackRef, {
+        videoId,
+        url: url || canonicalYoutubeUrl(videoId),
+        status,
+        position: Math.max(0, Number(position ?? 0)),
+        updatedAt: serverTimestamp()
+      });
+    }
+
+    async function playNewYoutube() {
+      masterError.textContent = "";
+      masterStatus.textContent = "";
+
+      const videoId = extractYoutubeVideoId(youtubeUrlInput.value);
+
+      if (!videoId) {
+        masterError.textContent = "올바른 YouTube 영상 링크를 입력해 주세요.";
+        return;
+      }
+
+      try {
+        loadAndPlayButton.disabled = true;
+
+        await writePlayback({
+          videoId,
+          url: canonicalYoutubeUrl(videoId),
+          status: "playing",
+          position: 0
+        });
+
+        masterStatus.textContent = "새 BGM을 재생했습니다.";
+      } catch (error) {
+        console.error(error);
+        masterError.textContent = error?.message ?? "BGM 재생 중 오류가 발생했습니다.";
+      } finally {
+        loadAndPlayButton.disabled = false;
+      }
+    }
+
+    async function pausePlayback() {
+      if (!currentPlayback?.videoId) return;
+
+      try {
+        const position = ytReady
+          ? Number(ytPlayer.getCurrentTime?.() ?? estimatePlaybackPosition(currentPlayback))
+          : estimatePlaybackPosition(currentPlayback);
+
+        await writePlayback({
+          videoId: currentPlayback.videoId,
+          url: currentPlayback.url,
+          status: "paused",
+          position
+        });
+
+        masterStatus.textContent = "BGM을 일시정지했습니다.";
+      } catch (error) {
+        masterStatus.textContent = error?.message ?? "일시정지에 실패했습니다.";
+      }
+    }
+
+    async function resumePlayback() {
+      if (!currentPlayback?.videoId) return;
+
+      try {
+        const position = currentPlayback.status === "playing"
+          ? estimatePlaybackPosition(currentPlayback)
+          : Number(currentPlayback.position ?? 0);
+
+        await writePlayback({
+          videoId: currentPlayback.videoId,
+          url: currentPlayback.url,
+          status: "playing",
+          position
+        });
+
+        masterStatus.textContent = "BGM을 재생했습니다.";
+      } catch (error) {
+        masterStatus.textContent = error?.message ?? "재생에 실패했습니다.";
+      }
+    }
+
+    async function restartPlayback() {
+      if (!currentPlayback?.videoId) return;
+
+      try {
+        await writePlayback({
+          videoId: currentPlayback.videoId,
+          url: currentPlayback.url,
+          status: "playing",
+          position: 0
+        });
+
+        masterStatus.textContent = "처음부터 재생했습니다.";
+      } catch (error) {
+        masterStatus.textContent = error?.message ?? "처음부터 재생에 실패했습니다.";
+      }
+    }
+
+    async function seekPlayback(target) {
+      if (!currentPlayback?.videoId) return;
+
+      try {
+        await writePlayback({
+          videoId: currentPlayback.videoId,
+          url: currentPlayback.url,
+          status: currentPlayback.status === "playing" ? "playing" : "paused",
+          position: Math.max(0, Number(target))
+        });
+
+        masterStatus.textContent = "재생 위치를 변경했습니다.";
+      } catch (error) {
+        masterStatus.textContent = error?.message ?? "재생 위치 변경에 실패했습니다.";
+      }
+    }
+
+    function formatTime(seconds) {
+      const safe = Math.max(0, Math.floor(Number(seconds) || 0));
+      const h = Math.floor(safe / 3600);
+      const m = Math.floor((safe % 3600) / 60);
+      const s = safe % 60;
+
+      if (h > 0) {
+        return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+      }
+
+      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function startSeekUiLoop() {
+      if (seekUiTimer) clearInterval(seekUiTimer);
+
+      seekUiTimer = setInterval(() => {
+        if (!ytReady || !ytPlayer || !currentVideoId) {
+          seekTimeText.textContent = "00:00 / 00:00";
+          return;
+        }
+
+        const duration = Number(ytPlayer.getDuration?.() ?? 0);
+        const current = Number(ytPlayer.getCurrentTime?.() ?? 0);
+
+        if (duration > 0) {
+          seekSlider.max = String(duration);
+
+          if (document.activeElement !== seekSlider) {
+            seekSlider.value = String(Math.min(duration, Math.max(0, current)));
+          }
+
+          seekTimeText.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        }
+
+        updateControlsEnabled();
+      }, 500);
     }
 
     masterButton.addEventListener("click", beginMasterEntry);
@@ -479,8 +1358,68 @@
     pinInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") submitPin();
     });
+
     pinConfirm.addEventListener("keydown", (event) => {
       if (event.key === "Enter") submitPin();
+    });
+
+    volumeSlider.addEventListener("input", () => {
+      volumeValue.textContent = `${volumeSlider.value}%`;
+      localStorage.setItem("ccfolia-bgm-volume", volumeSlider.value);
+      applySavedVolume();
+    });
+
+    openYoutube.addEventListener("click", () => {
+      if (!currentYoutubeUrl) return;
+      window.open(currentYoutubeUrl, "_blank", "noopener,noreferrer");
+    });
+
+    copyYoutube.addEventListener("click", async () => {
+      if (!currentYoutubeUrl) return;
+
+      try {
+        await navigator.clipboard.writeText(currentYoutubeUrl);
+        playerStatus.textContent = "YouTube 링크를 복사했습니다.";
+      } catch {
+        playerStatus.textContent = "링크 복사에 실패했습니다. 원본 YouTube 열기를 이용해 주세요.";
+      }
+    });
+
+    unlockButton.addEventListener("click", async () => {
+      autoplayWasBlocked = false;
+      unlockOverlay.classList.add("hidden");
+
+      await ensureYoutubePlayer();
+      applySavedVolume();
+
+      if (currentPlayback?.videoId) {
+        const target = estimatePlaybackPosition(currentPlayback);
+
+        if ((ytPlayer.getVideoData?.().video_id ?? "") !== currentPlayback.videoId) {
+          ytPlayer.loadVideoById({
+            videoId: currentPlayback.videoId,
+            startSeconds: target
+          });
+        } else {
+          ytPlayer.seekTo(target, true);
+          ytPlayer.playVideo();
+        }
+
+        playerStatus.textContent = "BGM 재생을 허용했습니다.";
+      }
+    });
+
+    loadAndPlayButton.addEventListener("click", playNewYoutube);
+    resumeButton.addEventListener("click", resumePlayback);
+    pauseButton.addEventListener("click", pausePlayback);
+    restartButton.addEventListener("click", restartPlayback);
+
+    youtubeUrlInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") playNewYoutube();
+    });
+
+    seekSlider.addEventListener("change", () => {
+      seekPlayback(Number(seekSlider.value));
     });
   </script>
 </body>
