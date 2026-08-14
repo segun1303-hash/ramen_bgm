@@ -2637,7 +2637,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.8</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.8.1</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -4492,22 +4492,43 @@
 
         await prepareRoom();
 
-        let restoreAsMaster = false;
+        const ownerSnapshot =
+          await get(
+            ref(
+              db,
+              `rooms/${currentRoomId}/ownerUid`
+            )
+          );
 
-        if (saved.role === "master") {
-          const ownerSnapshot =
-            await get(
-              ref(
-                db,
-                `rooms/${currentRoomId}/ownerUid`
-              )
-            );
+        if (!ownerSnapshot.exists()) {
+          clearActiveRoomSession();
 
-          restoreAsMaster =
-            ownerSnapshot.exists() &&
-            ownerSnapshot.val() ===
-              currentUser.uid;
+          history.replaceState(
+            {
+              ...(history.state || {}),
+              ccfoliaBgmView: "entry"
+            },
+            "",
+            window.location.href
+          );
+
+          entryView.classList.remove(
+            "hidden"
+          );
+
+          appView.classList.add(
+            "hidden"
+          );
+
+          entryError.textContent =
+            "이 방은 존재하지 않습니다. 룸마스터가 삭제했거나 아직 생성하지 않은 방입니다.";
+          return;
         }
+
+        const restoreAsMaster =
+          saved.role === "master" &&
+          ownerSnapshot.val() ===
+            currentUser.uid;
 
         enterApplication(
           restoreAsMaster,
@@ -4614,6 +4635,21 @@
       try {
         setEntryBusy(true);
         await prepareRoom();
+
+        const ownerSnapshot =
+          await get(
+            ref(
+              db,
+              `rooms/${currentRoomId}/ownerUid`
+            )
+          );
+
+        if (!ownerSnapshot.exists()) {
+          entryError.textContent =
+            "아직 룸마스터가 생성하지 않은 방입니다. 룸마스터가 먼저 방을 만든 뒤 입장해 주세요.";
+          return;
+        }
+
         enterApplication(false);
       } catch (error) {
         console.error(error);
