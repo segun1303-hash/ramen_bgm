@@ -2859,6 +2859,109 @@
       }
     }
 
+  
+    /* =========================================================
+       v3.12.4 dark-mode readability patch
+       ========================================================= */
+
+    html[data-theme="dark"] {
+      --panel: #21211f;
+      --panel2: #2a2a27;
+      --soft: #2d2d29;
+      --soft2: #262623;
+      --line: #4b4a44;
+      --line-strong: #66655d;
+      --muted: #cac7bd;
+      --faint: #a7a397;
+    }
+
+    html[data-theme="dark"] .version-text,
+    html[data-theme="dark"] .playlist-count,
+    html[data-theme="dark"] .account-label,
+    html[data-theme="dark"] .person-role,
+    html[data-theme="dark"] .room-subtext,
+    html[data-theme="dark"] .memo-preview,
+    html[data-theme="dark"] .diagnostics {
+      color: var(--faint);
+    }
+
+    html[data-theme="dark"] .status-line,
+    html[data-theme="dark"] .master-transfer-copy,
+    html[data-theme="dark"] .danger-copy,
+    html[data-theme="dark"] .field-hint,
+    html[data-theme="dark"] .pin-help,
+    html[data-theme="dark"] .playlist-public-title,
+    html[data-theme="dark"] .track-url {
+      color: var(--muted);
+    }
+
+    html[data-theme="dark"] input::placeholder,
+    html[data-theme="dark"] textarea::placeholder {
+      color: #938f85;
+    }
+
+    html[data-theme="dark"] .master-tab {
+      color: #c9c6bc;
+    }
+
+    html[data-theme="dark"] .master-tab.active {
+      background: #f0eee8;
+      color: #1d1d1b;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, .16);
+    }
+
+    html[data-theme="dark"] .folder-chip,
+    html[data-theme="dark"] .playlist-add-toggle,
+    html[data-theme="dark"] select.folder-select,
+    html[data-theme="dark"] textarea.memo-input {
+      background: #242421;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] .folder-chip {
+      color: var(--muted);
+    }
+
+    html[data-theme="dark"] .folder-chip.active {
+      background: #eceae4;
+      color: #1d1d1b;
+      border-color: #eceae4;
+    }
+
+    html[data-theme="dark"] .person-row {
+      background: #2a2a27;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] .person-name {
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .playlist-private-title,
+    html[data-theme="dark"] .folder-current,
+    html[data-theme="dark"] .section-title,
+    html[data-theme="dark"] .brand-title {
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .session-row {
+      border-color: var(--line);
+    }
+
+    html[data-theme="dark"] .mini-btn:disabled,
+    html[data-theme="dark"] .btn:disabled {
+      color: #8d897f;
+      border-color: #4e4d47;
+      background: #262623;
+    }
+
+    html[data-theme="dark"] .delete-room-card .status-line,
+    html[data-theme="dark"] .danger-zone .status-line {
+      color: #d9b2aa;
+    }
+
   </style>
 </head>
 
@@ -2993,7 +3096,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.12.3</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.13</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -3611,6 +3714,7 @@
     let detachedPlaylistWindow = null;
     let detachedPlaylistMode = null;
     let detachedSelectedFolderId = UNFILED_FOLDER_ID;
+    let detachedPlaybackUiTimer = null;
 
     let selectedFolderId = UNFILED_FOLDER_ID;
     let activeMasterTab = "playlist";
@@ -5714,6 +5818,7 @@
             "00:00 / 00:00";
 
           updateTrackUi();
+          renderDetachedPlaylist();
           return;
         }
 
@@ -5754,6 +5859,7 @@
         }
 
         updateTrackUi();
+        renderDetachedPlaylist();
 
         // 활성화 전에는 영상을 미리 cue만 해 둔다.
         // 활성화 후에는 룸 상태를 실제 플레이어에 적용한다.
@@ -7875,6 +7981,15 @@
     }
 
     function closeDetachedPlaylistWindow() {
+      if (detachedPlaybackUiTimer) {
+        clearInterval(
+          detachedPlaybackUiTimer
+        );
+
+        detachedPlaybackUiTimer =
+          null;
+      }
+
       if (!detachedWindowIsOpen()) {
         detachedPlaylistWindow = null;
         detachedPlaylistMode = null;
@@ -8160,9 +8275,98 @@
           line-height: 1.4;
         }
 
+
+        .pip-now {
+          display: grid;
+          gap: 8px;
+        }
+
+        .pip-now-title {
+          overflow: hidden;
+          font-size: 13px;
+          font-weight: 820;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-now-public {
+          overflow: hidden;
+          color: var(--muted);
+          font-size: 10px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-controls {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 6px;
+        }
+
+        .pip-controls .pip-btn {
+          min-width: 0;
+          padding: 0 6px;
+          font-size: 10px;
+        }
+
+        .pip-controls .pip-btn:disabled {
+          opacity: .45;
+          cursor: default;
+        }
+
+        .pip-seek {
+          display: grid;
+          gap: 5px;
+        }
+
+        .pip-seek-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          color: var(--muted);
+          font-size: 9px;
+        }
+
+        .pip-seek input[type="range"] {
+          width: 100%;
+          min-height: 18px;
+          padding: 0;
+          accent-color: var(--accent);
+        }
+
+        .pip-operations {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 10px;
+          min-width: 0;
+        }
+
+        .pip-quick {
+          display: grid;
+          gap: 6px;
+        }
+
+        .pip-quick .pip-btn {
+          min-height: 38px;
+        }
+
+        .pip-section-note {
+          margin-top: -3px;
+          margin-bottom: 6px;
+          color: var(--muted);
+          font-size: 9px;
+          line-height: 1.45;
+        }
+
         @media (min-width: 620px) {
           body {
             padding: 14px;
+          }
+
+          .pip-operations {
+            grid-template-columns: minmax(220px, .92fr) minmax(250px, 1.08fr);
+            align-items: start;
           }
 
           .pip-grid {
@@ -8354,6 +8558,289 @@
       }
     }
 
+    async function quickPlayFromDetachedWindow(
+      publicTitle,
+      rawUrl,
+      statusElement
+    ) {
+      if (
+        !isMaster ||
+        !currentRoomId
+      ) {
+        statusElement.textContent =
+          "현재 MASTER가 아닙니다.";
+        return;
+      }
+
+      const videoId =
+        extractYoutubeVideoId(
+          String(rawUrl || "").trim()
+        );
+
+      if (!videoId) {
+        statusElement.textContent =
+          "올바른 YouTube 링크를 입력해 주세요.";
+        return;
+      }
+
+      try {
+        statusElement.textContent =
+          "재생하는 중…";
+
+        suppressMasterVideoEvents(
+          1200
+        );
+
+        await writePlayback({
+          videoId,
+          url:
+            canonicalYoutubeUrl(
+              videoId
+            ),
+          status:
+            "playing",
+          position:
+            0,
+          publicTitle:
+            String(
+              publicTitle || ""
+            ).trim() ||
+            "BGM",
+          trackId:
+            null
+        });
+
+        masterStatus.textContent =
+          "퀵 플레이 BGM을 재생했습니다.";
+
+        statusElement.textContent =
+          "재생했습니다.";
+
+      } catch (error) {
+        console.error(
+          "detached quick play failed",
+          error
+        );
+
+        statusElement.textContent =
+          error?.message ??
+          "퀵 플레이에 실패했습니다.";
+      }
+    }
+
+    function detachedPlaybackDuration() {
+      if (
+        ytReady &&
+        ytPlayer
+      ) {
+        try {
+          const duration =
+            Number(
+              ytPlayer.getDuration?.() ??
+              0
+            );
+
+          if (
+            Number.isFinite(duration) &&
+            duration > 0
+          ) {
+            return duration;
+          }
+        } catch {}
+      }
+
+      return 0;
+    }
+
+    function updateDetachedPlaybackUi() {
+      if (!detachedWindowIsOpen()) {
+        return;
+      }
+
+      const doc =
+        detachedPlaylistWindow.document;
+
+      const title =
+        doc.getElementById(
+          "pipNowTitle"
+        );
+
+      const publicTitle =
+        doc.getElementById(
+          "pipNowPublic"
+        );
+
+      const play =
+        doc.getElementById(
+          "pipResumeButton"
+        );
+
+      const pause =
+        doc.getElementById(
+          "pipPauseButton"
+        );
+
+      const restart =
+        doc.getElementById(
+          "pipRestartButton"
+        );
+
+      const seek =
+        doc.getElementById(
+          "pipSeek"
+        );
+
+      const time =
+        doc.getElementById(
+          "pipSeekTime"
+        );
+
+      if (!title) {
+        return;
+      }
+
+      const hasTrack =
+        Boolean(
+          currentPlayback?.videoId
+        );
+
+      title.textContent =
+        hasTrack
+          ? (
+              currentPlayback.trackId &&
+              playlistData[
+                currentPlayback.trackId
+              ]?.privateTitle
+                ? playlistData[
+                    currentPlayback.trackId
+                  ].privateTitle
+                : currentPlayback.publicTitle ||
+                  "현재 BGM"
+            )
+          : "재생 대기 중";
+
+      publicTitle.textContent =
+        hasTrack
+          ? `공개: ${currentPlayback.publicTitle || "(비어 있음)"}`
+          : "아직 재생 중인 BGM이 없습니다.";
+
+      if (play) {
+        play.disabled =
+          !hasTrack ||
+          currentPlayback.status ===
+            "playing";
+      }
+
+      if (pause) {
+        pause.disabled =
+          !hasTrack ||
+          currentPlayback.status !==
+            "playing";
+      }
+
+      if (restart) {
+        restart.disabled =
+          !hasTrack;
+      }
+
+      if (
+        !seek ||
+        !time
+      ) {
+        return;
+      }
+
+      const current =
+        hasTrack
+          ? estimatePlaybackPosition(
+              currentPlayback
+            )
+          : 0;
+
+      const duration =
+        detachedPlaybackDuration();
+
+      const isDragging =
+        seek.dataset.dragging ===
+        "true";
+
+      if (duration > 0) {
+        seek.disabled =
+          !hasTrack;
+
+        seek.min =
+          "0";
+
+        seek.max =
+          String(duration);
+
+        if (!isDragging) {
+          seek.value =
+            String(
+              Math.min(
+                duration,
+                Math.max(
+                  0,
+                  current
+                )
+              )
+            );
+        }
+
+        time.textContent =
+          `${formatTime(current)} / ${formatTime(duration)}`;
+
+      } else {
+        seek.disabled =
+          true;
+
+        seek.min =
+          "0";
+
+        seek.max =
+          "100";
+
+        if (!isDragging) {
+          seek.value =
+            "0";
+        }
+
+        time.textContent =
+          hasTrack
+            ? `${formatTime(current)} / --:--`
+            : "00:00 / 00:00";
+      }
+    }
+
+    function startDetachedPlaybackUiLoop() {
+      if (detachedPlaybackUiTimer) {
+        clearInterval(
+          detachedPlaybackUiTimer
+        );
+      }
+
+      detachedPlaybackUiTimer =
+        setInterval(
+          () => {
+            if (
+              !detachedWindowIsOpen()
+            ) {
+              clearInterval(
+                detachedPlaybackUiTimer
+              );
+
+              detachedPlaybackUiTimer =
+                null;
+
+              return;
+            }
+
+            updateDetachedPlaybackUi();
+          },
+          400
+        );
+    }
+
     function renderDetachedPlaylist() {
       if (
         !detachedWindowIsOpen()
@@ -8384,7 +8871,7 @@
           "pip-card pip-empty";
 
         card.textContent =
-          "MASTER 권한이 없어 분리 플레이리스트를 사용할 수 없습니다.";
+          "MASTER 권한이 없어 분리 컨트롤러를 사용할 수 없습니다.";
 
         root.appendChild(card);
         return;
@@ -8403,6 +8890,8 @@
 
       root.replaceChildren();
 
+      /* ---------- header ---------- */
+
       const head =
         doc.createElement("div");
 
@@ -8419,7 +8908,7 @@
         "pip-title";
 
       title.textContent =
-        "PLAYLIST · MASTER";
+        "BGM CONTROLLER · MASTER";
 
       const subtitle =
         doc.createElement("div");
@@ -8428,7 +8917,7 @@
         "pip-subtitle";
 
       subtitle.textContent =
-        `${currentRoomName || "이름 없는 방"} · 별도 플레이리스트 관리창`;
+        `${currentRoomName || "이름 없는 방"} · 플레이리스트 / 퀵 플레이 / 재생 제어`;
 
       titleWrap.append(
         title,
@@ -8451,7 +8940,393 @@
         badge
       );
 
-      root.appendChild(head);
+      root.appendChild(
+        head
+      );
+
+      /* ---------- playback + quick play ---------- */
+
+      const operations =
+        doc.createElement("div");
+
+      operations.className =
+        "pip-operations";
+
+      const nowCard =
+        doc.createElement("section");
+
+      nowCard.className =
+        "pip-card pip-now";
+
+      const nowHeading =
+        doc.createElement("div");
+
+      nowHeading.className =
+        "pip-card-title";
+
+      nowHeading.textContent =
+        "NOW PLAYING";
+
+      const nowTitle =
+        doc.createElement("div");
+
+      nowTitle.id =
+        "pipNowTitle";
+
+      nowTitle.className =
+        "pip-now-title";
+
+      const nowPublic =
+        doc.createElement("div");
+
+      nowPublic.id =
+        "pipNowPublic";
+
+      nowPublic.className =
+        "pip-now-public";
+
+      const controlRow =
+        doc.createElement("div");
+
+      controlRow.className =
+        "pip-controls";
+
+      const resumeButton =
+        doc.createElement("button");
+
+      resumeButton.id =
+        "pipResumeButton";
+
+      resumeButton.className =
+        "pip-btn";
+
+      resumeButton.textContent =
+        "▶ 재생";
+
+      resumeButton.addEventListener(
+        "click",
+        async () => {
+          resumeButton.disabled =
+            true;
+
+          await resumePlayback();
+
+          updateDetachedPlaybackUi();
+        }
+      );
+
+      const pauseButton =
+        doc.createElement("button");
+
+      pauseButton.id =
+        "pipPauseButton";
+
+      pauseButton.className =
+        "pip-btn";
+
+      pauseButton.textContent =
+        "Ⅱ 일시정지";
+
+      pauseButton.addEventListener(
+        "click",
+        async () => {
+          pauseButton.disabled =
+            true;
+
+          await pausePlayback();
+
+          updateDetachedPlaybackUi();
+        }
+      );
+
+      const restartButton =
+        doc.createElement("button");
+
+      restartButton.id =
+        "pipRestartButton";
+
+      restartButton.className =
+        "pip-btn";
+
+      restartButton.textContent =
+        "↺ 처음부터";
+
+      restartButton.addEventListener(
+        "click",
+        async () => {
+          restartButton.disabled =
+            true;
+
+          await restartPlayback();
+
+          updateDetachedPlaybackUi();
+        }
+      );
+
+      controlRow.append(
+        resumeButton,
+        pauseButton,
+        restartButton
+      );
+
+      const seekWrap =
+        doc.createElement("div");
+
+      seekWrap.className =
+        "pip-seek";
+
+      const seekHead =
+        doc.createElement("div");
+
+      seekHead.className =
+        "pip-seek-head";
+
+      const seekLabel =
+        doc.createElement("span");
+
+      seekLabel.textContent =
+        "재생 위치";
+
+      const seekTime =
+        doc.createElement("span");
+
+      seekTime.id =
+        "pipSeekTime";
+
+      seekTime.textContent =
+        "00:00 / 00:00";
+
+      seekHead.append(
+        seekLabel,
+        seekTime
+      );
+
+      const seek =
+        doc.createElement("input");
+
+      seek.id =
+        "pipSeek";
+
+      seek.type =
+        "range";
+
+      seek.min =
+        "0";
+
+      seek.max =
+        "100";
+
+      seek.value =
+        "0";
+
+      seek.disabled =
+        true;
+
+      seek.dataset.dragging =
+        "false";
+
+      seek.addEventListener(
+        "pointerdown",
+        () => {
+          seek.dataset.dragging =
+            "true";
+        }
+      );
+
+      seek.addEventListener(
+        "input",
+        () => {
+          seek.dataset.dragging =
+            "true";
+
+          const duration =
+            Number(
+              seek.max || 0
+            );
+
+          const preview =
+            Number(
+              seek.value || 0
+            );
+
+          seekTime.textContent =
+            `${formatTime(preview)} / ${duration > 0 ? formatTime(duration) : "--:--"}`;
+        }
+      );
+
+      const finishSeek =
+        () => {
+          seek.dataset.dragging =
+            "false";
+        };
+
+      seek.addEventListener(
+        "pointerup",
+        finishSeek
+      );
+
+      seek.addEventListener(
+        "pointercancel",
+        finishSeek
+      );
+
+      seek.addEventListener(
+        "blur",
+        finishSeek
+      );
+
+      seek.addEventListener(
+        "change",
+        async () => {
+          const target =
+            Number(
+              seek.value || 0
+            );
+
+          seek.dataset.dragging =
+            "false";
+
+          await seekPlayback(
+            target
+          );
+
+          updateDetachedPlaybackUi();
+        }
+      );
+
+      seekWrap.append(
+        seekHead,
+        seek
+      );
+
+      nowCard.append(
+        nowHeading,
+        nowTitle,
+        nowPublic,
+        controlRow,
+        seekWrap
+      );
+
+      const quickCard =
+        doc.createElement("section");
+
+      quickCard.className =
+        "pip-card";
+
+      const quickHeading =
+        doc.createElement("div");
+
+      quickHeading.className =
+        "pip-card-title";
+
+      quickHeading.textContent =
+        "QUICK PLAY";
+
+      const quickNote =
+        doc.createElement("div");
+
+      quickNote.className =
+        "pip-section-note";
+
+      quickNote.textContent =
+        "플레이리스트에 저장하지 않고 바로 재생합니다.";
+
+      const quickWrap =
+        doc.createElement("div");
+
+      quickWrap.className =
+        "pip-quick";
+
+      const quickPublic =
+        doc.createElement("input");
+
+      quickPublic.type =
+        "text";
+
+      quickPublic.maxLength =
+        80;
+
+      quickPublic.placeholder =
+        "플레이어에게 보일 공개 제목";
+
+      const quickUrl =
+        doc.createElement("input");
+
+      quickUrl.type =
+        "url";
+
+      quickUrl.placeholder =
+        "YouTube 링크";
+
+      const quickButton =
+        doc.createElement("button");
+
+      quickButton.className =
+        "pip-btn primary";
+
+      quickButton.textContent =
+        "▶ 이 곡 바로 재생";
+
+      const quickStatus =
+        doc.createElement("div");
+
+      quickStatus.className =
+        "pip-status";
+
+      quickButton.addEventListener(
+        "click",
+        async () => {
+          quickButton.disabled =
+            true;
+
+          await quickPlayFromDetachedWindow(
+            quickPublic.value,
+            quickUrl.value,
+            quickStatus
+          );
+
+          quickButton.disabled =
+            false;
+        }
+      );
+
+      quickUrl.addEventListener(
+        "keydown",
+        (event) => {
+          if (
+            event.key ===
+            "Enter"
+          ) {
+            event.preventDefault();
+
+            quickButton.click();
+          }
+        }
+      );
+
+      quickWrap.append(
+        quickPublic,
+        quickUrl,
+        quickButton,
+        quickStatus
+      );
+
+      quickCard.append(
+        quickHeading,
+        quickNote,
+        quickWrap
+      );
+
+      operations.append(
+        nowCard,
+        quickCard
+      );
+
+      root.appendChild(
+        operations
+      );
+
+      /* ---------- folders ---------- */
 
       const folderStrip =
         doc.createElement("div");
@@ -8515,6 +9390,8 @@
         folderStrip
       );
 
+      /* ---------- playlist add + playlist ---------- */
+
       const grid =
         doc.createElement("div");
 
@@ -8534,7 +9411,16 @@
         "pip-card-title";
 
       addTitle.textContent =
-        `빠른 추가 · ${folderName(detachedSelectedFolderId)}`;
+        `PLAYLIST에 추가 · ${folderName(detachedSelectedFolderId)}`;
+
+      const addNote =
+        doc.createElement("div");
+
+      addNote.className =
+        "pip-section-note";
+
+      addNote.textContent =
+        "현재 선택한 폴더에 저장만 합니다.";
 
       const addWrap =
         doc.createElement("div");
@@ -8628,6 +9514,7 @@
             "Enter"
           ) {
             event.preventDefault();
+
             addButton.click();
           }
         }
@@ -8643,6 +9530,7 @@
 
       addCard.append(
         addTitle,
+        addNote,
         addWrap
       );
 
@@ -8782,13 +9670,13 @@
         doc.createElement("span");
 
       left.textContent =
-        "재생·빠른 추가 전용";
+        "재생 제어 · 퀵 플레이 · 플레이리스트";
 
       const right =
         doc.createElement("span");
 
       right.textContent =
-        "제목/메모/삭제/순서 변경은 메인 화면에서";
+        "편집/메모/삭제/순서 변경은 메인 화면에서";
 
       footer.append(
         left,
@@ -8798,6 +9686,8 @@
       root.appendChild(
         footer
       );
+
+      updateDetachedPlaybackUi();
     }
 
     async function openDetachedPlaylistWindow() {
@@ -8813,6 +9703,7 @@
         } catch {}
 
         renderDetachedPlaylist();
+        startDetachedPlaybackUiLoop();
         return;
       }
 
@@ -8848,6 +9739,15 @@
 
               detachedPlaylistMode =
                 null;
+
+              if (detachedPlaybackUiTimer) {
+                clearInterval(
+                  detachedPlaybackUiTimer
+                );
+
+                detachedPlaybackUiTimer =
+                  null;
+              }
             },
             {
               once: true
@@ -8886,6 +9786,15 @@
 
               detachedPlaylistMode =
                 null;
+
+              if (detachedPlaybackUiTimer) {
+                clearInterval(
+                  detachedPlaybackUiTimer
+                );
+
+                detachedPlaybackUiTimer =
+                  null;
+              }
             },
             {
               once: true
@@ -8894,6 +9803,7 @@
         }
 
         renderDetachedPlaylist();
+        startDetachedPlaybackUiLoop();
 
       } catch (error) {
         console.error(
