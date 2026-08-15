@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="ko">
 <head>
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CCFOLIA BGM</title>
@@ -4229,6 +4231,49 @@
     html[data-theme="dark"] .listen-queue-row.current{background:#30302c;border-color:var(--line-strong)}
     @media(max-width:520px){.listen-source-tabs{grid-template-columns:1fr}.listen-queue-row{grid-template-columns:1fr}.listen-queue-actions{justify-content:flex-end}}
 
+  
+    /* =========================================================
+       v3.23.3 LISTEN TOGETHER loading polish
+       ========================================================= */
+
+    .listen-video-frame .player-placeholder {
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(20, 20, 19, .96),
+          rgba(12, 12, 12, .98)
+        );
+      color: rgba(255, 255, 255, .72);
+      font-size: 10px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .listen-video-frame .player-placeholder.hidden {
+      display: none;
+    }
+
+    .listen-video-frame .player-placeholder.loading::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      margin-bottom: 9px;
+      border: 2px solid rgba(255, 255, 255, .22);
+      border-top-color: rgba(255, 255, 255, .78);
+      border-radius: 50%;
+      animation: listen-loading-spin .8s linear infinite;
+    }
+
+    @keyframes listen-loading-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
   </style>
 </head>
 
@@ -4575,7 +4620,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.23.1</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.23.3</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5400,6 +5445,7 @@
     let listenHostHeartbeatAt = 0;
     let listenLastHostVideoId = "";
     let listenLastHostIndex = -1;
+    let listenQueueAdvanceInProgress = false;
 
     let ytPlayer = null;
     let ytReady = false;
@@ -10848,6 +10894,9 @@
       listenLastHostIndex =
         -1;
 
+      listenQueueAdvanceInProgress =
+        false;
+
       await set(
         ref(
           db,
@@ -11032,6 +11081,19 @@
         if (
           direction > 0
         ) {
+          if (
+            listenPlayerReady &&
+            listenPlayer
+          ) {
+            try {
+              listenSuppressEventsUntil =
+                Date.now() +
+                500;
+
+              listenPlayer.pauseVideo();
+            } catch {}
+          }
+
           await commitListenPlayback(
             "paused"
           );
@@ -11308,6 +11370,102 @@
       );
     }
 
+    function showListenPlayerPlaceholder(
+      message,
+      {
+        loading =
+          false
+      } = {}
+    ) {
+      listenPlayerPlaceholder.textContent =
+        message;
+
+      listenPlayerPlaceholder.classList.remove(
+        "hidden"
+      );
+
+      listenPlayerPlaceholder.classList.toggle(
+        "loading",
+        loading
+      );
+    }
+
+    function hideListenPlayerPlaceholder() {
+      listenPlayerPlaceholder.classList.add(
+        "hidden"
+      );
+
+      listenPlayerPlaceholder.classList.remove(
+        "loading"
+      );
+    }
+
+    function updateListenPlayerVisualState(
+      state
+    ) {
+      if (
+        !listenPlayback ||
+        listenPlayback.mode ===
+          "idle"
+      ) {
+        return;
+      }
+
+      if (
+        state ===
+          YT.PlayerState.CUED ||
+        state ===
+          YT.PlayerState.BUFFERING ||
+        state ===
+          YT.PlayerState.PLAYING ||
+        state ===
+          YT.PlayerState.PAUSED
+      ) {
+        hideListenPlayerPlaceholder();
+      }
+    }
+
+    async function prewarmListenPlayer() {
+      if (
+        listenPlayerReady ||
+        listenPlayerReadyPromise
+      ) {
+        return;
+      }
+
+      try {
+        showListenPlayerPlaceholder(
+          "YouTube 플레이어 준비 중…",
+          {
+            loading:
+              true
+          }
+        );
+
+        await ensureListenPlayer();
+
+        if (
+          !listenPlayback ||
+          listenPlayback.mode ===
+            "idle"
+        ) {
+          showListenPlayerPlaceholder(
+            "HOST가 아직 음악을 선택하지 않았습니다."
+          );
+        }
+
+      } catch (error) {
+        console.error(
+          "listen player prewarm failed",
+          error
+        );
+
+        showListenPlayerPlaceholder(
+          "YouTube 플레이어를 준비하지 못했습니다."
+        );
+      }
+    }
+
     async function ensureListenPlayer() {
       if (
         listenPlayerReady &&
@@ -11390,6 +11548,11 @@
                         onStateChange:
                           (event) => {
                             updateListenVideoMetadata();
+
+                            updateListenPlayerVisualState(
+                              event.data
+                            );
+
                             handleListenPlayerStateChange(
                               event.data
                             );
@@ -11452,8 +11615,8 @@
         state.mode ===
           "idle"
       ) {
-        listenPlayerPlaceholder.classList.remove(
-          "hidden"
+        showListenPlayerPlaceholder(
+          "HOST가 아직 음악을 선택하지 않았습니다."
         );
 
         listenTrackTitle.textContent =
@@ -11465,8 +11628,12 @@
         return;
       }
 
-      listenPlayerPlaceholder.classList.add(
-        "hidden"
+      showListenPlayerPlaceholder(
+        "YouTube 영상을 불러오는 중…",
+        {
+          loading:
+            true
+        }
       );
 
       const player =
@@ -11625,8 +11792,19 @@
       }
 
       window.setTimeout(
-        updateListenVideoMetadata,
-        350
+        () => {
+          updateListenVideoMetadata();
+
+          try {
+            const currentState =
+              player.getPlayerState?.();
+
+            updateListenPlayerVisualState(
+              currentState
+            );
+          } catch {}
+        },
+        250
       );
     }
 
@@ -11763,16 +11941,91 @@
         Date.now();
     }
 
+    async function handleListenQueueEnded() {
+      if (
+        !listenIsHost ||
+        listenPlayback?.mode !==
+          "queue" ||
+        listenQueueAdvanceInProgress
+      ) {
+        return;
+      }
+
+      listenQueueAdvanceInProgress =
+        true;
+
+      try {
+        if (
+          listenPlayback.loop
+        ) {
+          await restartListenQueueLoop();
+        } else {
+          await hostMoveListenQueue(
+            1
+          );
+        }
+      } finally {
+        window.setTimeout(
+          () => {
+            listenQueueAdvanceInProgress =
+              false;
+          },
+          700
+        );
+      }
+    }
+
     function handleListenPlayerStateChange(
       state
     ) {
       if (
         !listenIsHost ||
-        Date.now() <
-          listenSuppressEventsUntil ||
         !listenPlayback ||
         listenPlayback.mode ===
           "idle"
+      ) {
+        return;
+      }
+
+      /*
+       * ENDED is never suppressed.
+       *
+       * Playback snapshots from Firebase deliberately suppress the
+       * PLAYING/PAUSED events caused by our own load/seek commands.
+       * In v3.23.1 that same suppression also discarded ENDED.
+       * If a track happened to finish during that window, automatic
+       * queue advance was permanently missed.
+       */
+      if (
+        state ===
+          YT.PlayerState.ENDED
+      ) {
+        if (
+          listenPlayback.mode ===
+          "queue"
+        ) {
+          handleListenQueueEnded()
+            .catch(
+              console.error
+            );
+
+        } else if (
+          listenPlayback.mode ===
+          "video"
+        ) {
+          commitListenPlayback(
+            "paused"
+          ).catch(
+            console.error
+          );
+        }
+
+        return;
+      }
+
+      if (
+        Date.now() <
+        listenSuppressEventsUntil
       ) {
         return;
       }
@@ -11790,39 +12043,6 @@
       } else if (
         state ===
         YT.PlayerState.PAUSED
-      ) {
-        commitListenPlayback(
-          "paused"
-        ).catch(
-          console.error
-        );
-
-      } else if (
-        state ===
-          YT.PlayerState.ENDED &&
-        listenPlayback.mode ===
-          "queue"
-      ) {
-        if (
-          listenPlayback.loop
-        ) {
-          restartListenQueueLoop()
-            .catch(
-              console.error
-            );
-        } else {
-          hostMoveListenQueue(
-            1
-          ).catch(
-            console.error
-          );
-        }
-
-      } else if (
-        state ===
-          YT.PlayerState.ENDED &&
-        listenPlayback.mode ===
-          "video"
       ) {
         commitListenPlayback(
           "paused"
@@ -12211,6 +12431,23 @@
             }
 
             try {
+              const playerState =
+                listenPlayer.getPlayerState?.();
+
+              if (
+                listenPlayback.mode ===
+                  "queue" &&
+                playerState ===
+                  YT.PlayerState.ENDED
+              ) {
+                handleListenQueueEnded()
+                  .catch(
+                    console.error
+                  );
+
+                return;
+              }
+
               const data =
                 listenPlayer.getVideoData?.() ||
                 {};
@@ -12447,6 +12684,13 @@
 
       listenHostHeartbeatAt =
         0;
+
+      listenQueueAdvanceInProgress =
+        false;
+
+      showListenPlayerPlaceholder(
+        "HOST가 아직 음악을 선택하지 않았습니다."
+      );
     }
 
     async function subscribeListenRoom(
@@ -12735,6 +12979,13 @@
 
       showListenView();
 
+      /*
+       * Prepare the YouTube iframe as soon as the room opens.
+       * This does not start audio, but removes most of the first-play
+       * API/iframe initialization delay from the user's actual play action.
+       */
+      prewarmListenPlayer();
+
       const participantRef =
         ref(
           db,
@@ -12957,6 +13208,10 @@
 
         listenJoinGate.classList.remove(
           "hidden"
+        );
+
+        showListenPlayerPlaceholder(
+          "입장 후 YouTube 플레이어를 준비합니다."
         );
 
         showListenView();
