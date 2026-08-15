@@ -2962,6 +2962,71 @@
       color: #d9b2aa;
     }
 
+  
+    /* =========================================================
+       v3.14 memo dark-mode readability
+       ========================================================= */
+
+    html[data-theme="dark"] .playlist-memo-panel,
+    html[data-theme="dark"] .track-memo-panel {
+      background: #262623;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] .track-memo-panel {
+      border-top-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] .memo-view,
+    html[data-theme="dark"] .large-memo-input,
+    html[data-theme="dark"] textarea.memo-input {
+      background: #1d1d1b;
+      color: #f0eee8;
+      border-color: #66655d;
+    }
+
+    html[data-theme="dark"] .memo-view.empty {
+      color: #aaa69b;
+    }
+
+    html[data-theme="dark"] .large-memo-input::placeholder,
+    html[data-theme="dark"] textarea.memo-input::placeholder {
+      color: #8f8b81;
+    }
+
+    html[data-theme="dark"] .large-memo-input:focus,
+    html[data-theme="dark"] textarea.memo-input:focus {
+      border-color: #aaa69b;
+    }
+
+    html[data-theme="dark"] .memo-mode-label,
+    html[data-theme="dark"] .track-memo-title {
+      color: #f0eee8;
+    }
+
+    html[data-theme="dark"] .track-memo-status {
+      color: #c4c0b5;
+    }
+
+    html[data-theme="dark"] .playlist-memo-toggle {
+      background: #292926;
+      color: #eeeae2;
+      border-color: #57564f;
+    }
+
+    html[data-theme="dark"] .memo-mode-actions .mini-btn,
+    html[data-theme="dark"] .track-memo-panel .mini-btn {
+      background: #343430;
+      color: #f0eee8;
+      border-color: #64635b;
+    }
+
+    html[data-theme="dark"] .memo-mode-actions .mini-btn:hover,
+    html[data-theme="dark"] .track-memo-panel .mini-btn:hover {
+      background: #403f3a;
+    }
+
   </style>
 </head>
 
@@ -3096,7 +3161,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.13</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.14</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -3715,6 +3780,15 @@
     let detachedPlaylistMode = null;
     let detachedSelectedFolderId = UNFILED_FOLDER_ID;
     let detachedPlaybackUiTimer = null;
+
+    const detachedPanelState = {
+      now: true,
+      quick: false,
+      add: false,
+      playlist: true
+    };
+
+    let detachedMemoTarget = null;
 
     let selectedFolderId = UNFILED_FOLDER_ID;
     let activeMasterTab = "playlist";
@@ -5818,7 +5892,7 @@
             "00:00 / 00:00";
 
           updateTrackUi();
-          renderDetachedPlaylist();
+          updateDetachedPlaybackUi();
           return;
         }
 
@@ -5859,7 +5933,7 @@
         }
 
         updateTrackUi();
-        renderDetachedPlaylist();
+        updateDetachedPlaybackUi();
 
         // 활성화 전에는 영상을 미리 cue만 해 둔다.
         // 활성화 후에는 룸 상태를 실제 플레이어에 적용한다.
@@ -8018,9 +8092,12 @@
           --bg: #f3f2ef;
           --panel: #ffffff;
           --panel2: #f7f6f3;
+          --panel3: #efeee9;
           --line: #d8d6d0;
+          --lineStrong: #bcb9b0;
           --text: #282724;
           --muted: #77736b;
+          --faint: #99958d;
           --accent: #282724;
           --accentText: #ffffff;
           --danger: #a4473e;
@@ -8031,9 +8108,12 @@
           --bg: #171716;
           --panel: #222220;
           --panel2: #292927;
-          --line: #41413b;
-          --text: #eeeeea;
-          --muted: #aaa9a1;
+          --panel3: #30302d;
+          --line: #4a4943;
+          --lineStrong: #64635b;
+          --text: #f0eee8;
+          --muted: #c5c1b7;
+          --faint: #9f9b91;
           --accent: #eceae4;
           --accentText: #20201e;
           --danger: #e18e84;
@@ -8058,7 +8138,7 @@
         }
 
         body {
-          padding: 12px;
+          padding: 9px;
           overflow: auto;
         }
 
@@ -8068,40 +8148,200 @@
           font: inherit;
         }
 
+        button {
+          color: inherit;
+        }
+
         .pip-shell {
           display: grid;
-          gap: 10px;
+          gap: 7px;
           min-width: 0;
         }
 
         .pip-head {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
           justify-content: space-between;
-          gap: 10px;
+          gap: 8px;
+          min-width: 0;
+          padding: 1px 1px 3px;
+        }
+
+        .pip-head-main {
+          min-width: 0;
         }
 
         .pip-title {
-          font-size: 15px;
+          overflow: hidden;
+          font-size: 13px;
           font-weight: 850;
           letter-spacing: -.02em;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .pip-subtitle {
-          margin-top: 3px;
+          margin-top: 2px;
+          overflow: hidden;
           color: var(--muted);
-          font-size: 10px;
-          line-height: 1.45;
+          font-size: 9px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .pip-badge {
           flex: 0 0 auto;
-          padding: 5px 7px;
+          padding: 4px 6px;
           border: 1px solid var(--line);
           border-radius: 999px;
+          color: var(--faint);
+          font-size: 8px;
+          font-weight: 750;
+        }
+
+        .pip-section {
+          min-width: 0;
+          border: 1px solid var(--line);
+          border-radius: 9px;
+          background: var(--panel);
+          overflow: hidden;
+        }
+
+        .pip-section-toggle {
+          display: flex;
+          width: 100%;
+          min-height: 32px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          padding: 0 9px;
+          border: 0;
+          background: var(--panel);
+          color: var(--text);
+          cursor: pointer;
+          text-align: left;
+        }
+
+        .pip-section-toggle:hover {
+          background: var(--panel2);
+        }
+
+        .pip-section-label {
+          min-width: 0;
+          overflow: hidden;
+          font-size: 10px;
+          font-weight: 850;
+          letter-spacing: .035em;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-section-summary {
+          min-width: 0;
+          overflow: hidden;
           color: var(--muted);
           font-size: 9px;
-          font-weight: 750;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-section-chevron {
+          flex: 0 0 auto;
+          color: var(--faint);
+          font-size: 10px;
+        }
+
+        .pip-section-body {
+          display: grid;
+          gap: 7px;
+          padding: 8px;
+          border-top: 1px solid var(--line);
+        }
+
+        .pip-section-body.hidden {
+          display: none;
+        }
+
+        .pip-now-title {
+          overflow: hidden;
+          font-size: 12px;
+          font-weight: 820;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-now-public {
+          overflow: hidden;
+          color: var(--muted);
+          font-size: 9px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-controls {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 5px;
+        }
+
+        .pip-btn,
+        .pip-icon-btn {
+          min-height: 32px;
+          padding: 0 8px;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel2);
+          color: var(--text);
+          cursor: pointer;
+          font-size: 9px;
+          font-weight: 760;
+        }
+
+        .pip-btn:hover,
+        .pip-icon-btn:hover {
+          background: var(--panel3);
+        }
+
+        .pip-btn:disabled,
+        .pip-icon-btn:disabled {
+          opacity: .42;
+          cursor: default;
+        }
+
+        .pip-btn.primary {
+          background: var(--accent);
+          color: var(--accentText);
+          border-color: var(--accent);
+        }
+
+        .pip-control-icon {
+          font-size: 12px;
+          line-height: 1;
+        }
+
+        .pip-control-text {
+          margin-left: 3px;
+        }
+
+        .pip-seek {
+          display: grid;
+          gap: 4px;
+        }
+
+        .pip-seek-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          color: var(--muted);
+          font-size: 8px;
+        }
+
+        .pip-seek input[type="range"] {
+          width: 100%;
+          min-height: 16px;
+          padding: 0;
+          accent-color: var(--accent);
         }
 
         .pip-folders {
@@ -8109,19 +8349,20 @@
           gap: 5px;
           min-width: 0;
           overflow-x: auto;
-          padding-bottom: 3px;
+          padding: 1px 0 2px;
+          scrollbar-width: thin;
         }
 
         .pip-folder {
           flex: 0 0 auto;
-          min-height: 32px;
-          padding: 0 10px;
+          min-height: 29px;
+          padding: 0 9px;
           border: 1px solid var(--line);
           border-radius: 999px;
           background: var(--panel);
           color: var(--muted);
-          font-size: 11px;
-          font-weight: 700;
+          font-size: 9px;
+          font-weight: 720;
           white-space: nowrap;
           cursor: pointer;
         }
@@ -8132,105 +8373,66 @@
           border-color: var(--accent);
         }
 
-        .pip-grid {
+        .pip-input-grid {
           display: grid;
-          grid-template-columns: minmax(0, 1fr);
-          gap: 10px;
-          min-width: 0;
-        }
-
-        .pip-card {
-          min-width: 0;
-          padding: 10px;
-          border: 1px solid var(--line);
-          border-radius: 11px;
-          background: var(--panel);
-        }
-
-        .pip-card-title {
-          margin-bottom: 8px;
-          font-size: 10px;
-          font-weight: 800;
-          color: var(--muted);
-          letter-spacing: .04em;
-        }
-
-        .pip-add {
-          display: grid;
-          gap: 6px;
-        }
-
-        .pip-add-row {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr);
-          gap: 6px;
+          gap: 5px;
         }
 
         input {
           width: 100%;
           min-width: 0;
-          min-height: 36px;
-          padding: 0 9px;
+          min-height: 33px;
+          padding: 0 8px;
           border: 1px solid var(--line);
-          border-radius: 8px;
+          border-radius: 7px;
           background: var(--panel2);
           color: var(--text);
+          font-size: 10px;
         }
 
         input::placeholder {
-          color: var(--muted);
-        }
-
-        .pip-btn {
-          min-height: 34px;
-          padding: 0 10px;
-          border: 1px solid var(--line);
-          border-radius: 8px;
-          background: var(--panel2);
-          color: var(--text);
-          cursor: pointer;
-          font-size: 10px;
-          font-weight: 750;
-        }
-
-        .pip-btn.primary {
-          background: var(--accent);
-          color: var(--accentText);
-          border-color: var(--accent);
+          color: var(--faint);
         }
 
         .pip-status {
-          min-height: 14px;
+          min-height: 12px;
           color: var(--muted);
-          font-size: 9px;
+          font-size: 8px;
+          line-height: 1.35;
+        }
+
+        .pip-note {
+          color: var(--muted);
+          font-size: 8px;
           line-height: 1.4;
         }
 
         .pip-list {
           display: grid;
-          gap: 6px;
+          gap: 4px;
           min-width: 0;
-          max-height: min(58vh, 620px);
+          max-height: min(54vh, 520px);
           overflow-y: auto;
-          padding-right: 2px;
+          padding-right: 1px;
+          scrollbar-width: thin;
         }
 
         .pip-empty {
-          padding: 18px 8px;
+          padding: 13px 7px;
           color: var(--muted);
-          font-size: 10px;
+          font-size: 9px;
           text-align: center;
         }
 
         .pip-track {
           display: grid;
           grid-template-columns: minmax(0, 1fr) auto;
-          gap: 8px;
+          gap: 6px;
           align-items: center;
           min-width: 0;
-          padding: 8px;
+          padding: 6px 7px;
           border: 1px solid var(--line);
-          border-radius: 9px;
+          border-radius: 8px;
           background: var(--panel2);
         }
 
@@ -8240,14 +8442,110 @@
 
         .pip-track-private {
           overflow: hidden;
-          font-size: 11px;
+          color: var(--text);
+          font-size: 10px;
           font-weight: 780;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
 
         .pip-track-public {
-          margin-top: 2px;
+          margin-top: 1px;
+          overflow: hidden;
+          color: var(--muted);
+          font-size: 8px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-track-actions {
+          display: flex;
+          flex: 0 0 auto;
+          gap: 4px;
+        }
+
+        .pip-track-actions .pip-icon-btn {
+          width: 31px;
+          min-height: 29px;
+          padding: 0;
+        }
+
+        .pip-memo-button.has-memo {
+          border-color: var(--lineStrong);
+          color: var(--text);
+        }
+
+        .pip-memo-button.empty-memo {
+          color: var(--faint);
+        }
+
+        .pip-memo-drawer {
+          display: grid;
+          gap: 6px;
+          padding: 8px 9px;
+          border: 1px solid var(--lineStrong);
+          border-radius: 9px;
+          background: var(--panel);
+        }
+
+        .pip-memo-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+
+        .pip-memo-title {
+          min-width: 0;
+          overflow: hidden;
+          font-size: 10px;
+          font-weight: 820;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-memo-close {
+          flex: 0 0 auto;
+          width: 28px;
+          min-height: 26px;
+          padding: 0;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel2);
+          color: var(--text);
+          cursor: pointer;
+          font-size: 11px;
+        }
+
+        .pip-memo-content {
+          max-height: 180px;
+          overflow-y: auto;
+          padding: 8px;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel2);
+          color: var(--text);
+          font-size: 10px;
+          line-height: 1.55;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+        }
+
+        .pip-memo-content.empty {
+          color: var(--muted);
+          font-style: italic;
+        }
+
+        .pip-toolbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 6px;
+          min-width: 0;
+        }
+
+        .pip-toolbar-main {
+          min-width: 0;
           overflow: hidden;
           color: var(--muted);
           font-size: 9px;
@@ -8255,145 +8553,95 @@
           white-space: nowrap;
         }
 
-        .pip-play {
-          width: 36px;
-          min-height: 34px;
-          border: 1px solid var(--line);
-          border-radius: 8px;
-          background: var(--panel);
-          color: var(--text);
-          cursor: pointer;
-          font-weight: 800;
+        .pip-toolbar-actions {
+          display: flex;
+          flex: 0 0 auto;
+          gap: 4px;
         }
 
         .pip-footer {
           display: flex;
           justify-content: space-between;
           gap: 8px;
-          color: var(--muted);
-          font-size: 9px;
-          line-height: 1.4;
+          color: var(--faint);
+          font-size: 8px;
+          line-height: 1.35;
         }
 
-
-        .pip-now {
-          display: grid;
-          gap: 8px;
-        }
-
-        .pip-now-title {
-          overflow: hidden;
-          font-size: 13px;
-          font-weight: 820;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .pip-now-public {
-          overflow: hidden;
-          color: var(--muted);
-          font-size: 10px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .pip-controls {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 6px;
-        }
-
-        .pip-controls .pip-btn {
-          min-width: 0;
-          padding: 0 6px;
-          font-size: 10px;
-        }
-
-        .pip-controls .pip-btn:disabled {
-          opacity: .45;
-          cursor: default;
-        }
-
-        .pip-seek {
-          display: grid;
-          gap: 5px;
-        }
-
-        .pip-seek-head {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-          color: var(--muted);
-          font-size: 9px;
-        }
-
-        .pip-seek input[type="range"] {
-          width: 100%;
-          min-height: 18px;
-          padding: 0;
-          accent-color: var(--accent);
-        }
-
-        .pip-operations {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr);
-          gap: 10px;
-          min-width: 0;
-        }
-
-        .pip-quick {
-          display: grid;
-          gap: 6px;
-        }
-
-        .pip-quick .pip-btn {
-          min-height: 38px;
-        }
-
-        .pip-section-note {
-          margin-top: -3px;
-          margin-bottom: 6px;
-          color: var(--muted);
-          font-size: 9px;
-          line-height: 1.45;
-        }
-
-        @media (min-width: 620px) {
+        @media (max-width: 430px) {
           body {
-            padding: 14px;
+            padding: 7px;
           }
 
-          .pip-operations {
-            grid-template-columns: minmax(220px, .92fr) minmax(250px, 1.08fr);
+          .pip-badge {
+            display: none;
+          }
+
+          .pip-subtitle {
+            display: none;
+          }
+
+          .pip-control-text {
+            display: none;
+          }
+
+          .pip-controls .pip-btn {
+            min-height: 34px;
+            padding: 0;
+          }
+
+          .pip-control-icon {
+            font-size: 14px;
+          }
+
+          .pip-section-body {
+            padding: 7px;
+          }
+        }
+
+        @media (min-width: 640px) {
+          body {
+            padding: 10px;
+          }
+
+          .pip-shell {
+            grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
             align-items: start;
           }
 
-          .pip-grid {
-            grid-template-columns: minmax(190px, .78fr) minmax(280px, 1.22fr);
-            align-items: start;
+          .pip-head,
+          .pip-folders,
+          .pip-memo-drawer,
+          .pip-footer {
+            grid-column: 1 / -1;
           }
 
-          .pip-add-row {
-            grid-template-columns: 1fr;
+          .pip-section[data-panel="now"],
+          .pip-section[data-panel="quick"] {
+            grid-column: span 1;
+          }
+
+          .pip-section[data-panel="add"],
+          .pip-section[data-panel="playlist"] {
+            grid-column: span 1;
           }
 
           .pip-list {
-            max-height: min(72vh, 760px);
+            max-height: min(68vh, 700px);
           }
         }
 
-        @media (min-width: 900px) {
-          .pip-grid {
-            grid-template-columns: minmax(240px, .72fr) minmax(420px, 1.28fr);
+        @media (min-width: 920px) {
+          .pip-shell {
+            grid-template-columns: minmax(260px, .72fr) minmax(420px, 1.28fr);
           }
 
           .pip-title {
-            font-size: 17px;
+            font-size: 14px;
           }
 
           .pip-track-private {
-            font-size: 12px;
+            font-size: 11px;
           }
         }
       `;
@@ -8841,6 +9089,257 @@
         );
     }
 
+    function detachedPanelOpen(key) {
+      return detachedPanelState[key] !== false;
+    }
+
+    function toggleDetachedPanel(key) {
+      detachedPanelState[key] =
+        !detachedPanelOpen(key);
+
+      renderDetachedPlaylist();
+    }
+
+    function setDetachedMemoTarget(target) {
+      if (
+        target &&
+        detachedMemoTarget &&
+        target.type === detachedMemoTarget.type &&
+        target.id === detachedMemoTarget.id
+      ) {
+        detachedMemoTarget = null;
+      } else {
+        detachedMemoTarget = target;
+      }
+
+      renderDetachedPlaylist();
+    }
+
+    function detachedMemoData() {
+      if (!detachedMemoTarget) {
+        return null;
+      }
+
+      if (
+        detachedMemoTarget.type ===
+        "playlist"
+      ) {
+        return {
+          title:
+            "플레이리스트 전체 메모",
+          content:
+            String(
+              playlistMemo || ""
+            )
+        };
+      }
+
+      if (
+        detachedMemoTarget.type ===
+        "track"
+      ) {
+        const track =
+          playlistData[
+            detachedMemoTarget.id
+          ];
+
+        if (!track) {
+          return null;
+        }
+
+        return {
+          title:
+            `${track.privateTitle || "(제목 없음)"} · BGM 메모`,
+          content:
+            String(
+              track.memo || ""
+            )
+        };
+      }
+
+      return null;
+    }
+
+    function makeDetachedSection(
+      doc,
+      {
+        key,
+        label,
+        summary = ""
+      }
+    ) {
+      const section =
+        doc.createElement("section");
+
+      section.className =
+        "pip-section";
+
+      section.dataset.panel =
+        key;
+
+      const toggle =
+        doc.createElement("button");
+
+      toggle.className =
+        "pip-section-toggle";
+
+      toggle.type =
+        "button";
+
+      const left =
+        doc.createElement("div");
+
+      left.style.minWidth =
+        "0";
+
+      const labelEl =
+        doc.createElement("div");
+
+      labelEl.className =
+        "pip-section-label";
+
+      labelEl.textContent =
+        label;
+
+      const summaryEl =
+        doc.createElement("div");
+
+      summaryEl.className =
+        "pip-section-summary";
+
+      summaryEl.textContent =
+        summary;
+
+      left.append(
+        labelEl,
+        summaryEl
+      );
+
+      const chevron =
+        doc.createElement("span");
+
+      chevron.className =
+        "pip-section-chevron";
+
+      chevron.textContent =
+        detachedPanelOpen(key)
+          ? "▾"
+          : "▸";
+
+      toggle.append(
+        left,
+        chevron
+      );
+
+      toggle.addEventListener(
+        "click",
+        () => {
+          toggleDetachedPanel(
+            key
+          );
+        }
+      );
+
+      const body =
+        doc.createElement("div");
+
+      body.className =
+        `pip-section-body${detachedPanelOpen(key) ? "" : " hidden"}`;
+
+      section.append(
+        toggle,
+        body
+      );
+
+      return {
+        section,
+        body
+      };
+    }
+
+    function renderDetachedMemoDrawer(
+      doc,
+      root
+    ) {
+      const memo =
+        detachedMemoData();
+
+      if (!memo) {
+        return;
+      }
+
+      const drawer =
+        doc.createElement("section");
+
+      drawer.className =
+        "pip-memo-drawer";
+
+      const head =
+        doc.createElement("div");
+
+      head.className =
+        "pip-memo-head";
+
+      const title =
+        doc.createElement("div");
+
+      title.className =
+        "pip-memo-title";
+
+      title.textContent =
+        memo.title;
+
+      const close =
+        doc.createElement("button");
+
+      close.className =
+        "pip-memo-close";
+
+      close.type =
+        "button";
+
+      close.textContent =
+        "×";
+
+      close.title =
+        "메모 닫기";
+
+      close.addEventListener(
+        "click",
+        () => {
+          detachedMemoTarget =
+            null;
+
+          renderDetachedPlaylist();
+        }
+      );
+
+      head.append(
+        title,
+        close
+      );
+
+      const content =
+        doc.createElement("div");
+
+      content.className =
+        `pip-memo-content${memo.content.trim() ? "" : " empty"}`;
+
+      content.textContent =
+        memo.content.trim()
+          ? memo.content
+          : "저장된 메모가 없습니다.";
+
+      drawer.append(
+        head,
+        content
+      );
+
+      root.appendChild(
+        drawer
+      );
+    }
+
     function renderDetachedPlaylist() {
       if (
         !detachedWindowIsOpen()
@@ -8862,13 +9361,13 @@
       if (!root) return;
 
       if (!isMaster) {
-        root.innerHTML = "";
+        root.replaceChildren();
 
         const card =
           doc.createElement("div");
 
         card.className =
-          "pip-card pip-empty";
+          "pip-section pip-empty";
 
         card.textContent =
           "MASTER 권한이 없어 분리 컨트롤러를 사용할 수 없습니다.";
@@ -8888,18 +9387,31 @@
           UNFILED_FOLDER_ID;
       }
 
+      if (
+        detachedMemoTarget?.type ===
+        "track" &&
+        !playlistData[
+          detachedMemoTarget.id
+        ]
+      ) {
+        detachedMemoTarget =
+          null;
+      }
+
       root.replaceChildren();
 
-      /* ---------- header ---------- */
-
+      /* header */
       const head =
-        doc.createElement("div");
+        doc.createElement("header");
 
       head.className =
         "pip-head";
 
-      const titleWrap =
+      const headMain =
         doc.createElement("div");
+
+      headMain.className =
+        "pip-head-main";
 
       const title =
         doc.createElement("div");
@@ -8908,7 +9420,7 @@
         "pip-title";
 
       title.textContent =
-        "BGM CONTROLLER · MASTER";
+        "BGM CONTROLLER";
 
       const subtitle =
         doc.createElement("div");
@@ -8917,9 +9429,10 @@
         "pip-subtitle";
 
       subtitle.textContent =
-        `${currentRoomName || "이름 없는 방"} · 플레이리스트 / 퀵 플레이 / 재생 제어`;
+        currentRoomName ||
+        "이름 없는 방";
 
-      titleWrap.append(
+      headMain.append(
         title,
         subtitle
       );
@@ -8931,12 +9444,13 @@
         "pip-badge";
 
       badge.textContent =
-        detachedPlaylistMode === "pip"
-          ? "PICTURE IN PICTURE"
-          : "POPUP";
+        detachedPlaylistMode ===
+        "pip"
+          ? "MASTER · PIP"
+          : "MASTER · POPUP";
 
       head.append(
-        titleWrap,
+        headMain,
         badge
       );
 
@@ -8944,397 +9458,427 @@
         head
       );
 
-      /* ---------- playback + quick play ---------- */
-
-      const operations =
-        doc.createElement("div");
-
-      operations.className =
-        "pip-operations";
-
-      const nowCard =
-        doc.createElement("section");
-
-      nowCard.className =
-        "pip-card pip-now";
-
-      const nowHeading =
-        doc.createElement("div");
-
-      nowHeading.className =
-        "pip-card-title";
-
-      nowHeading.textContent =
-        "NOW PLAYING";
-
-      const nowTitle =
-        doc.createElement("div");
-
-      nowTitle.id =
-        "pipNowTitle";
-
-      nowTitle.className =
-        "pip-now-title";
-
-      const nowPublic =
-        doc.createElement("div");
-
-      nowPublic.id =
-        "pipNowPublic";
-
-      nowPublic.className =
-        "pip-now-public";
-
-      const controlRow =
-        doc.createElement("div");
-
-      controlRow.className =
-        "pip-controls";
-
-      const resumeButton =
-        doc.createElement("button");
-
-      resumeButton.id =
-        "pipResumeButton";
-
-      resumeButton.className =
-        "pip-btn";
-
-      resumeButton.textContent =
-        "▶ 재생";
-
-      resumeButton.addEventListener(
-        "click",
-        async () => {
-          resumeButton.disabled =
-            true;
-
-          await resumePlayback();
-
-          updateDetachedPlaybackUi();
-        }
-      );
-
-      const pauseButton =
-        doc.createElement("button");
-
-      pauseButton.id =
-        "pipPauseButton";
-
-      pauseButton.className =
-        "pip-btn";
-
-      pauseButton.textContent =
-        "Ⅱ 일시정지";
-
-      pauseButton.addEventListener(
-        "click",
-        async () => {
-          pauseButton.disabled =
-            true;
-
-          await pausePlayback();
-
-          updateDetachedPlaybackUi();
-        }
-      );
-
-      const restartButton =
-        doc.createElement("button");
-
-      restartButton.id =
-        "pipRestartButton";
-
-      restartButton.className =
-        "pip-btn";
-
-      restartButton.textContent =
-        "↺ 처음부터";
-
-      restartButton.addEventListener(
-        "click",
-        async () => {
-          restartButton.disabled =
-            true;
-
-          await restartPlayback();
-
-          updateDetachedPlaybackUi();
-        }
-      );
-
-      controlRow.append(
-        resumeButton,
-        pauseButton,
-        restartButton
-      );
-
-      const seekWrap =
-        doc.createElement("div");
-
-      seekWrap.className =
-        "pip-seek";
-
-      const seekHead =
-        doc.createElement("div");
-
-      seekHead.className =
-        "pip-seek-head";
-
-      const seekLabel =
-        doc.createElement("span");
-
-      seekLabel.textContent =
-        "재생 위치";
-
-      const seekTime =
-        doc.createElement("span");
-
-      seekTime.id =
-        "pipSeekTime";
-
-      seekTime.textContent =
-        "00:00 / 00:00";
-
-      seekHead.append(
-        seekLabel,
-        seekTime
-      );
-
-      const seek =
-        doc.createElement("input");
-
-      seek.id =
-        "pipSeek";
-
-      seek.type =
-        "range";
-
-      seek.min =
-        "0";
-
-      seek.max =
-        "100";
-
-      seek.value =
-        "0";
-
-      seek.disabled =
-        true;
-
-      seek.dataset.dragging =
-        "false";
-
-      seek.addEventListener(
-        "pointerdown",
-        () => {
-          seek.dataset.dragging =
-            "true";
-        }
-      );
-
-      seek.addEventListener(
-        "input",
-        () => {
-          seek.dataset.dragging =
-            "true";
-
-          const duration =
-            Number(
-              seek.max || 0
-            );
-
-          const preview =
-            Number(
-              seek.value || 0
-            );
-
-          seekTime.textContent =
-            `${formatTime(preview)} / ${duration > 0 ? formatTime(duration) : "--:--"}`;
-        }
-      );
-
-      const finishSeek =
-        () => {
-          seek.dataset.dragging =
-            "false";
-        };
-
-      seek.addEventListener(
-        "pointerup",
-        finishSeek
-      );
-
-      seek.addEventListener(
-        "pointercancel",
-        finishSeek
-      );
-
-      seek.addEventListener(
-        "blur",
-        finishSeek
-      );
-
-      seek.addEventListener(
-        "change",
-        async () => {
-          const target =
-            Number(
-              seek.value || 0
-            );
-
-          seek.dataset.dragging =
-            "false";
-
-          await seekPlayback(
-            target
-          );
-
-          updateDetachedPlaybackUi();
-        }
-      );
-
-      seekWrap.append(
-        seekHead,
-        seek
-      );
-
-      nowCard.append(
-        nowHeading,
-        nowTitle,
-        nowPublic,
-        controlRow,
-        seekWrap
-      );
-
-      const quickCard =
-        doc.createElement("section");
-
-      quickCard.className =
-        "pip-card";
-
-      const quickHeading =
-        doc.createElement("div");
-
-      quickHeading.className =
-        "pip-card-title";
-
-      quickHeading.textContent =
-        "QUICK PLAY";
-
-      const quickNote =
-        doc.createElement("div");
-
-      quickNote.className =
-        "pip-section-note";
-
-      quickNote.textContent =
-        "플레이리스트에 저장하지 않고 바로 재생합니다.";
-
-      const quickWrap =
-        doc.createElement("div");
-
-      quickWrap.className =
-        "pip-quick";
-
-      const quickPublic =
-        doc.createElement("input");
-
-      quickPublic.type =
-        "text";
-
-      quickPublic.maxLength =
-        80;
-
-      quickPublic.placeholder =
-        "플레이어에게 보일 공개 제목";
-
-      const quickUrl =
-        doc.createElement("input");
-
-      quickUrl.type =
-        "url";
-
-      quickUrl.placeholder =
-        "YouTube 링크";
-
-      const quickButton =
-        doc.createElement("button");
-
-      quickButton.className =
-        "pip-btn primary";
-
-      quickButton.textContent =
-        "▶ 이 곡 바로 재생";
-
-      const quickStatus =
-        doc.createElement("div");
-
-      quickStatus.className =
-        "pip-status";
-
-      quickButton.addEventListener(
-        "click",
-        async () => {
-          quickButton.disabled =
-            true;
-
-          await quickPlayFromDetachedWindow(
-            quickPublic.value,
-            quickUrl.value,
-            quickStatus
-          );
-
-          quickButton.disabled =
-            false;
-        }
-      );
-
-      quickUrl.addEventListener(
-        "keydown",
-        (event) => {
-          if (
-            event.key ===
-            "Enter"
-          ) {
-            event.preventDefault();
-
-            quickButton.click();
+      /* NOW PLAYING */
+      const currentPrivate =
+        currentPlayback?.trackId &&
+        playlistData[
+          currentPlayback.trackId
+        ]?.privateTitle
+          ? playlistData[
+              currentPlayback.trackId
+            ].privateTitle
+          : currentPlayback?.publicTitle ||
+            "재생 대기 중";
+
+      const now =
+        makeDetachedSection(
+          doc,
+          {
+            key:
+              "now",
+            label:
+              "NOW PLAYING",
+            summary:
+              currentPrivate
           }
-        }
-      );
+        );
 
-      quickWrap.append(
-        quickPublic,
-        quickUrl,
-        quickButton,
-        quickStatus
-      );
+      if (
+        detachedPanelOpen(
+          "now"
+        )
+      ) {
+        const nowTitle =
+          doc.createElement("div");
 
-      quickCard.append(
-        quickHeading,
-        quickNote,
-        quickWrap
-      );
+        nowTitle.id =
+          "pipNowTitle";
 
-      operations.append(
-        nowCard,
-        quickCard
-      );
+        nowTitle.className =
+          "pip-now-title";
+
+        const nowPublic =
+          doc.createElement("div");
+
+        nowPublic.id =
+          "pipNowPublic";
+
+        nowPublic.className =
+          "pip-now-public";
+
+        const controlRow =
+          doc.createElement("div");
+
+        controlRow.className =
+          "pip-controls";
+
+        const makeControl =
+          (
+            id,
+            icon,
+            label,
+            handler
+          ) => {
+            const button =
+              doc.createElement(
+                "button"
+              );
+
+            button.id =
+              id;
+
+            button.className =
+              "pip-btn";
+
+            button.type =
+              "button";
+
+            button.title =
+              label;
+
+            button.setAttribute(
+              "aria-label",
+              label
+            );
+
+            const iconEl =
+              doc.createElement(
+                "span"
+              );
+
+            iconEl.className =
+              "pip-control-icon";
+
+            iconEl.textContent =
+              icon;
+
+            const textEl =
+              doc.createElement(
+                "span"
+              );
+
+            textEl.className =
+              "pip-control-text";
+
+            textEl.textContent =
+              label;
+
+            button.append(
+              iconEl,
+              textEl
+            );
+
+            button.addEventListener(
+              "click",
+              async () => {
+                button.disabled =
+                  true;
+
+                await handler();
+
+                updateDetachedPlaybackUi();
+              }
+            );
+
+            return button;
+          };
+
+        const resumeButton =
+          makeControl(
+            "pipResumeButton",
+            "▶",
+            "재생",
+            resumePlayback
+          );
+
+        const pauseButton =
+          makeControl(
+            "pipPauseButton",
+            "Ⅱ",
+            "일시정지",
+            pausePlayback
+          );
+
+        const restartButton =
+          makeControl(
+            "pipRestartButton",
+            "↺",
+            "처음부터",
+            restartPlayback
+          );
+
+        controlRow.append(
+          resumeButton,
+          pauseButton,
+          restartButton
+        );
+
+        const seekWrap =
+          doc.createElement("div");
+
+        seekWrap.className =
+          "pip-seek";
+
+        const seekHead =
+          doc.createElement("div");
+
+        seekHead.className =
+          "pip-seek-head";
+
+        const seekLabel =
+          doc.createElement("span");
+
+        seekLabel.textContent =
+          "재생 위치";
+
+        const seekTime =
+          doc.createElement("span");
+
+        seekTime.id =
+          "pipSeekTime";
+
+        seekTime.textContent =
+          "00:00 / 00:00";
+
+        seekHead.append(
+          seekLabel,
+          seekTime
+        );
+
+        const seek =
+          doc.createElement("input");
+
+        seek.id =
+          "pipSeek";
+
+        seek.type =
+          "range";
+
+        seek.min =
+          "0";
+
+        seek.max =
+          "100";
+
+        seek.value =
+          "0";
+
+        seek.disabled =
+          true;
+
+        seek.dataset.dragging =
+          "false";
+
+        seek.addEventListener(
+          "pointerdown",
+          () => {
+            seek.dataset.dragging =
+              "true";
+          }
+        );
+
+        seek.addEventListener(
+          "input",
+          () => {
+            seek.dataset.dragging =
+              "true";
+
+            const duration =
+              Number(
+                seek.max || 0
+              );
+
+            const preview =
+              Number(
+                seek.value || 0
+              );
+
+            seekTime.textContent =
+              `${formatTime(preview)} / ${duration > 0 ? formatTime(duration) : "--:--"}`;
+          }
+        );
+
+        const finishSeek =
+          () => {
+            seek.dataset.dragging =
+              "false";
+          };
+
+        seek.addEventListener(
+          "pointerup",
+          finishSeek
+        );
+
+        seek.addEventListener(
+          "pointercancel",
+          finishSeek
+        );
+
+        seek.addEventListener(
+          "blur",
+          finishSeek
+        );
+
+        seek.addEventListener(
+          "change",
+          async () => {
+            const target =
+              Number(
+                seek.value || 0
+              );
+
+            seek.dataset.dragging =
+              "false";
+
+            await seekPlayback(
+              target
+            );
+
+            updateDetachedPlaybackUi();
+          }
+        );
+
+        seekWrap.append(
+          seekHead,
+          seek
+        );
+
+        now.body.append(
+          nowTitle,
+          nowPublic,
+          controlRow,
+          seekWrap
+        );
+      }
 
       root.appendChild(
-        operations
+        now.section
       );
 
-      /* ---------- folders ---------- */
+      /* QUICK PLAY */
+      const quick =
+        makeDetachedSection(
+          doc,
+          {
+            key:
+              "quick",
+            label:
+              "QUICK PLAY",
+            summary:
+              "저장 없이 바로 재생"
+          }
+        );
 
-      const folderStrip =
+      if (
+        detachedPanelOpen(
+          "quick"
+        )
+      ) {
+        const wrap =
+          doc.createElement("div");
+
+        wrap.className =
+          "pip-input-grid";
+
+        const publicInput =
+          doc.createElement("input");
+
+        publicInput.type =
+          "text";
+
+        publicInput.maxLength =
+          80;
+
+        publicInput.placeholder =
+          "공개 제목";
+
+        const urlInput =
+          doc.createElement("input");
+
+        urlInput.type =
+          "url";
+
+        urlInput.placeholder =
+          "YouTube 링크";
+
+        const button =
+          doc.createElement("button");
+
+        button.className =
+          "pip-btn primary";
+
+        button.type =
+          "button";
+
+        button.textContent =
+          "▶ 바로 재생";
+
+        const status =
+          doc.createElement("div");
+
+        status.className =
+          "pip-status";
+
+        button.addEventListener(
+          "click",
+          async () => {
+            button.disabled =
+              true;
+
+            await quickPlayFromDetachedWindow(
+              publicInput.value,
+              urlInput.value,
+              status
+            );
+
+            button.disabled =
+              false;
+          }
+        );
+
+        urlInput.addEventListener(
+          "keydown",
+          (event) => {
+            if (
+              event.key ===
+              "Enter"
+            ) {
+              event.preventDefault();
+              button.click();
+            }
+          }
+        );
+
+        wrap.append(
+          publicInput,
+          urlInput,
+          button,
+          status
+        );
+
+        quick.body.appendChild(
+          wrap
+        );
+      }
+
+      root.appendChild(
+        quick.section
+      );
+
+      /* folder bar + memo */
+      const toolbar =
         doc.createElement("div");
 
-      folderStrip.className =
+      toolbar.className =
+        "pip-toolbar";
+
+      const folders =
+        doc.createElement("div");
+
+      folders.className =
         "pip-folders";
 
-      const folders = [
+      const folderItems = [
         {
           id:
             UNFILED_FOLDER_ID,
@@ -9346,7 +9890,7 @@
 
       for (
         const folder of
-        folders
+        folderItems
       ) {
         const count =
           detachedFolderTracks(
@@ -9354,10 +9898,15 @@
           ).length;
 
         const button =
-          doc.createElement("button");
+          doc.createElement(
+            "button"
+          );
 
         button.className =
           `pip-folder${detachedSelectedFolderId === folder.id ? " active" : ""}`;
+
+        button.type =
+          "button";
 
         button.textContent =
           count
@@ -9381,283 +9930,364 @@
           }
         );
 
-        folderStrip.appendChild(
+        folders.appendChild(
           button
         );
       }
 
-      root.appendChild(
-        folderStrip
-      );
-
-      /* ---------- playlist add + playlist ---------- */
-
-      const grid =
-        doc.createElement("div");
-
-      grid.className =
-        "pip-grid";
-
-      const addCard =
-        doc.createElement("section");
-
-      addCard.className =
-        "pip-card";
-
-      const addTitle =
-        doc.createElement("div");
-
-      addTitle.className =
-        "pip-card-title";
-
-      addTitle.textContent =
-        `PLAYLIST에 추가 · ${folderName(detachedSelectedFolderId)}`;
-
-      const addNote =
-        doc.createElement("div");
-
-      addNote.className =
-        "pip-section-note";
-
-      addNote.textContent =
-        "현재 선택한 폴더에 저장만 합니다.";
-
-      const addWrap =
-        doc.createElement("div");
-
-      addWrap.className =
-        "pip-add";
-
-      const privateInput =
-        doc.createElement("input");
-
-      privateInput.type =
-        "text";
-
-      privateInput.maxLength =
-        80;
-
-      privateInput.placeholder =
-        "내 제목";
-
-      const publicInput =
-        doc.createElement("input");
-
-      publicInput.type =
-        "text";
-
-      publicInput.maxLength =
-        80;
-
-      publicInput.placeholder =
-        "공개 제목 (선택)";
-
-      const urlInput =
-        doc.createElement("input");
-
-      urlInput.type =
-        "url";
-
-      urlInput.placeholder =
-        "YouTube 링크";
-
-      const addButton =
+      const memoButton =
         doc.createElement("button");
 
-      addButton.className =
-        "pip-btn primary";
+      memoButton.className =
+        `pip-icon-btn pip-memo-button${String(playlistMemo || "").trim() ? " has-memo" : " empty-memo"}`;
 
-      addButton.textContent =
-        "＋ 현재 폴더에 추가";
+      memoButton.type =
+        "button";
 
-      const status =
-        doc.createElement("div");
+      memoButton.textContent =
+        "메모";
 
-      status.className =
-        "pip-status";
+      memoButton.title =
+        "플레이리스트 전체 메모";
 
-      addButton.addEventListener(
+      memoButton.addEventListener(
         "click",
-        async () => {
-          addButton.disabled =
-            true;
-
-          await addTrackFromDetachedWindow(
-            privateInput.value,
-            publicInput.value,
-            urlInput.value,
-            status
-          );
-
-          if (
-            status.textContent ===
-            "추가했습니다."
-          ) {
-            privateInput.value =
-              "";
-            publicInput.value =
-              "";
-            urlInput.value =
-              "";
-          }
-
-          addButton.disabled =
-            false;
+        () => {
+          setDetachedMemoTarget({
+            type:
+              "playlist",
+            id:
+              "playlist"
+          });
         }
       );
 
-      urlInput.addEventListener(
-        "keydown",
-        (event) => {
-          if (
-            event.key ===
-            "Enter"
-          ) {
-            event.preventDefault();
+      toolbar.append(
+        folders,
+        memoButton
+      );
 
-            addButton.click();
+      root.appendChild(
+        toolbar
+      );
+
+      renderDetachedMemoDrawer(
+        doc,
+        root
+      );
+
+      /* PLAYLIST ADD */
+      const add =
+        makeDetachedSection(
+          doc,
+          {
+            key:
+              "add",
+            label:
+              "PLAYLIST에 추가",
+            summary:
+              folderName(
+                detachedSelectedFolderId
+              )
           }
-        }
+        );
+
+      if (
+        detachedPanelOpen(
+          "add"
+        )
+      ) {
+        const wrap =
+          doc.createElement("div");
+
+        wrap.className =
+          "pip-input-grid";
+
+        const privateInput =
+          doc.createElement("input");
+
+        privateInput.type =
+          "text";
+
+        privateInput.maxLength =
+          80;
+
+        privateInput.placeholder =
+          "내 제목";
+
+        const publicInput =
+          doc.createElement("input");
+
+        publicInput.type =
+          "text";
+
+        publicInput.maxLength =
+          80;
+
+        publicInput.placeholder =
+          "공개 제목 (선택)";
+
+        const urlInput =
+          doc.createElement("input");
+
+        urlInput.type =
+          "url";
+
+        urlInput.placeholder =
+          "YouTube 링크";
+
+        const button =
+          doc.createElement("button");
+
+        button.className =
+          "pip-btn primary";
+
+        button.type =
+          "button";
+
+        button.textContent =
+          "＋ 현재 폴더에 추가";
+
+        const status =
+          doc.createElement("div");
+
+        status.className =
+          "pip-status";
+
+        button.addEventListener(
+          "click",
+          async () => {
+            button.disabled =
+              true;
+
+            await addTrackFromDetachedWindow(
+              privateInput.value,
+              publicInput.value,
+              urlInput.value,
+              status
+            );
+
+            if (
+              status.textContent ===
+              "추가했습니다."
+            ) {
+              privateInput.value =
+                "";
+              publicInput.value =
+                "";
+              urlInput.value =
+                "";
+            }
+
+            button.disabled =
+              false;
+          }
+        );
+
+        urlInput.addEventListener(
+          "keydown",
+          (event) => {
+            if (
+              event.key ===
+              "Enter"
+            ) {
+              event.preventDefault();
+              button.click();
+            }
+          }
+        );
+
+        wrap.append(
+          privateInput,
+          publicInput,
+          urlInput,
+          button,
+          status
+        );
+
+        add.body.appendChild(
+          wrap
+        );
+      }
+
+      root.appendChild(
+        add.section
       );
 
-      addWrap.append(
-        privateInput,
-        publicInput,
-        urlInput,
-        addButton,
-        status
-      );
-
-      addCard.append(
-        addTitle,
-        addNote,
-        addWrap
-      );
-
-      const listCard =
-        doc.createElement("section");
-
-      listCard.className =
-        "pip-card";
-
-      const listTitle =
-        doc.createElement("div");
-
-      listTitle.className =
-        "pip-card-title";
-
+      /* PLAYLIST */
       const tracks =
         detachedFolderTracks(
           detachedSelectedFolderId
         );
 
-      listTitle.textContent =
-        `${folderName(detachedSelectedFolderId)} · ${tracks.length} BGM`;
+      const playlist =
+        makeDetachedSection(
+          doc,
+          {
+            key:
+              "playlist",
+            label:
+              "PLAYLIST",
+            summary:
+              `${folderName(detachedSelectedFolderId)} · ${tracks.length}`
+          }
+        );
 
-      const list =
-        doc.createElement("div");
-
-      list.className =
-        "pip-list";
-
-      if (!tracks.length) {
-        const empty =
+      if (
+        detachedPanelOpen(
+          "playlist"
+        )
+      ) {
+        const list =
           doc.createElement("div");
 
-        empty.className =
-          "pip-empty";
+        list.className =
+          "pip-list";
 
-        empty.textContent =
-          "이 폴더에는 아직 BGM이 없습니다.";
-
-        list.appendChild(
-          empty
-        );
-      } else {
-        for (
-          const track of
-          tracks
-        ) {
-          const row =
+        if (!tracks.length) {
+          const empty =
             doc.createElement("div");
 
-          row.className =
-            "pip-track";
+          empty.className =
+            "pip-empty";
 
-          const main =
-            doc.createElement("div");
-
-          main.className =
-            "pip-track-main";
-
-          const privateName =
-            doc.createElement("div");
-
-          privateName.className =
-            "pip-track-private";
-
-          privateName.textContent =
-            track.privateTitle ||
-            "(제목 없음)";
-
-          const publicName =
-            doc.createElement("div");
-
-          publicName.className =
-            "pip-track-public";
-
-          publicName.textContent =
-            `공개: ${track.publicTitle || "(비어 있음)"}`;
-
-          main.append(
-            privateName,
-            publicName
-          );
-
-          const play =
-            doc.createElement("button");
-
-          play.className =
-            "pip-play";
-
-          play.textContent =
-            "▶";
-
-          play.title =
-            "재생";
-
-          play.addEventListener(
-            "click",
-            () => {
-              playPlaylistTrack(
-                track
-              );
-            }
-          );
-
-          row.append(
-            main,
-            play
-          );
+          empty.textContent =
+            "이 폴더에는 아직 BGM이 없습니다.";
 
           list.appendChild(
-            row
+            empty
           );
+        } else {
+          for (
+            const track of
+            tracks
+          ) {
+            const row =
+              doc.createElement("div");
+
+            row.className =
+              "pip-track";
+
+            const main =
+              doc.createElement("div");
+
+            main.className =
+              "pip-track-main";
+
+            const privateName =
+              doc.createElement(
+                "div"
+              );
+
+            privateName.className =
+              "pip-track-private";
+
+            privateName.textContent =
+              track.privateTitle ||
+              "(제목 없음)";
+
+            const publicName =
+              doc.createElement(
+                "div"
+              );
+
+            publicName.className =
+              "pip-track-public";
+
+            publicName.textContent =
+              `공개: ${track.publicTitle || "(비어 있음)"}`;
+
+            main.append(
+              privateName,
+              publicName
+            );
+
+            const actions =
+              doc.createElement("div");
+
+            actions.className =
+              "pip-track-actions";
+
+            const memo =
+              doc.createElement(
+                "button"
+              );
+
+            memo.className =
+              `pip-icon-btn pip-memo-button${String(track.memo || "").trim() ? " has-memo" : " empty-memo"}`;
+
+            memo.type =
+              "button";
+
+            memo.textContent =
+              "메";
+
+            memo.title =
+              String(track.memo || "").trim()
+                ? "BGM 메모 보기"
+                : "저장된 BGM 메모 없음";
+
+            memo.addEventListener(
+              "click",
+              () => {
+                setDetachedMemoTarget({
+                  type:
+                    "track",
+                  id:
+                    track.id
+                });
+              }
+            );
+
+            const play =
+              doc.createElement(
+                "button"
+              );
+
+            play.className =
+              "pip-icon-btn";
+
+            play.type =
+              "button";
+
+            play.textContent =
+              "▶";
+
+            play.title =
+              "재생";
+
+            play.addEventListener(
+              "click",
+              () => {
+                playPlaylistTrack(
+                  track
+                );
+              }
+            );
+
+            actions.append(
+              memo,
+              play
+            );
+
+            row.append(
+              main,
+              actions
+            );
+
+            list.appendChild(
+              row
+            );
+          }
         }
+
+        playlist.body.appendChild(
+          list
+        );
       }
 
-      listCard.append(
-        listTitle,
-        list
-      );
-
-      grid.append(
-        addCard,
-        listCard
-      );
-
       root.appendChild(
-        grid
+        playlist.section
       );
 
       const footer =
@@ -9670,13 +10300,13 @@
         doc.createElement("span");
 
       left.textContent =
-        "재생 제어 · 퀵 플레이 · 플레이리스트";
+        "메모는 PiP에서 읽기";
 
       const right =
         doc.createElement("span");
 
       right.textContent =
-        "편집/메모/삭제/순서 변경은 메인 화면에서";
+        "편집/삭제/순서 변경은 메인";
 
       footer.append(
         left,
