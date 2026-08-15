@@ -3486,6 +3486,37 @@
       border-color: #7e514b;
     }
 
+  
+    /* v3.19 session folder manager */
+    .session-folder-menu-wrap{position:relative;flex:0 0 auto}
+    .session-folder-menu-button{font-size:15px;line-height:1}
+    .session-folder-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:40;display:grid;width:140px;padding:5px;border:1px solid var(--line);border-radius:9px;background:var(--panel);box-shadow:0 12px 30px rgba(0,0,0,.14)}
+    .session-folder-menu.hidden{display:none}
+    .session-folder-menu button{min-height:31px;padding:0 8px;border:0;border-radius:6px;background:transparent;color:var(--text);font:inherit;font-size:10px;text-align:left;cursor:pointer}
+    .session-folder-menu button:hover{background:var(--soft2)}
+    .session-folder-edit-card{width:min(440px,calc(100vw - 28px));padding:16px}
+    .session-folder-edit-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px}
+    .session-folder-edit-title{font-size:14px;font-weight:850}
+    .session-folder-edit-subtitle{margin-top:4px;color:var(--muted);font-size:10px;line-height:1.45}
+    .session-folder-edit-close{flex:0 0 auto;width:30px;min-height:30px;padding:0;border:1px solid var(--line);border-radius:7px;background:var(--soft2);color:var(--text);cursor:pointer;font-size:16px}
+    .session-folder-edit-body{display:grid;gap:12px}
+    .session-folder-edit-section{padding:11px;border:1px solid var(--line);border-radius:9px;background:var(--soft2)}
+    .session-folder-edit-section input{width:100%;min-height:36px;margin-top:7px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);font:inherit}
+    .session-folder-edit-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:8px}
+    .session-folder-danger{border-color:#d9b6b0;background:#fff8f6}
+    .session-folder-danger-title{color:#9b4037;font-size:10px;font-weight:850}
+    .session-folder-danger-copy{margin-top:5px;color:var(--muted);font-size:9px;line-height:1.5}
+    .session-folder-edit-disabled{padding:12px;border:1px solid var(--line);border-radius:9px;background:var(--soft2);color:var(--muted);font-size:10px;line-height:1.55}
+    .session-folder-sort-dialog{display:grid;gap:6px}
+    .session-folder-sort-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--soft2)}
+    .session-folder-sort-name{min-width:0;overflow:hidden;font-size:10px;font-weight:760;text-overflow:ellipsis;white-space:nowrap}
+    html[data-theme="dark"] .session-folder-menu{background:#242421;border-color:var(--line-strong)}
+    html[data-theme="dark"] .session-folder-edit-section,
+    html[data-theme="dark"] .session-folder-edit-disabled{background:#262623;border-color:var(--line-strong)}
+    html[data-theme="dark"] .session-folder-edit-section input{background:#1d1d1b;color:var(--text);border-color:var(--line-strong)}
+    html[data-theme="dark"] .session-folder-danger{background:#2d211f;border-color:#67443f}
+    html[data-theme="dark"] .session-folder-danger-title{color:#e89a90}
+
   </style>
 </head>
 
@@ -3578,14 +3609,20 @@
         <div id="sessionToolbar" class="session-toolbar">
           <div class="session-toolbar-top">
             <div id="sessionFolderStrip" class="session-folder-strip"></div>
-            <button id="addSessionFolderButton" class="session-folder-add" title="세션 폴더 추가">＋</button>
+            <div class="session-folder-menu-wrap">
+              <button id="sessionFolderMenuButton" class="session-folder-add session-folder-menu-button" type="button" title="세션 폴더 관리" aria-label="세션 폴더 관리">☰</button>
+              <div id="sessionFolderMenu" class="session-folder-menu hidden">
+                <button id="createSessionFolderMenuItem" type="button">폴더 생성</button>
+                <button id="editSessionFolderMenuItem" type="button">폴더 편집</button>
+                <button id="sortSessionFolderMenuItem" type="button">폴더 정렬</button>
+              </div>
+            </div>
           </div>
 
           <div class="session-toolbar-bottom">
             <div class="session-folder-manage">
               <span id="sessionFolderCurrent" class="session-folder-current">전체 세션</span>
-              <button id="renameSessionFolderButton" class="mini-btn hidden">이름 변경</button>
-              <button id="deleteSessionFolderButton" class="mini-btn danger-mini hidden">폴더 삭제</button>
+              <span class="version-text">각 세션의 폴더 선택에서 바로 이동할 수 있습니다.</span>
             </div>
 
             <select id="sessionSortSelect" class="session-sort" aria-label="세션 정렬">
@@ -3669,7 +3706,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.18.1</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.19</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -4179,10 +4216,12 @@
     const playerSessionCount = $("#playerSessionCount");
 
     const sessionFolderStrip = $("#sessionFolderStrip");
-    const addSessionFolderButton = $("#addSessionFolderButton");
+    const sessionFolderMenuButton = $("#sessionFolderMenuButton");
+    const sessionFolderMenu = $("#sessionFolderMenu");
+    const createSessionFolderMenuItem = $("#createSessionFolderMenuItem");
+    const editSessionFolderMenuItem = $("#editSessionFolderMenuItem");
+    const sortSessionFolderMenuItem = $("#sortSessionFolderMenuItem");
     const sessionFolderCurrent = $("#sessionFolderCurrent");
-    const renameSessionFolderButton = $("#renameSessionFolderButton");
-    const deleteSessionFolderButton = $("#deleteSessionFolderButton");
     const sessionSortSelect = $("#sessionSortSelect");
     const roomUrlInput = $("#roomUrl");
     const nicknameInput = $("#nicknameInput");
@@ -7006,20 +7045,325 @@
           selectedSessionFolderId
         );
 
-      const custom =
-        selectedSessionFolderId !== SESSION_FOLDER_ALL &&
-        selectedSessionFolderId !== SESSION_FOLDER_UNFILED &&
-        Boolean(sessionFolders[selectedSessionFolderId]);
 
-      renameSessionFolderButton.classList.toggle(
-        "hidden",
-        !custom
+    }
+
+    function closeSessionFolderMenu() {
+      sessionFolderMenu.classList.add("hidden");
+    }
+
+    async function shiftSessionFolder(folderId, direction) {
+      const user = auth.currentUser;
+      if (!isPersistentAccount(user)) return;
+
+      const folders = orderedSessionFolders();
+      const index = folders.findIndex((folder) => folder.id === folderId);
+      const swapIndex = index + direction;
+
+      if (index < 0 || swapIndex < 0 || swapIndex >= folders.length) return;
+
+      const current = folders[index];
+      const other = folders[swapIndex];
+
+      await update(
+        ref(db, `users/${user.uid}/sessionFolders`),
+        {
+          [`${current.id}/order`]: Number(other.order ?? (swapIndex + 1) * 10),
+          [`${other.id}/order`]: Number(current.order ?? (index + 1) * 10)
+        }
+      );
+    }
+
+    function openSessionFolderEditor() {
+      const user = auth.currentUser;
+      if (!isPersistentAccount(user)) return;
+
+      const folderId = selectedSessionFolderId;
+      const isAll = folderId === SESSION_FOLDER_ALL;
+      const isUnfiled = folderId === SESSION_FOLDER_UNFILED;
+      const isSystem = isAll || isUnfiled;
+
+      const current =
+        isAll
+          ? { name: "전체" }
+          : isUnfiled
+            ? { name: "미분류" }
+            : sessionFolders[folderId];
+
+      if (!current) return;
+
+      const overlay = document.createElement("div");
+      overlay.className = "unlock";
+      overlay.style.zIndex = "520";
+
+      const card = document.createElement("div");
+      card.className = "card session-folder-edit-card";
+
+      const head = document.createElement("div");
+      head.className = "session-folder-edit-head";
+
+      const headText = document.createElement("div");
+
+      const title = document.createElement("div");
+      title.className = "session-folder-edit-title";
+      title.textContent = "세션 폴더 편집";
+
+      const subtitle = document.createElement("div");
+      subtitle.className = "session-folder-edit-subtitle";
+      subtitle.textContent = `현재 폴더 · ${current.name || "이름 없음"}`;
+
+      headText.append(title, subtitle);
+
+      const closeButton = document.createElement("button");
+      closeButton.type = "button";
+      closeButton.className = "session-folder-edit-close";
+      closeButton.textContent = "×";
+      closeButton.title = "닫기";
+
+      head.append(headText, closeButton);
+
+      const body = document.createElement("div");
+      body.className = "session-folder-edit-body";
+
+      const closeModal = () => overlay.remove();
+
+      closeButton.addEventListener("click", closeModal);
+      overlay.addEventListener("click", (event) => {
+        if (event.target === overlay) closeModal();
+      });
+
+      if (isSystem) {
+        const disabled = document.createElement("div");
+        disabled.className = "session-folder-edit-disabled";
+        disabled.textContent =
+          isAll
+            ? "전체는 모든 저장 세션을 보여주는 시스템 필터라 이름 변경이나 삭제를 할 수 없습니다."
+            : "미분류는 시스템 기본 폴더라 이름 변경이나 삭제를 할 수 없습니다. 각 세션의 폴더 선택에서 다른 폴더로 이동할 수 있습니다.";
+        body.appendChild(disabled);
+      } else {
+        const renameSection = document.createElement("section");
+        renameSection.className = "session-folder-edit-section";
+
+        const label = document.createElement("div");
+        label.className = "field-label";
+        label.textContent = "폴더 이름";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 40;
+        input.value = current.name || "";
+
+        const actions = document.createElement("div");
+        actions.className = "session-folder-edit-actions";
+
+        const save = document.createElement("button");
+        save.type = "button";
+        save.className = "btn primary";
+        save.style.minHeight = "34px";
+        save.textContent = "이름 저장";
+
+        const status = document.createElement("div");
+        status.className = "status-line";
+
+        save.addEventListener("click", async () => {
+          const next = input.value.trim();
+          if (!next) {
+            status.textContent = "폴더 이름을 입력해 주세요.";
+            return;
+          }
+          if (next.length > 40) {
+            status.textContent = "폴더 이름은 40자 이하로 입력해 주세요.";
+            return;
+          }
+
+          try {
+            save.disabled = true;
+            await update(
+              ref(db, `users/${user.uid}/sessionFolders/${folderId}`),
+              { name: next }
+            );
+            subtitle.textContent = `현재 폴더 · ${next}`;
+            status.textContent = "이름을 변경했습니다.";
+          } catch (error) {
+            status.textContent = error?.message ?? "이름 변경에 실패했습니다.";
+          } finally {
+            save.disabled = false;
+          }
+        });
+
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            save.click();
+          }
+        });
+
+        actions.appendChild(save);
+        renameSection.append(label, input, actions, status);
+
+        const danger = document.createElement("section");
+        danger.className = "session-folder-edit-section session-folder-danger";
+
+        const dangerTitle = document.createElement("div");
+        dangerTitle.className = "session-folder-danger-title";
+        dangerTitle.textContent = "폴더 삭제";
+
+        const affected = Object.entries(savedSessions || {})
+          .map(([roomId, value]) => ({ roomId, ...(value || {}) }))
+          .filter((session) => normalizedSessionFolderId(session) === folderId);
+
+        const dangerCopy = document.createElement("div");
+        dangerCopy.className = "session-folder-danger-copy";
+        dangerCopy.textContent =
+          affected.length
+            ? `폴더만 삭제합니다. 이 폴더의 세션 ${affected.length}개는 삭제되지 않고 모두 '미분류'로 이동합니다.`
+            : "폴더만 삭제합니다. 저장된 실제 BGM 방은 삭제되지 않습니다.";
+
+        const dangerActions = document.createElement("div");
+        dangerActions.className = "session-folder-edit-actions";
+
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "mini-btn danger-mini";
+        del.textContent = "폴더 삭제";
+
+        del.addEventListener("click", async () => {
+          if (!confirm(`「${current.name || "폴더"}」를 삭제할까요?\n\n저장된 세션 자체는 삭제하지 않고 '미분류'로 이동합니다.`)) {
+            return;
+          }
+
+          try {
+            del.disabled = true;
+
+            const updates = {
+              [`sessionFolders/${folderId}`]: null
+            };
+
+            for (const session of affected) {
+              updates[`sessions/${session.roomId}/folderId`] = null;
+            }
+
+            await update(ref(db, `users/${user.uid}`), updates);
+
+            selectedSessionFolderId = SESSION_FOLDER_UNFILED;
+            closeModal();
+          } catch (error) {
+            alert(error?.message ?? "폴더 삭제에 실패했습니다.");
+            del.disabled = false;
+          }
+        });
+
+        dangerActions.appendChild(del);
+        danger.append(dangerTitle, dangerCopy, dangerActions);
+
+        body.append(renameSection, danger);
+      }
+
+      card.append(head, body);
+      overlay.appendChild(card);
+      document.body.appendChild(overlay);
+
+      if (!isSystem) {
+        requestAnimationFrame(() => {
+          card.querySelector('input[type="text"]')?.focus();
+        });
+      }
+    }
+
+    function openSessionFolderSort() {
+      const user = auth.currentUser;
+      if (!isPersistentAccount(user)) return;
+
+      const overlay = document.createElement("div");
+      overlay.className = "unlock";
+      overlay.style.zIndex = "500";
+
+      const dialog = document.createElement("div");
+      dialog.className = "card";
+      dialog.style.width = "min(420px, calc(100vw - 28px))";
+      dialog.style.padding = "16px";
+
+      const title = document.createElement("div");
+      title.className = "section-title";
+      title.textContent = "세션 폴더 정렬";
+
+      const desc = document.createElement("div");
+      desc.className = "status-line";
+      desc.textContent = "전체와 미분류는 고정입니다. 사용자가 만든 폴더만 순서를 바꿀 수 있습니다.";
+
+      const list = document.createElement("div");
+      list.className = "session-folder-sort-dialog";
+
+      const renderRows = () => {
+        list.replaceChildren();
+
+        const folders = orderedSessionFolders();
+
+        if (!folders.length) {
+          const empty = document.createElement("div");
+          empty.className = "playlist-empty";
+          empty.textContent = "정렬할 사용자 폴더가 없습니다.";
+          list.appendChild(empty);
+          return;
+        }
+
+        folders.forEach((folder, index) => {
+          const row = document.createElement("div");
+          row.className = "session-folder-sort-row";
+
+          const name = document.createElement("div");
+          name.className = "session-folder-sort-name";
+          name.textContent = folder.name || "이름 없음";
+
+          const up = document.createElement("button");
+          up.className = "mini-btn";
+          up.type = "button";
+          up.textContent = "↑";
+          up.disabled = index === 0;
+          up.addEventListener("click", async () => {
+            await shiftSessionFolder(folder.id, -1);
+          });
+
+          const down = document.createElement("button");
+          down.className = "mini-btn";
+          down.type = "button";
+          down.textContent = "↓";
+          down.disabled = index === folders.length - 1;
+          down.addEventListener("click", async () => {
+            await shiftSessionFolder(folder.id, 1);
+          });
+
+          row.append(name, up, down);
+          list.appendChild(row);
+        });
+      };
+
+      renderRows();
+
+      const unsubscribe = onValue(
+        ref(db, `users/${user.uid}/sessionFolders`),
+        renderRows
       );
 
-      deleteSessionFolderButton.classList.toggle(
-        "hidden",
-        !custom
-      );
+      const close = document.createElement("button");
+      close.className = "btn secondary";
+      close.type = "button";
+      close.textContent = "닫기";
+      close.style.marginTop = "10px";
+
+      const closeDialog = () => {
+        unsubscribe();
+        overlay.remove();
+      };
+
+      close.addEventListener("click", closeDialog);
+      overlay.addEventListener("click", (event) => {
+        if (event.target === overlay) closeDialog();
+      });
+
+      dialog.append(title, desc, list, close);
+      overlay.appendChild(dialog);
+      document.body.appendChild(overlay);
     }
 
     async function createSessionFolder() {
@@ -7077,100 +7421,6 @@
 
       selectedSessionFolderId =
         folderRef.key;
-    }
-
-    async function renameSelectedSessionFolder() {
-      const user = auth.currentUser;
-
-      if (
-        !isPersistentAccount(user) ||
-        !sessionFolders[selectedSessionFolderId]
-      ) {
-        return;
-      }
-
-      const raw = prompt(
-        "폴더 이름을 변경합니다.",
-        sessionFolders[selectedSessionFolderId].name || ""
-      );
-
-      if (raw === null) return;
-
-      const name = raw.trim();
-
-      if (!name) {
-        alert("폴더 이름을 입력해 주세요.");
-        return;
-      }
-
-      if (name.length > 40) {
-        alert("폴더 이름은 40자 이하로 입력해 주세요.");
-        return;
-      }
-
-      await update(
-        ref(
-          db,
-          `users/${user.uid}/sessionFolders/${selectedSessionFolderId}`
-        ),
-        { name }
-      );
-    }
-
-    async function deleteSelectedSessionFolder() {
-      const user = auth.currentUser;
-
-      if (
-        !isPersistentAccount(user) ||
-        !sessionFolders[selectedSessionFolderId]
-      ) {
-        return;
-      }
-
-      const name =
-        sessionFolderLabel(
-          selectedSessionFolderId
-        );
-
-      const affected =
-        Object.entries(savedSessions || {})
-          .map(([roomId, value]) => ({
-            roomId,
-            ...(value || {})
-          }))
-          .filter(
-            (session) =>
-              normalizedSessionFolderId(session) ===
-              selectedSessionFolderId
-          );
-
-      const message =
-        affected.length > 0
-          ? `「${name}」 폴더를 삭제할까요?\n안의 세션 ${affected.length}개는 삭제하지 않고 '미분류'로 이동합니다.`
-          : `「${name}」 폴더를 삭제할까요?`;
-
-      if (!confirm(message)) {
-        return;
-      }
-
-      const updates = {
-        [`sessionFolders/${selectedSessionFolderId}`]:
-          null
-      };
-
-      for (const session of affected) {
-        updates[
-          `sessions/${session.roomId}/folderId`
-        ] = null;
-      }
-
-      await update(
-        ref(db, `users/${user.uid}`),
-        updates
-      );
-
-      selectedSessionFolderId =
-        SESSION_FOLDER_UNFILED;
     }
 
     async function moveSavedSessionToFolder(
@@ -15513,45 +15763,47 @@
       renderRoomLibrarySource
     );
 
-    addSessionFolderButton.addEventListener(
+    sessionFolderMenuButton.addEventListener(
       "click",
-      async () => {
-        try {
-          await createSessionFolder();
-        } catch (error) {
-          console.error(error);
-          accountStatus.textContent =
-            error?.message ??
-            "세션 폴더 생성에 실패했습니다.";
-        }
+      (event) => {
+        event.stopPropagation();
+        sessionFolderMenu.classList.toggle("hidden");
       }
     );
 
-    renameSessionFolderButton.addEventListener(
-      "click",
-      async () => {
-        try {
-          await renameSelectedSessionFolder();
-        } catch (error) {
-          console.error(error);
-          accountStatus.textContent =
-            error?.message ??
-            "폴더 이름 변경에 실패했습니다.";
-        }
+    document.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (sessionFolderMenu.classList.contains("hidden")) return;
+        if (event.target.closest(".session-folder-menu-wrap")) return;
+        closeSessionFolderMenu();
       }
     );
 
-    deleteSessionFolderButton.addEventListener(
+    createSessionFolderMenuItem.addEventListener(
       "click",
-      async () => {
-        try {
-          await deleteSelectedSessionFolder();
-        } catch (error) {
+      () => {
+        closeSessionFolderMenu();
+        createSessionFolder().catch((error) => {
           console.error(error);
-          accountStatus.textContent =
-            error?.message ??
-            "폴더 삭제에 실패했습니다.";
-        }
+          alert(error?.message ?? "세션 폴더 생성에 실패했습니다.");
+        });
+      }
+    );
+
+    editSessionFolderMenuItem.addEventListener(
+      "click",
+      () => {
+        closeSessionFolderMenu();
+        openSessionFolderEditor();
+      }
+    );
+
+    sortSessionFolderMenuItem.addEventListener(
+      "click",
+      () => {
+        closeSessionFolderMenu();
+        openSessionFolderSort();
       }
     );
 
