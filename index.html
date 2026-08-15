@@ -3919,6 +3919,275 @@
       }
     }
 
+  
+    /* =========================================================
+       v3.22 LISTEN TOGETHER
+       ========================================================= */
+
+    .listen-entry-launch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft2);
+    }
+
+    .listen-entry-copy {
+      min-width: 0;
+    }
+
+    .listen-entry-label {
+      font-size: 9px;
+      font-weight: 850;
+      letter-spacing: .04em;
+    }
+
+    .listen-entry-desc {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .listen-entry-button {
+      flex: 0 0 auto;
+    }
+
+    .listen-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .listen-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .listen-video-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #111;
+    }
+
+    #listenPlayerHost,
+    #listenPlayerHost iframe {
+      width: 100%;
+      height: 100%;
+    }
+
+    .listen-transport {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .listen-transport-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+    }
+
+    .listen-volume-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .listen-volume-row input {
+      min-width: 0;
+    }
+
+    .listen-room-pane {
+      display: flex;
+      min-height: 0;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .listen-room-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .listen-invite-box,
+    .listen-host-panel {
+      display: grid;
+      gap: 7px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--soft2);
+    }
+
+    .listen-invite-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 5px;
+    }
+
+    .listen-invite-row input,
+    .listen-host-panel input {
+      width: 100%;
+      min-width: 0;
+      min-height: 34px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-size: 9px;
+    }
+
+    .listen-participants-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    .listen-participant-list {
+      display: grid;
+      align-content: start;
+      gap: 5px;
+      min-height: 90px;
+      max-height: 280px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .listen-participant-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft2);
+    }
+
+    .listen-participant-name {
+      min-width: 0;
+      overflow: hidden;
+      font-size: 10px;
+      font-weight: 760;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .listen-participant-role {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 800;
+    }
+
+    .listen-room-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .listen-join-gate {
+      position: absolute;
+      inset: 0;
+      z-index: 90;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: rgba(0, 0, 0, .5);
+    }
+
+    .listen-join-gate.hidden {
+      display: none;
+    }
+
+    .listen-join-card {
+      display: grid;
+      gap: 9px;
+      width: min(360px, 100%);
+      padding: 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--panel);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .24);
+    }
+
+    .listen-join-title {
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .listen-join-desc {
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .listen-join-card input {
+      width: 100%;
+      min-height: 38px;
+      padding: 0 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+    }
+
+    html[data-theme="dark"] .listen-entry-launch,
+    html[data-theme="dark"] .listen-invite-box,
+    html[data-theme="dark"] .listen-host-panel,
+    html[data-theme="dark"] .listen-participant-row {
+      background: #262623;
+      border-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] .listen-invite-row input,
+    html[data-theme="dark"] .listen-host-panel input,
+    html[data-theme="dark"] .listen-join-card input {
+      background: #1d1d1b;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    @media (max-width: 820px) {
+      .listen-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .listen-entry-launch {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .listen-transport-buttons {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
   </style>
 </head>
 
@@ -3965,6 +4234,14 @@
         <div class="role-grid">
           <button id="masterButton" class="btn primary">룸마스터로 입장</button>
           <button id="playerButton" class="btn secondary">플레이어로 입장</button>
+        </div>
+
+        <div class="listen-entry-launch">
+          <div class="listen-entry-copy">
+            <div class="listen-entry-label">LISTEN TOGETHER</div>
+            <div class="listen-entry-desc">친구와 YouTube 영상·플레이리스트를 같은 위치에서 같이 듣습니다.</div>
+          </div>
+          <button id="createListenRoomButton" class="mini-btn listen-entry-button" type="button">같이 듣기 방 만들기</button>
         </div>
 
         <div id="entryError" class="error"></div>
@@ -4103,12 +4380,145 @@
 
     </section>
 
+    <section id="listenView" class="card listen-card hidden">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="listenBackButton" class="back-to-sessions" type="button">← 로비</button>
+
+          <div class="brand">
+            <div class="brand-title">LISTEN TOGETHER <span class="version-text">BETA</span></div>
+            <div id="listenRoomLine" class="room-line">친구와 같이 듣기</div>
+          </div>
+        </div>
+
+        <div class="theme-control">
+          <button id="themeToggleListen" class="theme-toggle-button app-theme-toggle" type="button" aria-label="다크 모드로 전환" title="다크 모드로 전환">☾</button>
+          <span id="listenRoleBadge" class="badge">LISTENER</span>
+        </div>
+      </header>
+
+      <div id="listenJoinGate" class="listen-join-gate hidden">
+        <div class="listen-join-card">
+          <div class="listen-join-title">같이 듣기 방에 입장</div>
+          <div class="listen-join-desc">이 방에서 사용할 닉네임을 입력해 주세요.</div>
+
+          <input id="listenJoinNicknameInput" type="text" maxlength="20" placeholder="닉네임" autocomplete="nickname">
+
+          <button id="listenJoinButton" class="btn primary" type="button">입장</button>
+          <div id="listenJoinStatus" class="status-line"></div>
+        </div>
+      </div>
+
+      <div class="listen-grid">
+        <section class="pane">
+          <h2 class="section-title">NOW PLAYING</h2>
+
+          <div class="listen-video-frame">
+            <div id="listenPlayerHost">
+              <div id="listenYoutubePlayer"></div>
+            </div>
+
+            <div id="listenPlayerPlaceholder" class="player-placeholder">
+              HOST가 아직 음악을 선택하지 않았습니다.
+            </div>
+
+            <div id="listenUnlockOverlay" class="unlock">
+              <div class="unlock-inner">
+                <div class="unlock-title">같이 듣기 재생을 활성화해 주세요</div>
+                <div class="unlock-desc">
+                  브라우저 자동재생 제한 때문에 입장 후 한 번의 클릭이 필요합니다.
+                </div>
+                <button id="listenUnlockButton" type="button">▶ 소리 활성화</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="listen-transport">
+            <div class="listen-transport-buttons">
+              <button id="listenPrevButton" class="btn secondary" type="button" disabled>‹ 이전</button>
+              <button id="listenResumeButton" class="btn secondary" type="button" disabled>▶ 재생</button>
+              <button id="listenPauseButton" class="btn secondary" type="button" disabled>Ⅱ 일시정지</button>
+              <button id="listenNextButton" class="btn secondary" type="button" disabled>다음 ›</button>
+            </div>
+
+            <div class="seek-wrap">
+              <div class="seek-head">
+                <span>재생 위치</span>
+                <span id="listenSeekTimeText" class="time-text">00:00 / 00:00</span>
+              </div>
+              <input id="listenSeekSlider" type="range" min="0" max="100" step="0.1" value="0" disabled>
+            </div>
+          </div>
+
+          <div class="track-info">
+            <div class="track-label">CURRENT TRACK</div>
+            <div id="listenTrackTitle" class="track-title">재생 대기 중</div>
+            <div id="listenTrackMeta" class="track-meta">같이 듣기 전용 플레이어</div>
+          </div>
+
+          <div class="listen-volume-row">
+            <label for="listenVolumeSlider">내 음량</label>
+            <input id="listenVolumeSlider" type="range" min="0" max="100" step="1" value="70">
+            <span id="listenVolumeValue">70%</span>
+          </div>
+
+          <div id="listenPlayerStatus" class="status-line"></div>
+        </section>
+
+        <aside class="pane listen-room-pane">
+          <div class="listen-room-head">
+            <div>
+              <h2 class="section-title">ROOM</h2>
+              <div class="small">재생 위치만 동기화되고, 음량은 각자 따로 조절합니다.</div>
+            </div>
+            <span id="listenParticipantCount" class="version-text">0명</span>
+          </div>
+
+          <div class="listen-invite-box">
+            <div class="field-label">초대 링크</div>
+            <div class="listen-invite-row">
+              <input id="listenInviteLink" type="text" readonly>
+              <button id="listenCopyInviteButton" class="mini-btn" type="button">복사</button>
+            </div>
+          </div>
+
+          <section id="listenHostPanel" class="listen-host-panel hidden">
+            <div class="field-label">HOST 재생 소스</div>
+            <input id="listenSourceInput" type="url" placeholder="YouTube 영상 / 플레이리스트 / Mix 링크">
+
+            <button id="listenLoadSourceButton" class="btn primary" type="button">불러와서 같이 재생</button>
+
+            <div class="small">
+              일반 YouTube 영상과 플레이리스트를 지원합니다. Mix는 YouTube 임베드에서 허용되는 경우에 한해 재생을 시도합니다.
+            </div>
+
+            <div id="listenHostStatus" class="status-line"></div>
+          </section>
+
+          <div class="listen-participants-head">
+            <span>참가자</span>
+          </div>
+
+          <div id="listenParticipantList" class="listen-participant-list">
+            <div class="playlist-empty">입장한 사람이 없습니다.</div>
+          </div>
+
+          <div class="listen-room-actions">
+            <button id="listenLeaveButton" class="btn secondary" type="button">방 나가기</button>
+            <button id="listenCloseRoomButton" class="mini-btn danger-mini hidden" type="button">방 닫기</button>
+          </div>
+
+          <div id="listenRoomStatus" class="status-line"></div>
+        </aside>
+      </div>
+    </section>
+
     <section id="appView" class="card app-card hidden">
       <header class="topbar">
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.21.2</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.22</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -4402,7 +4812,8 @@
 
       const buttons = () => [
         document.getElementById("themeToggleEntry"),
-        document.getElementById("themeToggleApp")
+        document.getElementById("themeToggleApp"),
+        document.getElementById("themeToggleListen")
       ].filter(Boolean);
 
       const initialMode = () => {
@@ -4582,6 +4993,46 @@
 
     const entryView = $("#entryView");
     const appView = $("#appView");
+    const listenView = $("#listenView");
+
+    const createListenRoomButton = $("#createListenRoomButton");
+    const listenBackButton = $("#listenBackButton");
+    const listenRoomLine = $("#listenRoomLine");
+    const listenRoleBadge = $("#listenRoleBadge");
+
+    const listenJoinGate = $("#listenJoinGate");
+    const listenJoinNicknameInput = $("#listenJoinNicknameInput");
+    const listenJoinButton = $("#listenJoinButton");
+    const listenJoinStatus = $("#listenJoinStatus");
+
+    const listenPlayerHost = $("#listenPlayerHost");
+    const listenPlayerPlaceholder = $("#listenPlayerPlaceholder");
+    const listenUnlockOverlay = $("#listenUnlockOverlay");
+    const listenUnlockButton = $("#listenUnlockButton");
+    const listenPrevButton = $("#listenPrevButton");
+    const listenResumeButton = $("#listenResumeButton");
+    const listenPauseButton = $("#listenPauseButton");
+    const listenNextButton = $("#listenNextButton");
+    const listenSeekSlider = $("#listenSeekSlider");
+    const listenSeekTimeText = $("#listenSeekTimeText");
+    const listenTrackTitle = $("#listenTrackTitle");
+    const listenTrackMeta = $("#listenTrackMeta");
+    const listenVolumeSlider = $("#listenVolumeSlider");
+    const listenVolumeValue = $("#listenVolumeValue");
+    const listenPlayerStatus = $("#listenPlayerStatus");
+
+    const listenParticipantCount = $("#listenParticipantCount");
+    const listenInviteLink = $("#listenInviteLink");
+    const listenCopyInviteButton = $("#listenCopyInviteButton");
+    const listenHostPanel = $("#listenHostPanel");
+    const listenSourceInput = $("#listenSourceInput");
+    const listenLoadSourceButton = $("#listenLoadSourceButton");
+    const listenHostStatus = $("#listenHostStatus");
+    const listenParticipantList = $("#listenParticipantList");
+    const listenLeaveButton = $("#listenLeaveButton");
+    const listenCloseRoomButton = $("#listenCloseRoomButton");
+    const listenRoomStatus = $("#listenRoomStatus");
+
     const accountWorkspace = $("#accountWorkspace");
     const sessionLibraryCard = $("#sessionLibraryCard");
 
@@ -4849,6 +5300,39 @@
     let isMaster = false;
     let serverOffsetMs = 0;
 
+    let listenRoomId = null;
+    let listenOwnerUid = null;
+    let listenIsHost = false;
+    let listenNickname = "";
+    let listenPendingInviteRoomId = null;
+    let listenInviteHandling = false;
+    let listenClosingRoom = false;
+
+    let listenPlayback = null;
+    let listenParticipants = {};
+    let listenServerOffsetMs = 0;
+
+    let listenOwnerUnsubscribe = null;
+    let listenPlaybackUnsubscribe = null;
+    let listenParticipantsUnsubscribe = null;
+    let listenOffsetUnsubscribe = null;
+    let listenParticipantDisconnect = null;
+
+    let listenPlayer = null;
+    let listenPlayerReady = false;
+    let listenPlayerReadyPromise = null;
+    let listenAudioActivated = false;
+    let listenLoadedSourceKey = "";
+    let listenLoadedIndex = -1;
+    let listenSuppressEventsUntil = 0;
+    let listenSeekDragging = false;
+    let listenUiTimer = null;
+    let listenDriftTimer = null;
+    let listenHostWatchTimer = null;
+    let listenHostHeartbeatAt = 0;
+    let listenLastHostVideoId = "";
+    let listenLastHostIndex = -1;
+
     let ytPlayer = null;
     let ytReady = false;
     let ytApiReadyPromise = null;
@@ -4908,6 +5392,32 @@
 
     const rememberedNickname = localStorage.getItem("ccfolia-bgm-nickname") ?? "";
     nicknameInput.value = rememberedNickname;
+
+    const savedListenVolume =
+      Number(
+        localStorage.getItem(
+          "ccfolia-listen-volume"
+        ) ??
+        "70"
+      );
+
+    listenVolumeSlider.value =
+      String(
+        Number.isFinite(
+          savedListenVolume
+        )
+          ? Math.min(
+              100,
+              Math.max(
+                0,
+                savedListenVolume
+              )
+            )
+          : 70
+      );
+
+    listenVolumeValue.textContent =
+      `${listenVolumeSlider.value}%`;
 
     function isPersistentAccount(user = auth.currentUser) {
       return Boolean(user && !user.isAnonymous);
@@ -9379,7 +9889,8 @@
 
       if (
         view !== "entry" &&
-        view !== "room"
+        view !== "room" &&
+        view !== "listen"
       ) {
         history.replaceState(
           {
@@ -9705,6 +10216,2356 @@
 
       // 이제 실제 Google/익명 UID가 확정된 뒤 개인 닉네임을 저장한다.
       await saveAccountNickname();
+    }
+
+    function getListenRoomIdFromUrl() {
+      try {
+        const url =
+          new URL(
+            window.location.href
+          );
+
+        const value =
+          String(
+            url.searchParams.get(
+              "listen"
+            ) || ""
+          ).trim();
+
+        if (
+          !/^[A-Za-z0-9_-]{12,40}$/.test(
+            value
+          )
+        ) {
+          return "";
+        }
+
+        return value;
+
+      } catch {
+        return "";
+      }
+    }
+
+    function generateListenRoomId() {
+      const bytes =
+        new Uint8Array(
+          12
+        );
+
+      crypto.getRandomValues(
+        bytes
+      );
+
+      return Array.from(
+        bytes,
+        (value) =>
+          value
+            .toString(16)
+            .padStart(2, "0")
+      ).join("");
+    }
+
+    function listenInviteUrl(
+      roomId
+    ) {
+      const url =
+        new URL(
+          window.location.href
+        );
+
+      url.searchParams.set(
+        "listen",
+        roomId
+      );
+
+      return url.toString();
+    }
+
+    function removeListenParamFromUrl() {
+      const url =
+        new URL(
+          window.location.href
+        );
+
+      url.searchParams.delete(
+        "listen"
+      );
+
+      return url.toString();
+    }
+
+    function showListenView() {
+      entryView.classList.add(
+        "hidden"
+      );
+
+      appView.classList.add(
+        "hidden"
+      );
+
+      listenView.classList.remove(
+        "hidden"
+      );
+    }
+
+    function showEntryFromListen(
+      message = ""
+    ) {
+      listenView.classList.add(
+        "hidden"
+      );
+
+      appView.classList.add(
+        "hidden"
+      );
+
+      entryView.classList.remove(
+        "hidden"
+      );
+
+      if (message) {
+        entryError.textContent =
+          message;
+      }
+    }
+
+    function listenServerNowMs() {
+      return (
+        Date.now() +
+        listenServerOffsetMs
+      );
+    }
+
+    function estimateListenPosition(
+      state
+    ) {
+      const base =
+        Math.max(
+          0,
+          Number(
+            state?.position ?? 0
+          )
+        );
+
+      if (
+        state?.status !==
+        "playing"
+      ) {
+        return base;
+      }
+
+      const updatedAt =
+        Number(
+          state?.updatedAt ??
+          listenServerNowMs()
+        );
+
+      return Math.max(
+        0,
+        base +
+          Math.max(
+            0,
+            (
+              listenServerNowMs() -
+              updatedAt
+            ) / 1000
+          )
+      );
+    }
+
+    function parseListenYoutubeSource(
+      raw
+    ) {
+      const input =
+        String(
+          raw || ""
+        ).trim();
+
+      if (!input) {
+        throw new Error(
+          "YouTube 링크를 입력해 주세요."
+        );
+      }
+
+      let url;
+
+      try {
+        url =
+          new URL(
+            /^https?:\/\//i.test(
+              input
+            )
+              ? input
+              : `https://${input}`
+          );
+      } catch {
+        throw new Error(
+          "올바른 YouTube 링크를 입력해 주세요."
+        );
+      }
+
+      const host =
+        url.hostname
+          .replace(
+            /^www\./,
+            ""
+          )
+          .toLowerCase();
+
+      if (
+        host !==
+          "youtube.com" &&
+        host !==
+          "m.youtube.com" &&
+        host !==
+          "music.youtube.com" &&
+        host !==
+          "youtu.be"
+      ) {
+        throw new Error(
+          "YouTube 링크만 사용할 수 있습니다."
+        );
+      }
+
+      const playlistId =
+        String(
+          url.searchParams.get(
+            "list"
+          ) || ""
+        ).trim();
+
+      const videoId =
+        extractYoutubeVideoId(
+          input
+        );
+
+      if (playlistId) {
+        return {
+          mode:
+            "playlist",
+          playlistId,
+          requestedVideoId:
+            videoId || ""
+        };
+      }
+
+      if (videoId) {
+        return {
+          mode:
+            "video",
+          videoId
+        };
+      }
+
+      throw new Error(
+        "영상 또는 플레이리스트 정보를 찾지 못했습니다."
+      );
+    }
+
+    function listenSourceKey(
+      state
+    ) {
+      if (
+        state?.mode ===
+        "playlist"
+      ) {
+        return `playlist:${state.playlistId || ""}`;
+      }
+
+      if (
+        state?.mode ===
+        "video"
+      ) {
+        return `video:${state.videoId || ""}`;
+      }
+
+      return "idle";
+    }
+
+    function setListenLocalVolume(
+      value
+    ) {
+      const safe =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            Number(
+              value
+            ) || 0
+          )
+        );
+
+      listenVolumeSlider.value =
+        String(
+          safe
+        );
+
+      listenVolumeValue.textContent =
+        `${safe}%`;
+
+      localStorage.setItem(
+        "ccfolia-listen-volume",
+        String(
+          safe
+        )
+      );
+
+      if (
+        listenPlayerReady &&
+        listenPlayer
+      ) {
+        try {
+          listenPlayer.setVolume(
+            safe
+          );
+
+          if (
+            listenAudioActivated &&
+            safe > 0
+          ) {
+            listenPlayer.unMute();
+          }
+
+          if (safe <= 0) {
+            listenPlayer.mute();
+          }
+        } catch {}
+      }
+    }
+
+    function updateListenVideoMetadata() {
+      if (
+        !listenPlayerReady ||
+        !listenPlayer
+      ) {
+        return;
+      }
+
+      try {
+        const data =
+          listenPlayer.getVideoData?.() ||
+          {};
+
+        const title =
+          String(
+            data.title || ""
+          ).trim();
+
+        if (title) {
+          listenTrackTitle.textContent =
+            title;
+        }
+
+        const videoId =
+          String(
+            data.video_id || ""
+          ).trim();
+
+        const index =
+          Number(
+            listenPlayer.getPlaylistIndex?.()
+          );
+
+        if (
+          listenPlayback?.mode ===
+          "playlist"
+        ) {
+          listenTrackMeta.textContent =
+            Number.isFinite(
+              index
+            ) &&
+            index >= 0
+              ? `플레이리스트 · ${index + 1}번째 곡`
+              : "플레이리스트";
+        } else if (videoId) {
+          listenTrackMeta.textContent =
+            "YouTube 영상";
+        }
+
+      } catch {}
+    }
+
+    function listenPlayerErrorText(
+      code
+    ) {
+      const messages = {
+        2:
+          "YouTube 영상 주소가 올바르지 않습니다.",
+        5:
+          "이 영상은 HTML5 플레이어에서 재생할 수 없습니다.",
+        100:
+          "삭제되었거나 비공개인 영상입니다.",
+        101:
+          "이 영상은 외부 사이트에서 재생할 수 없습니다.",
+        150:
+          "이 영상은 외부 사이트에서 재생할 수 없습니다.",
+        153:
+          "YouTube가 현재 재생 요청의 클라이언트 정보를 확인하지 못했습니다."
+      };
+
+      return (
+        messages[
+          Number(
+            code
+          )
+        ] ||
+        `YouTube 재생 오류 (${code})`
+      );
+    }
+
+    async function ensureListenPlayer() {
+      if (
+        listenPlayerReady &&
+        listenPlayer
+      ) {
+        return listenPlayer;
+      }
+
+      if (
+        listenPlayerReadyPromise
+      ) {
+        return listenPlayerReadyPromise;
+      }
+
+      listenPlayerReadyPromise =
+        (async () => {
+          await loadYoutubeApi();
+
+          return await new Promise(
+            (
+              resolve,
+              reject
+            ) => {
+              try {
+                const playerVars = {
+                  playsinline:
+                    1,
+                  rel:
+                    0,
+                  controls:
+                    0
+                };
+
+                if (
+                  window.location.protocol ===
+                    "https:" ||
+                  window.location.protocol ===
+                    "http:"
+                ) {
+                  playerVars.origin =
+                    window.location.origin;
+                }
+
+                listenPlayer =
+                  new YT.Player(
+                    "listenYoutubePlayer",
+                    {
+                      width:
+                        "100%",
+                      height:
+                        "100%",
+                      playerVars,
+                      events: {
+                        onReady:
+                          (event) => {
+                            listenPlayerReady =
+                              true;
+
+                            const savedVolume =
+                              Number(
+                                localStorage.getItem(
+                                  "ccfolia-listen-volume"
+                                ) ??
+                                "70"
+                              );
+
+                            setListenLocalVolume(
+                              Number.isFinite(
+                                savedVolume
+                              )
+                                ? savedVolume
+                                : 70
+                            );
+
+                            resolve(
+                              event.target
+                            );
+                          },
+
+                        onStateChange:
+                          (event) => {
+                            updateListenVideoMetadata();
+                            handleListenPlayerStateChange(
+                              event.data
+                            );
+                          },
+
+                        onError:
+                          (event) => {
+                            listenPlayerStatus.textContent =
+                              listenPlayerErrorText(
+                                event.data
+                              );
+                          },
+
+                        onAutoplayBlocked:
+                          () => {
+                            listenUnlockOverlay.classList.remove(
+                              "hidden"
+                            );
+
+                            listenPlayerStatus.textContent =
+                              "브라우저가 자동재생을 차단했습니다. 소리 활성화를 눌러 주세요.";
+                          }
+                      }
+                    }
+                  );
+
+              } catch (error) {
+                reject(
+                  error
+                );
+              }
+            }
+          );
+        })();
+
+      try {
+        return await listenPlayerReadyPromise;
+      } catch (error) {
+        listenPlayerReadyPromise =
+          null;
+
+        throw error;
+      }
+    }
+
+    async function applyListenPlayback(
+      state,
+      {
+        force =
+          false
+      } = {}
+    ) {
+      listenPlayback =
+        state || null;
+
+      updateListenControls();
+
+      if (
+        !state ||
+        state.mode ===
+          "idle"
+      ) {
+        listenPlayerPlaceholder.classList.remove(
+          "hidden"
+        );
+
+        listenTrackTitle.textContent =
+          "재생 대기 중";
+
+        listenTrackMeta.textContent =
+          "HOST가 아직 음악을 선택하지 않았습니다.";
+
+        return;
+      }
+
+      listenPlayerPlaceholder.classList.add(
+        "hidden"
+      );
+
+      const player =
+        await ensureListenPlayer();
+
+      const estimated =
+        estimateListenPosition(
+          state
+        );
+
+      const key =
+        listenSourceKey(
+          state
+        );
+
+      const targetIndex =
+        Math.max(
+          0,
+          Number(
+            state.index ?? 0
+          ) || 0
+        );
+
+      const sourceChanged =
+        listenLoadedSourceKey !==
+        key;
+
+      const indexChanged =
+        state.mode ===
+          "playlist" &&
+        listenLoadedIndex !==
+          targetIndex;
+
+      listenSuppressEventsUntil =
+        Date.now() +
+        1200;
+
+      if (
+        state.mode ===
+        "video"
+      ) {
+        if (
+          !state.videoId
+        ) {
+          return;
+        }
+
+        if (
+          sourceChanged
+        ) {
+          if (
+            listenAudioActivated
+          ) {
+            player.loadVideoById({
+              videoId:
+                state.videoId,
+              startSeconds:
+                estimated
+            });
+          } else {
+            player.cueVideoById({
+              videoId:
+                state.videoId,
+              startSeconds:
+                estimated
+            });
+          }
+
+          listenLoadedSourceKey =
+            key;
+
+          listenLoadedIndex =
+            -1;
+
+        } else if (
+          force
+        ) {
+          try {
+            player.seekTo(
+              estimated,
+              true
+            );
+          } catch {}
+        }
+
+      } else if (
+        state.mode ===
+        "playlist"
+      ) {
+        if (
+          !state.playlistId
+        ) {
+          return;
+        }
+
+        if (
+          sourceChanged ||
+          indexChanged
+        ) {
+          const options = {
+            list:
+              state.playlistId,
+            listType:
+              "playlist",
+            index:
+              targetIndex,
+            startSeconds:
+              estimated
+          };
+
+          if (
+            listenAudioActivated
+          ) {
+            player.loadPlaylist(
+              options
+            );
+          } else {
+            player.cuePlaylist(
+              options
+            );
+          }
+
+          listenLoadedSourceKey =
+            key;
+
+          listenLoadedIndex =
+            targetIndex;
+
+        } else if (
+          force
+        ) {
+          try {
+            player.seekTo(
+              estimated,
+              true
+            );
+          } catch {}
+        }
+      }
+
+      if (
+        listenAudioActivated
+      ) {
+        try {
+          if (
+            state.status ===
+            "playing"
+          ) {
+            player.playVideo();
+          } else {
+            player.pauseVideo();
+          }
+        } catch {}
+      }
+
+      window.setTimeout(
+        updateListenVideoMetadata,
+        350
+      );
+    }
+
+    function listenCurrentPlayerStatus() {
+      if (
+        !listenPlayerReady ||
+        !listenPlayer
+      ) {
+        return "paused";
+      }
+
+      try {
+        return (
+          listenPlayer.getPlayerState() ===
+          YT.PlayerState.PLAYING
+        )
+          ? "playing"
+          : "paused";
+      } catch {
+        return "paused";
+      }
+    }
+
+    async function commitListenPlayback(
+      statusOverride =
+        null
+    ) {
+      if (
+        !listenIsHost ||
+        !listenRoomId ||
+        !listenPlayback ||
+        listenPlayback.mode ===
+          "idle" ||
+        !listenPlayerReady ||
+        !listenPlayer
+      ) {
+        return;
+      }
+
+      let position =
+        0;
+
+      let index =
+        Number(
+          listenPlayback.index ??
+          0
+        ) || 0;
+
+      let currentVideoId =
+        String(
+          listenPlayback.videoId ||
+          ""
+        );
+
+      try {
+        position =
+          Math.max(
+            0,
+            Number(
+              listenPlayer.getCurrentTime?.()
+            ) || 0
+          );
+
+        const playerIndex =
+          Number(
+            listenPlayer.getPlaylistIndex?.()
+          );
+
+        if (
+          Number.isFinite(
+            playerIndex
+          ) &&
+          playerIndex >= 0
+        ) {
+          index =
+            playerIndex;
+        }
+
+        const data =
+          listenPlayer.getVideoData?.() ||
+          {};
+
+        currentVideoId =
+          String(
+            data.video_id ||
+            currentVideoId
+          );
+
+      } catch {}
+
+      const updates = {
+        status:
+          statusOverride ||
+          listenCurrentPlayerStatus(),
+        position,
+        index,
+        updatedAt:
+          serverTimestamp()
+      };
+
+      if (
+        listenPlayback.mode ===
+        "playlist"
+      ) {
+        listenLoadedIndex =
+          index;
+      }
+
+      listenLastHostIndex =
+        index;
+
+      if (
+        currentVideoId
+      ) {
+        listenLastHostVideoId =
+          currentVideoId;
+        updates.videoId =
+          currentVideoId;
+      }
+
+      listenSuppressEventsUntil =
+        Date.now() +
+        700;
+
+      await update(
+        ref(
+          db,
+          `listenRooms/${listenRoomId}/playback`
+        ),
+        updates
+      );
+
+      listenHostHeartbeatAt =
+        Date.now();
+    }
+
+    function handleListenPlayerStateChange(
+      state
+    ) {
+      if (
+        !listenIsHost ||
+        Date.now() <
+          listenSuppressEventsUntil ||
+        !listenPlayback ||
+        listenPlayback.mode ===
+          "idle"
+      ) {
+        return;
+      }
+
+      if (
+        state ===
+        YT.PlayerState.PLAYING
+      ) {
+        commitListenPlayback(
+          "playing"
+        ).catch(
+          console.error
+        );
+
+      } else if (
+        state ===
+        YT.PlayerState.PAUSED
+      ) {
+        commitListenPlayback(
+          "paused"
+        ).catch(
+          console.error
+        );
+
+      } else if (
+        state ===
+          YT.PlayerState.ENDED &&
+        listenPlayback.mode ===
+          "video"
+      ) {
+        commitListenPlayback(
+          "paused"
+        ).catch(
+          console.error
+        );
+      }
+    }
+
+    function updateListenControls() {
+      const hasSource =
+        Boolean(
+          listenPlayback &&
+          listenPlayback.mode !==
+            "idle"
+        );
+
+      const hostCanControl =
+        listenIsHost &&
+        hasSource;
+
+      listenResumeButton.disabled =
+        !hostCanControl;
+
+      listenPauseButton.disabled =
+        !hostCanControl;
+
+      listenSeekSlider.disabled =
+        !hostCanControl;
+
+      const playlist =
+        hostCanControl &&
+        listenPlayback.mode ===
+          "playlist";
+
+      listenPrevButton.disabled =
+        !playlist;
+
+      listenNextButton.disabled =
+        !playlist;
+
+      listenHostPanel.classList.toggle(
+        "hidden",
+        !listenIsHost
+      );
+
+      listenCloseRoomButton.classList.toggle(
+        "hidden",
+        !listenIsHost
+      );
+
+      listenRoleBadge.textContent =
+        listenIsHost
+          ? "HOST"
+          : "LISTENER";
+    }
+
+    function renderListenParticipants() {
+      listenParticipantList.replaceChildren();
+
+      const entries =
+        Object.entries(
+          listenParticipants ||
+          {}
+        )
+          .map(
+            ([uid, value]) => ({
+              uid,
+              ...(value || {})
+            })
+          )
+          .sort(
+            (a, b) => {
+              if (
+                a.uid ===
+                listenOwnerUid
+              ) {
+                return -1;
+              }
+
+              if (
+                b.uid ===
+                listenOwnerUid
+              ) {
+                return 1;
+              }
+
+              return String(
+                a.nickname || ""
+              ).localeCompare(
+                String(
+                  b.nickname || ""
+                ),
+                "ko"
+              );
+            }
+          );
+
+      listenParticipantCount.textContent =
+        `${entries.length}명`;
+
+      if (!entries.length) {
+        const empty =
+          document.createElement(
+            "div"
+          );
+
+        empty.className =
+          "playlist-empty";
+
+        empty.textContent =
+          "입장한 사람이 없습니다.";
+
+        listenParticipantList.appendChild(
+          empty
+        );
+
+        return;
+      }
+
+      for (
+        const participant of
+        entries
+      ) {
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "listen-participant-row";
+
+        const name =
+          document.createElement(
+            "div"
+          );
+
+        name.className =
+          "listen-participant-name";
+
+        name.textContent =
+          participant.nickname ||
+          "이름 없음";
+
+        const role =
+          document.createElement(
+            "div"
+          );
+
+        role.className =
+          "listen-participant-role";
+
+        role.textContent =
+          participant.uid ===
+          listenOwnerUid
+            ? "HOST"
+            : "LISTENER";
+
+        row.append(
+          name,
+          role
+        );
+
+        listenParticipantList.appendChild(
+          row
+        );
+      }
+    }
+
+    function startListenTimers() {
+      if (
+        listenUiTimer
+      ) {
+        clearInterval(
+          listenUiTimer
+        );
+      }
+
+      listenUiTimer =
+        setInterval(
+          () => {
+            if (
+              !listenPlayerReady ||
+              !listenPlayer
+            ) {
+              return;
+            }
+
+            try {
+              const current =
+                Math.max(
+                  0,
+                  Number(
+                    listenPlayer.getCurrentTime?.()
+                  ) || 0
+                );
+
+              const duration =
+                Math.max(
+                  0,
+                  Number(
+                    listenPlayer.getDuration?.()
+                  ) || 0
+                );
+
+              if (
+                !listenSeekDragging
+              ) {
+                listenSeekSlider.max =
+                  String(
+                    Math.max(
+                      1,
+                      duration
+                    )
+                  );
+
+                listenSeekSlider.value =
+                  String(
+                    Math.min(
+                      current,
+                      Math.max(
+                        1,
+                        duration
+                      )
+                    )
+                  );
+              }
+
+              listenSeekTimeText.textContent =
+                `${formatTime(current)} / ${duration > 0 ? formatTime(duration) : "--:--"}`;
+
+              updateListenVideoMetadata();
+
+            } catch {}
+          },
+          500
+        );
+
+      if (
+        listenDriftTimer
+      ) {
+        clearInterval(
+          listenDriftTimer
+        );
+      }
+
+      listenDriftTimer =
+        setInterval(
+          () => {
+            if (
+              listenIsHost ||
+              !listenAudioActivated ||
+              !listenPlayerReady ||
+              !listenPlayer ||
+              !listenPlayback ||
+              listenPlayback.status !==
+                "playing" ||
+              listenPlayback.mode ===
+                "idle"
+            ) {
+              return;
+            }
+
+            try {
+              if (
+                listenPlayback.mode ===
+                  "playlist"
+              ) {
+                const currentIndex =
+                  Number(
+                    listenPlayer.getPlaylistIndex?.()
+                  );
+
+                const wantedIndex =
+                  Number(
+                    listenPlayback.index ??
+                    0
+                  );
+
+                if (
+                  Number.isFinite(
+                    currentIndex
+                  ) &&
+                  currentIndex !==
+                    wantedIndex
+                ) {
+                  applyListenPlayback(
+                    listenPlayback,
+                    {
+                      force:
+                        true
+                    }
+                  );
+
+                  return;
+                }
+              }
+
+              const actual =
+                Number(
+                  listenPlayer.getCurrentTime?.()
+                ) || 0;
+
+              const wanted =
+                estimateListenPosition(
+                  listenPlayback
+                );
+
+              if (
+                Math.abs(
+                  actual -
+                  wanted
+                ) >
+                2
+              ) {
+                listenSuppressEventsUntil =
+                  Date.now() +
+                  600;
+
+                listenPlayer.seekTo(
+                  wanted,
+                  true
+                );
+              }
+
+            } catch {}
+          },
+          4000
+        );
+
+      if (
+        listenHostWatchTimer
+      ) {
+        clearInterval(
+          listenHostWatchTimer
+        );
+      }
+
+      listenHostWatchTimer =
+        setInterval(
+          () => {
+            if (
+              !listenIsHost ||
+              !listenPlayerReady ||
+              !listenPlayer ||
+              !listenPlayback ||
+              listenPlayback.mode ===
+                "idle"
+            ) {
+              return;
+            }
+
+            try {
+              const data =
+                listenPlayer.getVideoData?.() ||
+                {};
+
+              const videoId =
+                String(
+                  data.video_id ||
+                  ""
+                );
+
+              const index =
+                Number(
+                  listenPlayer.getPlaylistIndex?.()
+                );
+
+              const normalizedIndex =
+                Number.isFinite(
+                  index
+                ) &&
+                index >= 0
+                  ? index
+                  : -1;
+
+              const changed =
+                videoId &&
+                (
+                  videoId !==
+                    listenLastHostVideoId ||
+                  normalizedIndex !==
+                    listenLastHostIndex
+                );
+
+              if (changed) {
+                listenLastHostVideoId =
+                  videoId;
+
+                listenLastHostIndex =
+                  normalizedIndex;
+
+                commitListenPlayback()
+                  .catch(
+                    console.error
+                  );
+
+                return;
+              }
+
+              if (
+                listenCurrentPlayerStatus() ===
+                  "playing" &&
+                Date.now() -
+                  listenHostHeartbeatAt >
+                  5000
+              ) {
+                commitListenPlayback(
+                  "playing"
+                ).catch(
+                  console.error
+                );
+              }
+
+            } catch {}
+          },
+          1000
+        );
+    }
+
+    async function cleanupListenRoom({
+      removePresence =
+        true,
+      destroyPlayer =
+        true
+    } = {}) {
+      const roomId =
+        listenRoomId;
+
+      const uid =
+        auth.currentUser?.uid ||
+        currentUser?.uid ||
+        "";
+
+      if (
+        listenOwnerUnsubscribe
+      ) {
+        listenOwnerUnsubscribe();
+        listenOwnerUnsubscribe =
+          null;
+      }
+
+      if (
+        listenPlaybackUnsubscribe
+      ) {
+        listenPlaybackUnsubscribe();
+        listenPlaybackUnsubscribe =
+          null;
+      }
+
+      if (
+        listenParticipantsUnsubscribe
+      ) {
+        listenParticipantsUnsubscribe();
+        listenParticipantsUnsubscribe =
+          null;
+      }
+
+      if (
+        listenOffsetUnsubscribe
+      ) {
+        listenOffsetUnsubscribe();
+        listenOffsetUnsubscribe =
+          null;
+      }
+
+      if (
+        listenParticipantDisconnect
+      ) {
+        try {
+          await listenParticipantDisconnect.cancel();
+        } catch {}
+
+        listenParticipantDisconnect =
+          null;
+      }
+
+      if (
+        removePresence &&
+        roomId &&
+        uid
+      ) {
+        try {
+          await set(
+            ref(
+              db,
+              `listenRooms/${roomId}/participants/${uid}`
+            ),
+            null
+          );
+        } catch {}
+      }
+
+      if (
+        listenUiTimer
+      ) {
+        clearInterval(
+          listenUiTimer
+        );
+
+        listenUiTimer =
+          null;
+      }
+
+      if (
+        listenDriftTimer
+      ) {
+        clearInterval(
+          listenDriftTimer
+        );
+
+        listenDriftTimer =
+          null;
+      }
+
+      if (
+        listenHostWatchTimer
+      ) {
+        clearInterval(
+          listenHostWatchTimer
+        );
+
+        listenHostWatchTimer =
+          null;
+      }
+
+      if (
+        destroyPlayer &&
+        listenPlayer
+      ) {
+        try {
+          listenPlayer.destroy();
+        } catch {}
+
+        listenPlayer =
+          null;
+
+        listenPlayerReady =
+          false;
+
+        listenPlayerReadyPromise =
+          null;
+
+        listenPlayerHost.innerHTML =
+          '<div id="listenYoutubePlayer"></div>';
+      }
+
+      listenRoomId =
+        null;
+
+      listenOwnerUid =
+        null;
+
+      listenIsHost =
+        false;
+
+      listenPlayback =
+        null;
+
+      listenParticipants = {};
+
+      listenAudioActivated =
+        false;
+
+      listenLoadedSourceKey =
+        "";
+
+      listenLoadedIndex =
+        -1;
+
+      listenLastHostVideoId =
+        "";
+
+      listenLastHostIndex =
+        -1;
+
+      listenHostHeartbeatAt =
+        0;
+    }
+
+    async function subscribeListenRoom(
+      roomId
+    ) {
+      listenOwnerUnsubscribe =
+        onValue(
+          ref(
+            db,
+            `listenRooms/${roomId}/ownerUid`
+          ),
+          async (
+            snapshot
+          ) => {
+            if (
+              !snapshot.exists()
+            ) {
+              if (
+                listenClosingRoom
+              ) {
+                return;
+              }
+
+              await cleanupListenRoom({
+                removePresence:
+                  false
+              });
+
+              history.replaceState(
+                {
+                  ...(history.state ||
+                    {}),
+                  ccfoliaBgmView:
+                    "entry"
+                },
+                "",
+                removeListenParamFromUrl()
+              );
+
+              showEntryFromListen(
+                "같이 듣기 방이 닫혔거나 존재하지 않습니다."
+              );
+
+              return;
+            }
+
+            listenOwnerUid =
+              String(
+                snapshot.val() ||
+                ""
+              );
+
+            listenIsHost =
+              listenOwnerUid ===
+              auth.currentUser?.uid;
+
+            updateListenControls();
+            renderListenParticipants();
+          }
+        );
+
+      listenPlaybackUnsubscribe =
+        onValue(
+          ref(
+            db,
+            `listenRooms/${roomId}/playback`
+          ),
+          (
+            snapshot
+          ) => {
+            const state =
+              snapshot.val() || {
+                mode:
+                  "idle",
+                status:
+                  "paused",
+                position:
+                  0,
+                index:
+                  0,
+                updatedAt:
+                  listenServerNowMs()
+              };
+
+            listenPlayback =
+              state;
+
+            applyListenPlayback(
+              state
+            ).catch(
+              (error) => {
+                console.error(
+                  "listen playback apply failed",
+                  error
+                );
+
+                listenPlayerStatus.textContent =
+                  error?.message ??
+                  "재생 상태를 적용하지 못했습니다.";
+              }
+            );
+          }
+        );
+
+      listenParticipantsUnsubscribe =
+        onValue(
+          ref(
+            db,
+            `listenRooms/${roomId}/participants`
+          ),
+          (
+            snapshot
+          ) => {
+            listenParticipants =
+              snapshot.val() ||
+              {};
+
+            renderListenParticipants();
+          }
+        );
+
+      listenOffsetUnsubscribe =
+        onValue(
+          ref(
+            db,
+            ".info/serverTimeOffset"
+          ),
+          (
+            snapshot
+          ) => {
+            listenServerOffsetMs =
+              Number(
+                snapshot.val() ??
+                0
+              );
+          }
+        );
+    }
+
+    async function joinListenRoom(
+      roomId,
+      nickname,
+      {
+        historyMode =
+          "replace"
+      } = {}
+    ) {
+      const cleanNickname =
+        String(
+          nickname || ""
+        ).trim();
+
+      if (!cleanNickname) {
+        throw new Error(
+          "닉네임을 입력해 주세요."
+        );
+      }
+
+      if (
+        cleanNickname.length >
+        20
+      ) {
+        throw new Error(
+          "닉네임은 20자 이하로 입력해 주세요."
+        );
+      }
+
+      await ensureRoomEntryAuth();
+
+      const ownerSnapshot =
+        await get(
+          ref(
+            db,
+            `listenRooms/${roomId}/ownerUid`
+          )
+        );
+
+      if (
+        !ownerSnapshot.exists()
+      ) {
+        throw new Error(
+          "같이 듣기 방이 존재하지 않거나 이미 닫혔습니다."
+        );
+      }
+
+      await cleanupListenRoom();
+
+      listenRoomId =
+        roomId;
+
+      listenOwnerUid =
+        String(
+          ownerSnapshot.val() ||
+          ""
+        );
+
+      listenIsHost =
+        listenOwnerUid ===
+        auth.currentUser.uid;
+
+      listenNickname =
+        cleanNickname;
+
+      localStorage.setItem(
+        "ccfolia-bgm-nickname",
+        cleanNickname
+      );
+
+      nicknameInput.value =
+        cleanNickname;
+
+      listenRoomLine.textContent =
+        `방 ${roomId.slice(0, 8)} · ${listenIsHost ? "HOST" : "LISTENER"}`;
+
+      listenInviteLink.value =
+        listenInviteUrl(
+          roomId
+        );
+
+      listenJoinGate.classList.add(
+        "hidden"
+      );
+
+      listenUnlockOverlay.classList.remove(
+        "hidden"
+      );
+
+      listenPlayerPlaceholder.classList.remove(
+        "hidden"
+      );
+
+      listenPlayerStatus.textContent =
+        "";
+
+      listenRoomStatus.textContent =
+        "";
+
+      listenHostStatus.textContent =
+        "";
+
+      updateListenControls();
+
+      showListenView();
+
+      const participantRef =
+        ref(
+          db,
+          `listenRooms/${roomId}/participants/${auth.currentUser.uid}`
+        );
+
+      await set(
+        participantRef,
+        {
+          nickname:
+            cleanNickname,
+          joinedAt:
+            serverTimestamp()
+        }
+      );
+
+      listenParticipantDisconnect =
+        onDisconnect(
+          participantRef
+        );
+
+      await listenParticipantDisconnect.remove();
+
+      await subscribeListenRoom(
+        roomId
+      );
+
+      startListenTimers();
+
+      const url =
+        listenInviteUrl(
+          roomId
+        );
+
+      const state = {
+        ...(history.state ||
+          {}),
+        ccfoliaBgmView:
+          "listen"
+      };
+
+      if (
+        historyMode ===
+        "push"
+      ) {
+        history.pushState(
+          state,
+          "",
+          url
+        );
+      } else {
+        history.replaceState(
+          state,
+          "",
+          url
+        );
+      }
+    }
+
+    async function createListenRoom() {
+      entryError.textContent =
+        "";
+
+      const nickname =
+        nicknameInput.value.trim();
+
+      if (!nickname) {
+        entryError.textContent =
+          "같이 듣기 방을 만들려면 닉네임을 먼저 입력해 주세요.";
+
+        nicknameInput.focus();
+
+        return;
+      }
+
+      try {
+        createListenRoomButton.disabled =
+          true;
+
+        await ensureRoomEntryAuth();
+
+        const roomId =
+          generateListenRoomId();
+
+        await set(
+          ref(
+            db,
+            `listenRooms/${roomId}`
+          ),
+          {
+            ownerUid:
+              auth.currentUser.uid,
+            meta: {
+              createdAt:
+                serverTimestamp()
+            },
+            playback: {
+              mode:
+                "idle",
+              status:
+                "paused",
+              position:
+                0,
+              index:
+                0,
+              updatedAt:
+                serverTimestamp()
+            }
+          }
+        );
+
+        await joinListenRoom(
+          roomId,
+          nickname,
+          {
+            historyMode:
+              "push"
+          }
+        );
+
+      } catch (error) {
+        console.error(
+          "listen room create failed",
+          error
+        );
+
+        entryError.textContent =
+          error?.message ??
+          "같이 듣기 방을 만들지 못했습니다.";
+
+      } finally {
+        createListenRoomButton.disabled =
+          false;
+      }
+    }
+
+    async function prepareListenInviteFromUrl() {
+      const roomId =
+        getListenRoomIdFromUrl();
+
+      if (
+        !roomId ||
+        listenInviteHandling ||
+        listenRoomId
+      ) {
+        return false;
+      }
+
+      listenInviteHandling =
+        true;
+
+      try {
+        await ensureRoomEntryAuth();
+
+        const ownerSnapshot =
+          await get(
+            ref(
+              db,
+              `listenRooms/${roomId}/ownerUid`
+            )
+          );
+
+        if (
+          !ownerSnapshot.exists()
+        ) {
+          history.replaceState(
+            {
+              ...(history.state ||
+                {}),
+              ccfoliaBgmView:
+                "entry"
+            },
+            "",
+            removeListenParamFromUrl()
+          );
+
+          entryError.textContent =
+            "같이 듣기 방이 존재하지 않거나 이미 닫혔습니다.";
+
+          return true;
+        }
+
+        listenPendingInviteRoomId =
+          roomId;
+
+        listenOwnerUid =
+          String(
+            ownerSnapshot.val() ||
+            ""
+          );
+
+        listenIsHost =
+          listenOwnerUid ===
+          auth.currentUser.uid;
+
+        listenInviteLink.value =
+          listenInviteUrl(
+            roomId
+          );
+
+        listenRoomLine.textContent =
+          `방 ${roomId.slice(0, 8)} · 입장 대기`;
+
+        listenRoleBadge.textContent =
+          listenIsHost
+            ? "HOST"
+            : "LISTENER";
+
+        listenJoinNicknameInput.value =
+          localStorage.getItem(
+            "ccfolia-bgm-nickname"
+          ) ||
+          nicknameInput.value ||
+          "";
+
+        listenJoinStatus.textContent =
+          "";
+
+        listenJoinGate.classList.remove(
+          "hidden"
+        );
+
+        showListenView();
+
+        history.replaceState(
+          {
+            ...(history.state ||
+              {}),
+            ccfoliaBgmView:
+              "listen"
+          },
+          "",
+          listenInviteUrl(
+            roomId
+          )
+        );
+
+        requestAnimationFrame(
+          () => {
+            listenJoinNicknameInput.focus();
+          }
+        );
+
+        return true;
+
+      } catch (error) {
+        console.error(
+          "listen invite prepare failed",
+          error
+        );
+
+        entryError.textContent =
+          error?.message ??
+          "같이 듣기 초대 링크를 열지 못했습니다.";
+
+        return true;
+
+      } finally {
+        listenInviteHandling =
+          false;
+      }
+    }
+
+    async function leaveListenRoom() {
+      await cleanupListenRoom();
+
+      listenPendingInviteRoomId =
+        null;
+
+      history.replaceState(
+        {
+          ...(history.state ||
+            {}),
+          ccfoliaBgmView:
+            "entry"
+        },
+        "",
+        removeListenParamFromUrl()
+      );
+
+      showEntryFromListen();
+    }
+
+    async function closeListenRoom() {
+      if (
+        !listenIsHost ||
+        !listenRoomId
+      ) {
+        return;
+      }
+
+      if (
+        !confirm(
+          "같이 듣기 방을 닫을까요?\n\n접속 중인 친구도 모두 방에서 나가게 됩니다."
+        )
+      ) {
+        return;
+      }
+
+      const roomId =
+        listenRoomId;
+
+      try {
+        listenClosingRoom =
+          true;
+
+        listenCloseRoomButton.disabled =
+          true;
+
+        await set(
+          ref(
+            db,
+            `listenRooms/${roomId}`
+          ),
+          null
+        );
+
+        await cleanupListenRoom({
+          removePresence:
+            false
+        });
+
+        history.replaceState(
+          {
+            ...(history.state ||
+              {}),
+            ccfoliaBgmView:
+              "entry"
+          },
+          "",
+          removeListenParamFromUrl()
+        );
+
+        showEntryFromListen(
+          "같이 듣기 방을 닫았습니다."
+        );
+
+      } catch (error) {
+        listenRoomStatus.textContent =
+          error?.message ??
+          "방을 닫지 못했습니다.";
+
+      } finally {
+        listenClosingRoom =
+          false;
+
+        listenCloseRoomButton.disabled =
+          false;
+      }
+    }
+
+    async function activateListenAudio() {
+      try {
+        listenUnlockButton.disabled =
+          true;
+
+        listenUnlockButton.textContent =
+          "준비 중…";
+
+        const player =
+          await ensureListenPlayer();
+
+        listenAudioActivated =
+          true;
+
+        const volume =
+          Number(
+            listenVolumeSlider.value
+          ) || 0;
+
+        player.setVolume(
+          volume
+        );
+
+        if (
+          volume > 0
+        ) {
+          player.unMute();
+        }
+
+        if (
+          listenPlayback
+        ) {
+          await applyListenPlayback(
+            listenPlayback,
+            {
+              force:
+                true
+            }
+          );
+        }
+
+        listenUnlockOverlay.classList.add(
+          "hidden"
+        );
+
+        listenPlayerStatus.textContent =
+          "같이 듣기 재생이 활성화되었습니다.";
+
+      } catch (error) {
+        console.error(
+          "listen activation failed",
+          error
+        );
+
+        listenPlayerStatus.textContent =
+          error?.message ??
+          "YouTube 플레이어를 준비하지 못했습니다.";
+
+      } finally {
+        listenUnlockButton.disabled =
+          false;
+
+        listenUnlockButton.textContent =
+          "▶ 소리 활성화";
+      }
+    }
+
+    async function hostLoadListenSource() {
+      if (
+        !listenIsHost ||
+        !listenRoomId
+      ) {
+        return;
+      }
+
+      try {
+        listenLoadSourceButton.disabled =
+          true;
+
+        listenHostStatus.textContent =
+          "YouTube 링크를 확인하는 중…";
+
+        const source =
+          parseListenYoutubeSource(
+            listenSourceInput.value
+          );
+
+        const playback = {
+          mode:
+            source.mode,
+          status:
+            "playing",
+          position:
+            0,
+          index:
+            0,
+          updatedAt:
+            serverTimestamp()
+        };
+
+        if (
+          source.mode ===
+          "playlist"
+        ) {
+          playback.playlistId =
+            source.playlistId;
+
+          if (
+            source.requestedVideoId
+          ) {
+            playback.requestedVideoId =
+              source.requestedVideoId;
+          }
+        } else {
+          playback.videoId =
+            source.videoId;
+        }
+
+        listenLoadedSourceKey =
+          "";
+
+        listenLoadedIndex =
+          -1;
+
+        listenLastHostVideoId =
+          "";
+
+        listenLastHostIndex =
+          -1;
+
+        await set(
+          ref(
+            db,
+            `listenRooms/${listenRoomId}/playback`
+          ),
+          playback
+        );
+
+        listenHostStatus.textContent =
+          source.mode ===
+          "playlist"
+            ? "플레이리스트를 불러왔습니다."
+            : "영상을 불러왔습니다.";
+
+      } catch (error) {
+        listenHostStatus.textContent =
+          error?.message ??
+          "YouTube 링크를 불러오지 못했습니다.";
+
+      } finally {
+        listenLoadSourceButton.disabled =
+          false;
+      }
+    }
+
+    async function hostListenPlay() {
+      if (
+        !listenIsHost
+      ) {
+        return;
+      }
+
+      try {
+        await activateListenAudio();
+
+        listenSuppressEventsUntil =
+          Date.now() +
+          500;
+
+        listenPlayer.playVideo();
+
+        await commitListenPlayback(
+          "playing"
+        );
+
+      } catch (error) {
+        listenPlayerStatus.textContent =
+          error?.message ??
+          "재생하지 못했습니다.";
+      }
+    }
+
+    async function hostListenPause() {
+      if (
+        !listenIsHost ||
+        !listenPlayerReady ||
+        !listenPlayer
+      ) {
+        return;
+      }
+
+      try {
+        listenSuppressEventsUntil =
+          Date.now() +
+          500;
+
+        listenPlayer.pauseVideo();
+
+        await commitListenPlayback(
+          "paused"
+        );
+
+      } catch (error) {
+        listenPlayerStatus.textContent =
+          error?.message ??
+          "일시정지하지 못했습니다.";
+      }
+    }
+
+    async function hostListenNext(
+      direction
+    ) {
+      if (
+        !listenIsHost ||
+        !listenPlayerReady ||
+        !listenPlayer ||
+        listenPlayback?.mode !==
+          "playlist"
+      ) {
+        return;
+      }
+
+      try {
+        listenSuppressEventsUntil =
+          Date.now() +
+          1200;
+
+        if (
+          direction > 0
+        ) {
+          listenPlayer.nextVideo();
+        } else {
+          listenPlayer.previousVideo();
+        }
+
+        window.setTimeout(
+          () => {
+            commitListenPlayback()
+              .catch(
+                console.error
+              );
+          },
+          500
+        );
+
+      } catch (error) {
+        listenPlayerStatus.textContent =
+          error?.message ??
+          "곡을 변경하지 못했습니다.";
+      }
+    }
+
+    async function copyListenInvite() {
+      const value =
+        listenInviteLink.value ||
+        (
+          listenRoomId
+            ? listenInviteUrl(
+                listenRoomId
+              )
+            : ""
+        );
+
+      if (!value) {
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(
+          value
+        );
+
+        listenRoomStatus.textContent =
+          "초대 링크를 복사했습니다.";
+
+      } catch {
+        listenInviteLink.focus();
+        listenInviteLink.select();
+
+        document.execCommand?.(
+          "copy"
+        );
+
+        listenRoomStatus.textContent =
+          "초대 링크를 복사했습니다.";
+      }
     }
 
     function validatePin(pin) {
@@ -17599,6 +20460,20 @@
         ) {
           clearActiveRoomSession();
 
+          if (
+            listenRoomId ||
+            listenPendingInviteRoomId
+          ) {
+            cleanupListenRoom()
+              .finally(
+                () => {
+                  window.location.reload();
+                }
+              );
+
+            return;
+          }
+
           // Firebase/YouTube 실시간 리스너까지 확실히 정리하기 위해
           // 로그인/목록 화면 상태에서 한 번 다시 로드한다.
           window.location.reload();
@@ -17617,6 +20492,18 @@
       updateAccountUi(
         user
       );
+
+      const listenInviteId =
+        getListenRoomIdFromUrl();
+
+      if (
+        listenInviteId &&
+        !listenRoomId &&
+        !listenPendingInviteRoomId
+      ) {
+        await prepareListenInviteFromUrl();
+        return;
+      }
 
       if (
         !initialRoomRestoreHandled &&
@@ -17657,6 +20544,240 @@
 
         await applyAuthState(
           user
+        );
+      }
+    );
+
+    createListenRoomButton.addEventListener(
+      "click",
+      createListenRoom
+    );
+
+    listenJoinButton.addEventListener(
+      "click",
+      async () => {
+        if (
+          !listenPendingInviteRoomId
+        ) {
+          return;
+        }
+
+        try {
+          listenJoinButton.disabled =
+            true;
+
+          listenJoinStatus.textContent =
+            "입장하는 중…";
+
+          const roomId =
+            listenPendingInviteRoomId;
+
+          await joinListenRoom(
+            roomId,
+            listenJoinNicknameInput.value,
+            {
+              historyMode:
+                "replace"
+            }
+          );
+
+          listenPendingInviteRoomId =
+            null;
+
+          listenJoinStatus.textContent =
+            "";
+
+        } catch (error) {
+          listenJoinStatus.textContent =
+            error?.message ??
+            "같이 듣기 방에 입장하지 못했습니다.";
+
+        } finally {
+          listenJoinButton.disabled =
+            false;
+        }
+      }
+    );
+
+    listenJoinNicknameInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key ===
+          "Enter"
+        ) {
+          event.preventDefault();
+          listenJoinButton.click();
+        }
+      }
+    );
+
+    listenBackButton.addEventListener(
+      "click",
+      leaveListenRoom
+    );
+
+    listenLeaveButton.addEventListener(
+      "click",
+      leaveListenRoom
+    );
+
+    listenCloseRoomButton.addEventListener(
+      "click",
+      closeListenRoom
+    );
+
+    listenCopyInviteButton.addEventListener(
+      "click",
+      copyListenInvite
+    );
+
+    listenUnlockButton.addEventListener(
+      "click",
+      activateListenAudio
+    );
+
+    listenLoadSourceButton.addEventListener(
+      "click",
+      hostLoadListenSource
+    );
+
+    listenSourceInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key ===
+          "Enter"
+        ) {
+          event.preventDefault();
+          hostLoadListenSource();
+        }
+      }
+    );
+
+    listenResumeButton.addEventListener(
+      "click",
+      hostListenPlay
+    );
+
+    listenPauseButton.addEventListener(
+      "click",
+      hostListenPause
+    );
+
+    listenNextButton.addEventListener(
+      "click",
+      () => {
+        hostListenNext(
+          1
+        );
+      }
+    );
+
+    listenPrevButton.addEventListener(
+      "click",
+      () => {
+        hostListenNext(
+          -1
+        );
+      }
+    );
+
+    listenSeekSlider.addEventListener(
+      "pointerdown",
+      () => {
+        listenSeekDragging =
+          true;
+      }
+    );
+
+    listenSeekSlider.addEventListener(
+      "input",
+      () => {
+        const value =
+          Math.max(
+            0,
+            Number(
+              listenSeekSlider.value
+            ) || 0
+          );
+
+        const duration =
+          Math.max(
+            0,
+            Number(
+              listenSeekSlider.max
+            ) || 0
+          );
+
+        listenSeekTimeText.textContent =
+          `${formatTime(value)} / ${duration > 0 ? formatTime(duration) : "--:--"}`;
+      }
+    );
+
+    const finishListenSeek =
+      async () => {
+        if (
+          !listenSeekDragging
+        ) {
+          return;
+        }
+
+        listenSeekDragging =
+          false;
+
+        if (
+          !listenIsHost ||
+          !listenPlayerReady ||
+          !listenPlayer
+        ) {
+          return;
+        }
+
+        try {
+          const value =
+            Math.max(
+              0,
+              Number(
+                listenSeekSlider.value
+              ) || 0
+            );
+
+          listenSuppressEventsUntil =
+            Date.now() +
+            700;
+
+          listenPlayer.seekTo(
+            value,
+            true
+          );
+
+          await commitListenPlayback(
+            listenCurrentPlayerStatus()
+          );
+
+        } catch (error) {
+          listenPlayerStatus.textContent =
+            error?.message ??
+            "재생 위치를 변경하지 못했습니다.";
+        }
+      };
+
+    listenSeekSlider.addEventListener(
+      "change",
+      finishListenSeek
+    );
+
+    listenSeekSlider.addEventListener(
+      "pointerup",
+      finishListenSeek
+    );
+
+    listenVolumeSlider.addEventListener(
+      "input",
+      () => {
+        setListenLocalVolume(
+          listenVolumeSlider.value
         );
       }
     );
