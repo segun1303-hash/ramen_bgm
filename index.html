@@ -3027,6 +3027,42 @@
       background: #403f3a;
     }
 
+  
+    /* =========================================================
+       v3.16.1 dark memo button contrast fix
+       ========================================================= */
+
+    html[data-theme="dark"] .memo-button {
+      background: #30302d;
+      color: #f0eee8;
+      border-color: #64635b;
+    }
+
+    html[data-theme="dark"] .memo-button:hover {
+      background: #3a3935;
+      color: #ffffff;
+      border-color: #77756c;
+    }
+
+    html[data-theme="dark"] .memo-button.has-memo {
+      background: #3a3935;
+      color: #ffffff;
+      border-color: #8b887e;
+      font-weight: 800;
+    }
+
+    html[data-theme="dark"] .memo-button.has-memo:hover {
+      background: #484741;
+      color: #ffffff;
+      border-color: #9b988e;
+    }
+
+    html[data-theme="dark"] .memo-button:disabled {
+      background: #292926;
+      color: #8f8b81;
+      border-color: #4b4a44;
+    }
+
   </style>
 </head>
 
@@ -3161,7 +3197,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.16</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.16.1</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
