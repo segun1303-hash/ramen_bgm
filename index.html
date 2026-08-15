@@ -2993,7 +2993,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.12.2</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.12.3</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -3606,11 +3606,12 @@
     let playlistMemo = "";
     let playlistUnsubscribe = null;
 
+    const UNFILED_FOLDER_ID = "__unfiled__";
+
     let detachedPlaylistWindow = null;
     let detachedPlaylistMode = null;
     let detachedSelectedFolderId = UNFILED_FOLDER_ID;
 
-    const UNFILED_FOLDER_ID = "__unfiled__";
     let selectedFolderId = UNFILED_FOLDER_ID;
     let activeMasterTab = "playlist";
     const expandedTracks = new Set();
