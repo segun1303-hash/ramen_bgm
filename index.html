@@ -3360,6 +3360,23 @@
       }
     }
 
+  
+    .bgm-category-menu-wrap{position:relative;flex:0 0 auto}
+    .bgm-category-menu-button{font-size:15px;line-height:1}
+    .bgm-category-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:40;display:grid;width:148px;padding:5px;border:1px solid var(--line);border-radius:9px;background:var(--panel);box-shadow:0 12px 30px rgba(0,0,0,.14)}
+    .bgm-category-menu.hidden{display:none}
+    .bgm-category-menu button{min-height:31px;padding:0 8px;border:0;border-radius:6px;background:transparent;color:var(--text);font:inherit;font-size:10px;text-align:left;cursor:pointer}
+    .bgm-category-menu button:hover{background:var(--soft2)}
+    .bgm-library-track-actions{align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .bgm-library-move-select{min-width:92px;max-width:132px;min-height:30px;padding:0 26px 0 7px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--text);font:inherit;font-size:9px}
+    .bgm-category-sort-dialog{display:grid;gap:6px}
+    .bgm-category-sort-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:5px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--soft2)}
+    .bgm-category-sort-name{min-width:0;overflow:hidden;font-size:10px;font-weight:760;text-overflow:ellipsis;white-space:nowrap}
+    .bgm-category-sort-row .mini-btn{min-width:30px;padding:0 7px}
+    html[data-theme="dark"] .bgm-category-menu{background:#242421;border-color:var(--line-strong)}
+    html[data-theme="dark"] .bgm-library-move-select{background:#242421;color:var(--text);border-color:var(--line-strong)}
+    @media(max-width:620px){.bgm-library-move-select{max-width:none;flex:1}}
+
   </style>
 </head>
 
@@ -3493,15 +3510,19 @@
         <div id="bgmLibraryPanel" class="bgm-library-panel hidden">
           <div class="bgm-library-toolbar">
             <div id="bgmLibraryCategoryStrip" class="bgm-library-category-strip"></div>
-            <button id="addBgmLibraryCategoryButton" class="session-folder-add" type="button" title="BGM 카테고리 추가">＋</button>
+            <div class="bgm-category-menu-wrap">
+              <button id="bgmCategoryMenuButton" class="session-folder-add bgm-category-menu-button" type="button" title="카테고리 관리" aria-label="카테고리 관리">☰</button>
+              <div id="bgmCategoryMenu" class="bgm-category-menu hidden">
+                <button id="createBgmLibraryCategoryMenuItem" type="button">카테고리 생성</button>
+                <button id="editBgmLibraryCategoryMenuItem" type="button">카테고리 편집</button>
+                <button id="sortBgmLibraryCategoryMenuItem" type="button">카테고리 정렬</button>
+              </div>
+            </div>
           </div>
 
           <div class="bgm-library-manage">
             <span id="bgmLibraryCurrentCategory" class="session-folder-current">미분류</span>
-            <div class="bgm-library-manage-actions">
-              <button id="renameBgmLibraryCategoryButton" class="mini-btn hidden" type="button">이름 변경</button>
-              <button id="deleteBgmLibraryCategoryButton" class="mini-btn danger-mini hidden" type="button">카테고리 삭제</button>
-            </div>
+            <span class="version-text">곡의 카테고리는 각 항목에서 변경할 수 있습니다.</span>
           </div>
 
           <button id="bgmLibraryAddToggle" class="playlist-add-toggle" type="button">＋ BGM 저장</button>
@@ -3539,7 +3560,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.17</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.18</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -4024,10 +4045,12 @@
 
     const bgmLibraryPanel = $("#bgmLibraryPanel");
     const bgmLibraryCategoryStrip = $("#bgmLibraryCategoryStrip");
-    const addBgmLibraryCategoryButton = $("#addBgmLibraryCategoryButton");
+    const bgmCategoryMenuButton = $("#bgmCategoryMenuButton");
+    const bgmCategoryMenu = $("#bgmCategoryMenu");
+    const createBgmLibraryCategoryMenuItem = $("#createBgmLibraryCategoryMenuItem");
+    const editBgmLibraryCategoryMenuItem = $("#editBgmLibraryCategoryMenuItem");
+    const sortBgmLibraryCategoryMenuItem = $("#sortBgmLibraryCategoryMenuItem");
     const bgmLibraryCurrentCategory = $("#bgmLibraryCurrentCategory");
-    const renameBgmLibraryCategoryButton = $("#renameBgmLibraryCategoryButton");
-    const deleteBgmLibraryCategoryButton = $("#deleteBgmLibraryCategoryButton");
     const bgmLibraryAddToggle = $("#bgmLibraryAddToggle");
     const bgmLibraryAddPanel = $("#bgmLibraryAddPanel");
     const bgmLibraryTitleInput = $("#bgmLibraryTitleInput");
@@ -4875,29 +4898,10 @@
         );
       }
 
-      const isRealCategory =
-        selectedBgmLibraryCategoryId !==
-          BGM_LIBRARY_UNFILED &&
-        Boolean(
-          bgmLibraryCategories[
-            selectedBgmLibraryCategoryId
-          ]
-        );
-
       bgmLibraryCurrentCategory.textContent =
         bgmLibraryCategoryName(
           selectedBgmLibraryCategoryId
         );
-
-      renameBgmLibraryCategoryButton.classList.toggle(
-        "hidden",
-        !isRealCategory
-      );
-
-      deleteBgmLibraryCategoryButton.classList.toggle(
-        "hidden",
-        !isRealCategory
-      );
 
       bgmLibraryTrackList.replaceChildren();
 
@@ -4980,6 +4984,81 @@
 
         actions.className =
           "bgm-library-track-actions";
+
+        const moveSelect =
+          document.createElement(
+            "select"
+          );
+
+        moveSelect.className =
+          "bgm-library-move-select";
+
+        moveSelect.title =
+          "카테고리 이동";
+
+        for (
+          const category of
+          [
+            { id: BGM_LIBRARY_UNFILED, name: "미분류" },
+            ...orderedBgmLibraryCategories()
+          ]
+        ) {
+          const option =
+            document.createElement(
+              "option"
+            );
+
+          option.value =
+            category.id;
+
+          option.textContent =
+            category.name;
+
+          moveSelect.appendChild(
+            option
+          );
+        }
+
+        moveSelect.value =
+          normalizeBgmLibraryCategoryId(
+            track
+          );
+
+        moveSelect.addEventListener(
+          "change",
+          async () => {
+            const nextCategoryId =
+              moveSelect.value;
+
+            moveSelect.disabled =
+              true;
+
+            try {
+              await moveBgmLibraryTrackToCategory(
+                track.id,
+                nextCategoryId
+              );
+            } catch (error) {
+              console.error(
+                "BGM category move failed",
+                error
+              );
+
+              alert(
+                error?.message ??
+                "카테고리 이동에 실패했습니다."
+              );
+
+              moveSelect.value =
+                normalizeBgmLibraryCategoryId(
+                  track
+                );
+            } finally {
+              moveSelect.disabled =
+                false;
+            }
+          }
+        );
 
         const preview =
           document.createElement(
@@ -5064,6 +5143,7 @@
         );
 
         actions.append(
+          moveSelect,
           preview,
           deleteButton
         );
@@ -5077,6 +5157,387 @@
           row
         );
       }
+    }
+
+    async function moveBgmLibraryTrackToCategory(
+      trackId,
+      categoryId
+    ) {
+      const user = auth.currentUser;
+
+      if (!isPersistentAccount(user)) {
+        throw new Error(
+          "Google 로그인 사용자만 사용할 수 있습니다."
+        );
+      }
+
+      const safeCategoryId =
+        categoryId !== BGM_LIBRARY_UNFILED &&
+        bgmLibraryCategories[categoryId]
+          ? categoryId
+          : BGM_LIBRARY_UNFILED;
+
+      const updates = {
+        order:
+          maxBgmLibraryOrder(
+            safeCategoryId
+          ) + 10
+      };
+
+      updates.categoryId =
+        safeCategoryId === BGM_LIBRARY_UNFILED
+          ? null
+          : safeCategoryId;
+
+      await update(
+        ref(
+          db,
+          `users/${user.uid}/bgmLibrary/tracks/${trackId}`
+        ),
+        updates
+      );
+    }
+
+    function closeBgmCategoryMenu() {
+      bgmCategoryMenu.classList.add(
+        "hidden"
+      );
+    }
+
+    async function editSelectedBgmLibraryCategory() {
+      if (
+        selectedBgmLibraryCategoryId ===
+        BGM_LIBRARY_UNFILED
+      ) {
+        alert(
+          "미분류는 기본 카테고리라 이름 변경이나 삭제를 할 수 없습니다."
+        );
+        return;
+      }
+
+      const current =
+        bgmLibraryCategories[
+          selectedBgmLibraryCategoryId
+        ];
+
+      if (!current) return;
+
+      const action =
+        prompt(
+          `「${current.name || "카테고리"}」 편집\\n\\n1 = 이름 변경\\n2 = 카테고리 삭제`,
+          "1"
+        )?.trim();
+
+      if (action === "1") {
+        await renameSelectedBgmLibraryCategory();
+      } else if (action === "2") {
+        await deleteSelectedBgmLibraryCategory();
+      }
+    }
+
+    async function shiftBgmLibraryCategory(
+      categoryId,
+      direction
+    ) {
+      const user = auth.currentUser;
+
+      if (!isPersistentAccount(user)) {
+        return;
+      }
+
+      const categories =
+        orderedBgmLibraryCategories();
+
+      const index =
+        categories.findIndex(
+          (category) =>
+            category.id ===
+            categoryId
+        );
+
+      const swapIndex =
+        index + direction;
+
+      if (
+        index < 0 ||
+        swapIndex < 0 ||
+        swapIndex >= categories.length
+      ) {
+        return;
+      }
+
+      const current =
+        categories[index];
+
+      const other =
+        categories[swapIndex];
+
+      const currentOrder =
+        Number(
+          current.order ??
+          (index + 1) * 10
+        );
+
+      const otherOrder =
+        Number(
+          other.order ??
+          (swapIndex + 1) * 10
+        );
+
+      await update(
+        ref(
+          db,
+          `users/${user.uid}/bgmLibrary/categories`
+        ),
+        {
+          [`${current.id}/order`]:
+            otherOrder,
+          [`${other.id}/order`]:
+            currentOrder
+        }
+      );
+    }
+
+    function openBgmLibraryCategorySort() {
+      const overlay =
+        document.createElement(
+          "div"
+        );
+
+      overlay.className =
+        "unlock";
+
+      overlay.style.zIndex =
+        "500";
+
+      const dialog =
+        document.createElement(
+          "div"
+        );
+
+      dialog.className =
+        "card";
+
+      dialog.style.width =
+        "min(420px, calc(100vw - 28px))";
+
+      dialog.style.padding =
+        "16px";
+
+      const title =
+        document.createElement(
+          "div"
+        );
+
+      title.className =
+        "section-title";
+
+      title.textContent =
+        "BGM 카테고리 정렬";
+
+      const desc =
+        document.createElement(
+          "div"
+        );
+
+      desc.className =
+        "status-line";
+
+      desc.textContent =
+        "미분류는 항상 맨 앞에 유지됩니다.";
+
+      const list =
+        document.createElement(
+          "div"
+        );
+
+      list.className =
+        "bgm-category-sort-dialog";
+
+      const renderRows =
+        () => {
+          list.replaceChildren();
+
+          const categories =
+            orderedBgmLibraryCategories();
+
+          if (!categories.length) {
+            const empty =
+              document.createElement(
+                "div"
+              );
+
+            empty.className =
+              "playlist-empty";
+
+            empty.textContent =
+              "정렬할 사용자 카테고리가 없습니다.";
+
+            list.appendChild(
+              empty
+            );
+
+            return;
+          }
+
+          categories.forEach(
+            (
+              category,
+              index
+            ) => {
+              const row =
+                document.createElement(
+                  "div"
+                );
+
+              row.className =
+                "bgm-category-sort-row";
+
+              const name =
+                document.createElement(
+                  "div"
+                );
+
+              name.className =
+                "bgm-category-sort-name";
+
+              name.textContent =
+                category.name ||
+                "이름 없음";
+
+              const up =
+                document.createElement(
+                  "button"
+                );
+
+              up.className =
+                "mini-btn";
+
+              up.type =
+                "button";
+
+              up.textContent =
+                "↑";
+
+              up.disabled =
+                index === 0;
+
+              up.addEventListener(
+                "click",
+                async () => {
+                  await shiftBgmLibraryCategory(
+                    category.id,
+                    -1
+                  );
+                }
+              );
+
+              const down =
+                document.createElement(
+                  "button"
+                );
+
+              down.className =
+                "mini-btn";
+
+              down.type =
+                "button";
+
+              down.textContent =
+                "↓";
+
+              down.disabled =
+                index ===
+                categories.length - 1;
+
+              down.addEventListener(
+                "click",
+                async () => {
+                  await shiftBgmLibraryCategory(
+                    category.id,
+                    1
+                  );
+                }
+              );
+
+              row.append(
+                name,
+                up,
+                down
+              );
+
+              list.appendChild(
+                row
+              );
+            }
+          );
+        };
+
+      renderRows();
+
+      const unsubscribe =
+        onValue(
+          ref(
+            db,
+            `users/${auth.currentUser.uid}/bgmLibrary/categories`
+          ),
+          renderRows
+        );
+
+      const close =
+        document.createElement(
+          "button"
+        );
+
+      close.className =
+        "btn secondary";
+
+      close.type =
+        "button";
+
+      close.textContent =
+        "닫기";
+
+      close.style.marginTop =
+        "10px";
+
+      const closeDialog =
+        () => {
+          unsubscribe();
+          overlay.remove();
+        };
+
+      close.addEventListener(
+        "click",
+        closeDialog
+      );
+
+      overlay.addEventListener(
+        "click",
+        (event) => {
+          if (
+            event.target ===
+            overlay
+          ) {
+            closeDialog();
+          }
+        }
+      );
+
+      dialog.append(
+        title,
+        desc,
+        list,
+        close
+      );
+
+      overlay.appendChild(
+        dialog
+      );
+
+      document.body.appendChild(
+        overlay
+      );
     }
 
     async function addBgmLibraryCategory() {
@@ -14421,16 +14882,49 @@
       }
     );
 
-    addBgmLibraryCategoryButton.addEventListener(
+    bgmCategoryMenuButton.addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+
+        bgmCategoryMenu.classList.toggle(
+          "hidden"
+        );
+      }
+    );
+
+    document.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (
+          bgmCategoryMenu.classList.contains(
+            "hidden"
+          )
+        ) {
+          return;
+        }
+
+        if (
+          event.target.closest(
+            ".bgm-category-menu-wrap"
+          )
+        ) {
+          return;
+        }
+
+        closeBgmCategoryMenu();
+      }
+    );
+
+    createBgmLibraryCategoryMenuItem.addEventListener(
       "click",
       () => {
+        closeBgmCategoryMenu();
+
         addBgmLibraryCategory()
           .catch(
             (error) => {
-              console.error(
-                error
-              );
-
+              console.error(error);
               alert(
                 error?.message ??
                 "BGM 카테고리 추가에 실패했습니다."
@@ -14440,41 +14934,29 @@
       }
     );
 
-    renameBgmLibraryCategoryButton.addEventListener(
+    editBgmLibraryCategoryMenuItem.addEventListener(
       "click",
       () => {
-        renameSelectedBgmLibraryCategory()
+        closeBgmCategoryMenu();
+
+        editSelectedBgmLibraryCategory()
           .catch(
             (error) => {
-              console.error(
-                error
-              );
-
+              console.error(error);
               alert(
                 error?.message ??
-                "카테고리 이름 변경에 실패했습니다."
+                "카테고리 편집에 실패했습니다."
               );
             }
           );
       }
     );
 
-    deleteBgmLibraryCategoryButton.addEventListener(
+    sortBgmLibraryCategoryMenuItem.addEventListener(
       "click",
       () => {
-        deleteSelectedBgmLibraryCategory()
-          .catch(
-            (error) => {
-              console.error(
-                error
-              );
-
-              alert(
-                error?.message ??
-                "카테고리 삭제에 실패했습니다."
-              );
-            }
-          );
+        closeBgmCategoryMenu();
+        openBgmLibraryCategorySort();
       }
     );
 
