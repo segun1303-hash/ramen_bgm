@@ -4188,6 +4188,30 @@
       }
     }
 
+  
+    /* v3.23 LISTEN TOGETHER source modes */
+    .listen-source-tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:3px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+    .listen-source-tab{min-height:30px;padding:0 8px;border:0;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;font:inherit;font-size:9px;font-weight:820}
+    .listen-source-tab.active{background:var(--text);color:var(--panel)}
+    .listen-source-panel{display:grid;gap:7px}
+    .listen-source-panel.hidden{display:none}
+    .listen-queue-add-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px}
+    .listen-queue-add-row input{min-width:0}
+    .listen-queue-list{display:grid;gap:5px;max-height:250px;overflow-y:auto;padding-right:1px;scrollbar-width:thin}
+    .listen-queue-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+    .listen-queue-row.current{border-color:var(--line-strong);background:var(--soft)}
+    .listen-queue-main{min-width:0}
+    .listen-queue-title{overflow:hidden;font-size:9px;font-weight:800;text-overflow:ellipsis;white-space:nowrap}
+    .listen-queue-meta{margin-top:2px;color:var(--muted);font-size:8px}
+    .listen-queue-actions{display:flex;flex:0 0 auto;gap:3px}
+    .listen-queue-actions button{min-height:27px;padding:0 7px;border:1px solid var(--line);border-radius:6px;background:var(--soft2);color:var(--text);cursor:pointer;font:inherit;font-size:8px;font-weight:760}
+    .listen-queue-actions button.primary{background:var(--text);color:var(--panel);border-color:var(--text)}
+    html[data-theme="dark"] .listen-source-tab.active,
+    html[data-theme="dark"] .listen-queue-actions button.primary{background:#eceae4;color:#20201e;border-color:#eceae4}
+    html[data-theme="dark"] .listen-queue-row{background:#1f1f1d;border-color:var(--line)}
+    html[data-theme="dark"] .listen-queue-row.current{background:#30302c;border-color:var(--line-strong)}
+    @media(max-width:520px){.listen-source-tabs{grid-template-columns:1fr}.listen-queue-row{grid-template-columns:1fr}.listen-queue-actions{justify-content:flex-end}}
+
   </style>
 </head>
 
@@ -4483,13 +4507,28 @@
           </div>
 
           <section id="listenHostPanel" class="listen-host-panel hidden">
-            <div class="field-label">HOST 재생 소스</div>
-            <input id="listenSourceInput" type="url" placeholder="YouTube 영상 / 플레이리스트 / Mix 링크">
+            <div class="listen-source-tabs">
+              <button id="listenQueueModeButton" class="listen-source-tab active" type="button">영상 목록</button>
+              <button id="listenPlaylistModeButton" class="listen-source-tab" type="button">플레이리스트 / Mix</button>
+            </div>
 
-            <button id="listenLoadSourceButton" class="btn primary" type="button">불러와서 같이 재생</button>
+            <div id="listenQueueModePanel" class="listen-source-panel">
+              <div class="field-label">일반 YouTube 영상 목록</div>
+              <div class="listen-queue-add-row">
+                <input id="listenQueueUrlInput" type="url" placeholder="추가할 YouTube 영상 링크">
+                <button id="listenQueueAddButton" class="mini-btn" type="button">추가</button>
+              </div>
+              <div class="small">영상 링크를 여러 개 저장해 두고 이전/다음으로 같이 들을 수 있습니다. 영상이 끝나면 다음 곡으로 자동 이동합니다.</div>
+              <div id="listenQueueList" class="listen-queue-list">
+                <div class="playlist-empty">아직 추가된 영상이 없습니다.</div>
+              </div>
+            </div>
 
-            <div class="small">
-              일반 YouTube 영상과 플레이리스트를 지원합니다. Mix는 YouTube 임베드에서 허용되는 경우에 한해 재생을 시도합니다.
+            <div id="listenPlaylistModePanel" class="listen-source-panel hidden">
+              <div class="field-label">YouTube 플레이리스트 / Mix</div>
+              <input id="listenSourceInput" type="url" placeholder="YouTube 플레이리스트 / Mix 링크">
+              <button id="listenLoadSourceButton" class="btn primary" type="button">불러와서 같이 재생</button>
+              <div class="small">일반 YouTube 플레이리스트를 지원합니다. Mix는 YouTube 임베드에서 허용되는 경우에 한해 재생을 시도합니다.</div>
             </div>
 
             <div id="listenHostStatus" class="status-line"></div>
@@ -4518,7 +4557,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.22</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.23</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5025,6 +5064,13 @@
     const listenInviteLink = $("#listenInviteLink");
     const listenCopyInviteButton = $("#listenCopyInviteButton");
     const listenHostPanel = $("#listenHostPanel");
+    const listenQueueModeButton = $("#listenQueueModeButton");
+    const listenPlaylistModeButton = $("#listenPlaylistModeButton");
+    const listenQueueModePanel = $("#listenQueueModePanel");
+    const listenPlaylistModePanel = $("#listenPlaylistModePanel");
+    const listenQueueUrlInput = $("#listenQueueUrlInput");
+    const listenQueueAddButton = $("#listenQueueAddButton");
+    const listenQueueList = $("#listenQueueList");
     const listenSourceInput = $("#listenSourceInput");
     const listenLoadSourceButton = $("#listenLoadSourceButton");
     const listenHostStatus = $("#listenHostStatus");
@@ -5310,11 +5356,14 @@
 
     let listenPlayback = null;
     let listenParticipants = {};
+    let listenQueue = {};
+    let listenSourceMode = "queue";
     let listenServerOffsetMs = 0;
 
     let listenOwnerUnsubscribe = null;
     let listenPlaybackUnsubscribe = null;
     let listenParticipantsUnsubscribe = null;
+    let listenQueueUnsubscribe = null;
     let listenOffsetUnsubscribe = null;
     let listenParticipantDisconnect = null;
 
@@ -10374,6 +10423,502 @@
       );
     }
 
+    function setListenSourceMode(mode) {
+      listenSourceMode =
+        mode === "playlist"
+          ? "playlist"
+          : "queue";
+
+      const queueActive =
+        listenSourceMode === "queue";
+
+      listenQueueModeButton.classList.toggle(
+        "active",
+        queueActive
+      );
+
+      listenPlaylistModeButton.classList.toggle(
+        "active",
+        !queueActive
+      );
+
+      listenQueueModePanel.classList.toggle(
+        "hidden",
+        !queueActive
+      );
+
+      listenPlaylistModePanel.classList.toggle(
+        "hidden",
+        queueActive
+      );
+    }
+
+    function orderedListenQueue() {
+      return Object.entries(
+        listenQueue || {}
+      )
+        .map(
+          ([id, value]) => ({
+            id,
+            ...(value || {})
+          })
+        )
+        .sort(
+          (a, b) => {
+            const ao =
+              Number(
+                a.order ?? 0
+              );
+
+            const bo =
+              Number(
+                b.order ?? 0
+              );
+
+            if (ao !== bo) {
+              return ao - bo;
+            }
+
+            return String(
+              a.title || ""
+            ).localeCompare(
+              String(
+                b.title || ""
+              ),
+              "ko"
+            );
+          }
+        );
+    }
+
+    function listenQueueIndexById(
+      queueId
+    ) {
+      return orderedListenQueue()
+        .findIndex(
+          (item) =>
+            item.id === queueId
+        );
+    }
+
+    function renderListenQueue() {
+      listenQueueList.replaceChildren();
+
+      const entries =
+        orderedListenQueue();
+
+      if (!entries.length) {
+        const empty =
+          document.createElement("div");
+
+        empty.className =
+          "playlist-empty";
+
+        empty.textContent =
+          "아직 추가된 영상이 없습니다.";
+
+        listenQueueList.appendChild(
+          empty
+        );
+
+        return;
+      }
+
+      for (const item of entries) {
+        const row =
+          document.createElement("div");
+
+        row.className =
+          `listen-queue-row${listenPlayback?.mode === "queue" && listenPlayback?.queueId === item.id ? " current" : ""}`;
+
+        const main =
+          document.createElement("div");
+
+        main.className =
+          "listen-queue-main";
+
+        const title =
+          document.createElement("div");
+
+        title.className =
+          "listen-queue-title";
+
+        title.textContent =
+          item.title ||
+          "제목 없음";
+
+        const meta =
+          document.createElement("div");
+
+        meta.className =
+          "listen-queue-meta";
+
+        meta.textContent =
+          listenPlayback?.mode ===
+            "queue" &&
+          listenPlayback?.queueId ===
+            item.id
+            ? "현재 재생"
+            : "영상 목록";
+
+        main.append(
+          title,
+          meta
+        );
+
+        const actions =
+          document.createElement("div");
+
+        actions.className =
+          "listen-queue-actions";
+
+        const play =
+          document.createElement("button");
+
+        play.type =
+          "button";
+
+        play.className =
+          "primary";
+
+        play.textContent =
+          "재생";
+
+        play.addEventListener(
+          "click",
+          () => {
+            hostPlayListenQueueItem(
+              item.id
+            );
+          }
+        );
+
+        const remove =
+          document.createElement("button");
+
+        remove.type =
+          "button";
+
+        remove.textContent =
+          "삭제";
+
+        remove.addEventListener(
+          "click",
+          async () => {
+            if (
+              !listenIsHost ||
+              !listenRoomId
+            ) {
+              return;
+            }
+
+            try {
+              remove.disabled =
+                true;
+
+              await set(
+                ref(
+                  db,
+                  `listenRooms/${listenRoomId}/queue/${item.id}`
+                ),
+                null
+              );
+
+              if (
+                listenPlayback?.mode ===
+                  "queue" &&
+                listenPlayback?.queueId ===
+                  item.id
+              ) {
+                const remaining =
+                  orderedListenQueue()
+                    .filter(
+                      (entry) =>
+                        entry.id !== item.id
+                    );
+
+                if (remaining.length) {
+                  await hostPlayListenQueueItem(
+                    remaining[0].id
+                  );
+                } else {
+                  await set(
+                    ref(
+                      db,
+                      `listenRooms/${listenRoomId}/playback`
+                    ),
+                    {
+                      mode:
+                        "idle",
+                      status:
+                        "paused",
+                      position:
+                        0,
+                      index:
+                        0,
+                      updatedAt:
+                        serverTimestamp()
+                    }
+                  );
+                }
+              }
+
+            } catch (error) {
+              listenHostStatus.textContent =
+                error?.message ??
+                "영상 삭제에 실패했습니다.";
+            } finally {
+              remove.disabled =
+                false;
+            }
+          }
+        );
+
+        actions.append(
+          play,
+          remove
+        );
+
+        row.append(
+          main,
+          actions
+        );
+
+        listenQueueList.appendChild(
+          row
+        );
+      }
+    }
+
+    async function addListenQueueVideo() {
+      if (
+        !listenIsHost ||
+        !listenRoomId
+      ) {
+        return;
+      }
+
+      try {
+        listenQueueAddButton.disabled =
+          true;
+
+        listenHostStatus.textContent =
+          "YouTube 영상을 확인하는 중…";
+
+        const parsed =
+          parseListenYoutubeSource(
+            listenQueueUrlInput.value
+          );
+
+        if (
+          parsed.mode !==
+          "video"
+        ) {
+          throw new Error(
+            "영상 목록에는 일반 YouTube 영상 링크만 추가할 수 있습니다."
+          );
+        }
+
+        const title =
+          await resolveYoutubeTitle(
+            "",
+            parsed.videoId
+          );
+
+        const maxOrder =
+          orderedListenQueue()
+            .reduce(
+              (max, item) =>
+                Math.max(
+                  max,
+                  Number(
+                    item.order ?? 0
+                  )
+                ),
+              0
+            );
+
+        const itemRef =
+          push(
+            ref(
+              db,
+              `listenRooms/${listenRoomId}/queue`
+            )
+          );
+
+        await set(
+          itemRef,
+          {
+            title,
+            videoId:
+              parsed.videoId,
+            youtubeUrl:
+              canonicalYoutubeUrl(
+                parsed.videoId
+              ),
+            order:
+              maxOrder + 10,
+            createdAt:
+              serverTimestamp()
+          }
+        );
+
+        listenQueueUrlInput.value =
+          "";
+
+        listenHostStatus.textContent =
+          `「${title}」을(를) 영상 목록에 추가했습니다.`;
+
+        if (
+          !listenPlayback ||
+          listenPlayback.mode ===
+            "idle"
+        ) {
+          await hostPlayListenQueueItem(
+            itemRef.key
+          );
+        }
+
+      } catch (error) {
+        listenHostStatus.textContent =
+          error?.message ??
+          "영상을 목록에 추가하지 못했습니다.";
+      } finally {
+        listenQueueAddButton.disabled =
+          false;
+      }
+    }
+
+    async function hostPlayListenQueueItem(
+      queueId
+    ) {
+      if (
+        !listenIsHost ||
+        !listenRoomId
+      ) {
+        return;
+      }
+
+      const item =
+        listenQueue[
+          queueId
+        ];
+
+      if (!item?.videoId) {
+        listenHostStatus.textContent =
+          "영상 목록에서 곡을 찾지 못했습니다.";
+        return;
+      }
+
+      const index =
+        listenQueueIndexById(
+          queueId
+        );
+
+      listenLoadedSourceKey =
+        "";
+
+      listenLoadedIndex =
+        -1;
+
+      listenLastHostVideoId =
+        "";
+
+      listenLastHostIndex =
+        -1;
+
+      await set(
+        ref(
+          db,
+          `listenRooms/${listenRoomId}/playback`
+        ),
+        {
+          mode:
+            "queue",
+          queueId,
+          videoId:
+            item.videoId,
+          title:
+            item.title ||
+            "YouTube 영상",
+          status:
+            "playing",
+          position:
+            0,
+          index:
+            Math.max(
+              0,
+              index
+            ),
+          updatedAt:
+            serverTimestamp()
+        }
+      );
+    }
+
+    async function hostMoveListenQueue(
+      direction
+    ) {
+      if (
+        !listenIsHost ||
+        listenPlayback?.mode !==
+          "queue"
+      ) {
+        return;
+      }
+
+      const entries =
+        orderedListenQueue();
+
+      if (!entries.length) {
+        return;
+      }
+
+      let index =
+        entries.findIndex(
+          (entry) =>
+            entry.id ===
+            listenPlayback.queueId
+        );
+
+      if (index < 0) {
+        index =
+          Math.max(
+            0,
+            Number(
+              listenPlayback.index ??
+              0
+            )
+          );
+      }
+
+      const nextIndex =
+        index +
+        direction;
+
+      if (
+        nextIndex < 0 ||
+        nextIndex >=
+          entries.length
+      ) {
+        if (
+          direction > 0
+        ) {
+          await commitListenPlayback(
+            "paused"
+          );
+        }
+
+        return;
+      }
+
+      await hostPlayListenQueueItem(
+        entries[
+          nextIndex
+        ].id
+      );
+    }
+
     function parseListenYoutubeSource(
       raw
     ) {
@@ -10480,6 +11025,13 @@
         return `video:${state.videoId || ""}`;
       }
 
+      if (
+        state?.mode ===
+        "queue"
+      ) {
+        return `queue:${state.queueId || state.videoId || ""}`;
+      }
+
       return "idle";
     }
 
@@ -10579,6 +11131,19 @@
             index >= 0
               ? `플레이리스트 · ${index + 1}번째 곡`
               : "플레이리스트";
+        } else if (
+          listenPlayback?.mode ===
+          "queue"
+        ) {
+          const queueIndex =
+            listenQueueIndexById(
+              listenPlayback.queueId
+            );
+
+          listenTrackMeta.textContent =
+            queueIndex >= 0
+              ? `영상 목록 · ${queueIndex + 1} / ${orderedListenQueue().length}`
+              : "영상 목록";
         } else if (videoId) {
           listenTrackMeta.textContent =
             "YouTube 영상";
@@ -10813,7 +11378,9 @@
 
       if (
         state.mode ===
-        "video"
+          "video" ||
+        state.mode ===
+          "queue"
       ) {
         if (
           !state.videoId
@@ -11106,6 +11673,18 @@
         state ===
           YT.PlayerState.ENDED &&
         listenPlayback.mode ===
+          "queue"
+      ) {
+        hostMoveListenQueue(
+          1
+        ).catch(
+          console.error
+        );
+
+      } else if (
+        state ===
+          YT.PlayerState.ENDED &&
+        listenPlayback.mode ===
           "video"
       ) {
         commitListenPlayback(
@@ -11137,16 +11716,20 @@
       listenSeekSlider.disabled =
         !hostCanControl;
 
-      const playlist =
+      const canStep =
         hostCanControl &&
-        listenPlayback.mode ===
-          "playlist";
+        (
+          listenPlayback.mode ===
+            "playlist" ||
+          listenPlayback.mode ===
+            "queue"
+        );
 
       listenPrevButton.disabled =
-        !playlist;
+        !canStep;
 
       listenNextButton.disabled =
-        !playlist;
+        !canStep;
 
       listenHostPanel.classList.toggle(
         "hidden",
@@ -11566,6 +12149,14 @@
       }
 
       if (
+        listenQueueUnsubscribe
+      ) {
+        listenQueueUnsubscribe();
+        listenQueueUnsubscribe =
+          null;
+      }
+
+      if (
         listenOffsetUnsubscribe
       ) {
         listenOffsetUnsubscribe();
@@ -11667,6 +12258,9 @@
         null;
 
       listenParticipants = {};
+      listenQueue = {};
+
+      renderListenQueue();
 
       listenAudioActivated =
         false;
@@ -11772,6 +12366,24 @@
             listenPlayback =
               state;
 
+            renderListenQueue();
+
+            if (
+              state.mode ===
+              "playlist"
+            ) {
+              setListenSourceMode(
+                "playlist"
+              );
+            } else if (
+              state.mode ===
+                "queue"
+            ) {
+              setListenSourceMode(
+                "queue"
+              );
+            }
+
             applyListenPlayback(
               state
             ).catch(
@@ -11786,6 +12398,25 @@
                   "재생 상태를 적용하지 못했습니다.";
               }
             );
+          }
+        );
+
+      listenQueueUnsubscribe =
+        onValue(
+          ref(
+            db,
+            `listenRooms/${roomId}/queue`
+          ),
+          (
+            snapshot
+          ) => {
+            listenQueue =
+              snapshot.val() ||
+              {};
+
+            renderListenQueue();
+            updateListenVideoMetadata();
+            updateListenControls();
           }
         );
 
@@ -11925,7 +12556,12 @@
       listenHostStatus.textContent =
         "";
 
+      setListenSourceMode(
+        "queue"
+      );
+
       updateListenControls();
+      renderListenQueue();
 
       showListenView();
 
@@ -12367,6 +13003,15 @@
             listenSourceInput.value
           );
 
+        if (
+          source.mode !==
+          "playlist"
+        ) {
+          throw new Error(
+            "이 모드에는 YouTube 플레이리스트 또는 Mix 링크를 입력해 주세요. 일반 영상은 '영상 목록' 탭에서 추가할 수 있습니다."
+          );
+        }
+
         const playback = {
           mode:
             source.mode,
@@ -12494,9 +13139,32 @@
     ) {
       if (
         !listenIsHost ||
+        !listenPlayback
+      ) {
+        return;
+      }
+
+      if (
+        listenPlayback.mode ===
+        "queue"
+      ) {
+        try {
+          await hostMoveListenQueue(
+            direction
+          );
+        } catch (error) {
+          listenPlayerStatus.textContent =
+            error?.message ??
+            "곡을 변경하지 못했습니다.";
+        }
+
+        return;
+      }
+
+      if (
         !listenPlayerReady ||
         !listenPlayer ||
-        listenPlayback?.mode !==
+        listenPlayback.mode !==
           "playlist"
       ) {
         return;
@@ -20635,6 +21303,42 @@
     listenUnlockButton.addEventListener(
       "click",
       activateListenAudio
+    );
+
+    listenQueueModeButton.addEventListener(
+      "click",
+      () => {
+        setListenSourceMode(
+          "queue"
+        );
+      }
+    );
+
+    listenPlaylistModeButton.addEventListener(
+      "click",
+      () => {
+        setListenSourceMode(
+          "playlist"
+        );
+      }
+    );
+
+    listenQueueAddButton.addEventListener(
+      "click",
+      addListenQueueVideo
+    );
+
+    listenQueueUrlInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key ===
+          "Enter"
+        ) {
+          event.preventDefault();
+          addListenQueueVideo();
+        }
+      }
     );
 
     listenLoadSourceButton.addEventListener(
