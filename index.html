@@ -4108,7 +4108,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.21</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.21.2</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -4836,6 +4836,12 @@
     let detachedPlaylistMemoOpen = false;
     let detachedTrackMemoId = null;
 
+    let detachedAddSource =
+      "youtube";
+
+    let detachedLibraryCategoryId =
+      null;
+
     let selectedFolderId = UNFILED_FOLDER_ID;
     let activeMasterTab = "playlist";
     const expandedTracks = new Set();
@@ -4905,6 +4911,13 @@
 
     function isPersistentAccount(user = auth.currentUser) {
       return Boolean(user && !user.isAnonymous);
+    }
+
+    function hasPersistentAccountSession() {
+      return isPersistentAccount(
+        currentAccountUser ||
+        auth.currentUser
+      );
     }
 
     function providerDisplayName(user) {
@@ -5333,6 +5346,12 @@
 
             renderBgmLibrary();
             renderRoomLibrarySource();
+
+            if (
+              detachedWindowIsOpen()
+            ) {
+              renderDetachedPlaylist();
+            }
           },
           (error) => {
             console.error(
@@ -5357,6 +5376,12 @@
 
             renderBgmLibrary();
             renderRoomLibrarySource();
+
+            if (
+              detachedWindowIsOpen()
+            ) {
+              renderDetachedPlaylist();
+            }
           },
           (error) => {
             console.error(
@@ -12781,6 +12806,157 @@
           display: none;
         }
 
+        .pip-add-source-tabs {
+          display: grid;
+          grid-template-columns:
+            1fr 1fr;
+          gap: 3px;
+          padding: 3px;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel);
+        }
+
+        .pip-add-source-tab {
+          min-height: 28px;
+          padding: 0 7px;
+          border: 0;
+          border-radius: 5px;
+          background: transparent;
+          color: var(--muted);
+          cursor: pointer;
+          font-size: 8px;
+          font-weight: 800;
+        }
+
+        .pip-add-source-tab.active {
+          background: var(--accent);
+          color: var(--accentText);
+        }
+
+        .pip-library-toolbar {
+          display: flex;
+          min-width: 0;
+          align-items: center;
+          justify-content: space-between;
+          gap: 5px;
+        }
+
+        .pip-library-toolbar select {
+          min-width: 0;
+          flex: 1;
+          min-height: 30px;
+          padding: 0 25px 0 7px;
+          border: 1px solid var(--line);
+          border-radius: 6px;
+          background: var(--panel);
+          color: var(--text);
+          font: inherit;
+          font-size: 8px;
+        }
+
+        .pip-library-count {
+          flex: 0 0 auto;
+          color: var(--muted);
+          font-size: 8px;
+        }
+
+        .pip-library-list {
+          display: grid;
+          gap: 4px;
+          max-height: 230px;
+          overflow-y: auto;
+          padding-right: 1px;
+          scrollbar-width: thin;
+        }
+
+        .pip-library-row {
+          display: grid;
+          grid-template-columns:
+            minmax(0, 1fr)
+            auto;
+          gap: 5px;
+          align-items: center;
+          min-width: 0;
+          padding: 6px;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel);
+        }
+
+        .pip-library-main {
+          min-width: 0;
+        }
+
+        .pip-library-title {
+          overflow: hidden;
+          font-size: 9px;
+          font-weight: 800;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-library-memo {
+          margin-top: 2px;
+          color: var(--muted);
+          font-size: 8px;
+          line-height: 1.35;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+        }
+
+        .pip-library-actions {
+          display: flex;
+          flex: 0 0 auto;
+          gap: 3px;
+        }
+
+        .pip-library-actions button {
+          min-height: 27px;
+          padding: 0 7px;
+          border: 1px solid var(--line);
+          border-radius: 6px;
+          background: var(--panel2);
+          color: var(--text);
+          cursor: pointer;
+          font: inherit;
+          font-size: 8px;
+          font-weight: 750;
+        }
+
+        .pip-library-actions button.primary {
+          background: var(--accent);
+          color: var(--accentText);
+          border-color: var(--accent);
+        }
+
+        .pip-library-empty {
+          padding: 12px 6px;
+          color: var(--muted);
+          font-size: 8px;
+          text-align: center;
+        }
+
+        .pip-library-login-notice {
+          padding: 10px;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel);
+          color: var(--muted);
+          font-size: 8px;
+          line-height: 1.5;
+        }
+
+        @media (max-width: 390px) {
+          .pip-library-row {
+            grid-template-columns: 1fr;
+          }
+
+          .pip-library-actions {
+            justify-content: flex-end;
+          }
+        }
+
         .pip-memo-drawer {
           display: grid;
           gap: 5px;
@@ -13321,6 +13497,105 @@
         statusElement.textContent =
           error?.message ??
           "BGM 추가에 실패했습니다.";
+      }
+    }
+
+    async function addLibraryTrackFromDetachedWindow(
+      trackId,
+      statusElement
+    ) {
+      if (
+        !isMaster ||
+        !currentRoomId
+      ) {
+        statusElement.textContent =
+          "현재 MASTER가 아닙니다.";
+        return;
+      }
+
+      if (
+        !isPersistentAccount(
+          auth.currentUser
+        )
+      ) {
+        statusElement.textContent =
+          "BGM LIBRARY는 로그인 사용자만 사용할 수 있습니다.";
+        return;
+      }
+
+      const track =
+        bgmLibraryTracks[
+          trackId
+        ];
+
+      if (!track) {
+        statusElement.textContent =
+          "BGM LIBRARY에서 곡을 찾지 못했습니다.";
+        return;
+      }
+
+      try {
+        statusElement.textContent =
+          "추가하는 중…";
+
+        const trackRef =
+          push(
+            ref(
+              db,
+              `rooms/${currentRoomId}/master/playlist`
+            )
+          );
+
+        const data = {
+          privateTitle:
+            track.title ||
+            "YouTube BGM",
+          publicTitle:
+            "",
+          memo:
+            String(
+              track.memo || ""
+            ),
+          youtubeUrl:
+            track.youtubeUrl ||
+            canonicalYoutubeUrl(
+              track.videoId
+            ),
+          videoId:
+            track.videoId,
+          order:
+            maxTrackOrderInFolder(
+              detachedSelectedFolderId
+            ) + 10,
+          createdAt:
+            serverTimestamp()
+        };
+
+        if (
+          detachedSelectedFolderId !==
+          UNFILED_FOLDER_ID
+        ) {
+          data.folderId =
+            detachedSelectedFolderId;
+        }
+
+        await set(
+          trackRef,
+          data
+        );
+
+        statusElement.textContent =
+          `「${track.title || "BGM"}」을(를) 추가했습니다.`;
+
+      } catch (error) {
+        console.error(
+          "detached library add failed",
+          error
+        );
+
+        statusElement.textContent =
+          error?.message ??
+          "BGM LIBRARY에서 추가하지 못했습니다.";
       }
     }
 
@@ -15074,108 +15349,487 @@
         if (
           detachedPanelState.add
         ) {
-          const privateInput =
-            doc.createElement("input");
+          const account =
+            hasPersistentAccountSession();
 
-          privateInput.type =
-            "text";
-
-          privateInput.maxLength =
-            "80";
-
-          privateInput.placeholder =
-            "내 제목 · 비우면 YouTube 제목";
-
-          const publicInput =
-            doc.createElement("input");
-
-          publicInput.type =
-            "text";
-
-          publicInput.maxLength =
-            "80";
-
-          publicInput.placeholder =
-            "공개 제목 (선택)";
-
-          const urlInput =
-            doc.createElement("input");
-
-          urlInput.type =
-            "url";
-
-          urlInput.placeholder =
-            "YouTube 링크";
-
-          const addButton =
-            doc.createElement("button");
-
-          addButton.className =
-            "pip-btn primary";
-
-          addButton.type =
-            "button";
-
-          addButton.textContent =
-            "＋ 현재 폴더에 추가";
-
-          const addStatus =
-            doc.createElement("div");
-
-          addStatus.className =
-            "pip-status";
-
-          addButton.addEventListener(
-            "click",
-            async () => {
-              addButton.disabled =
-                true;
-
-              await addTrackFromDetachedWindow(
-                privateInput.value,
-                publicInput.value,
-                urlInput.value,
-                addStatus
+          {
+            const sourceTabs =
+              doc.createElement(
+                "div"
               );
 
-              if (
-                addStatus.textContent ===
-                "추가했습니다."
-              ) {
-                privateInput.value =
-                  "";
-                publicInput.value =
-                  "";
-                urlInput.value =
-                  "";
+            sourceTabs.className =
+              "pip-add-source-tabs";
+
+            const youtubeTab =
+              doc.createElement(
+                "button"
+              );
+
+            youtubeTab.type =
+              "button";
+
+            youtubeTab.className =
+              `pip-add-source-tab${detachedAddSource === "youtube" ? " active" : ""}`;
+
+            youtubeTab.textContent =
+              "YouTube";
+
+            youtubeTab.addEventListener(
+              "click",
+              () => {
+                detachedAddSource =
+                  "youtube";
+
+                renderDetachedPlaylist();
               }
+            );
 
-              addButton.disabled =
-                false;
+            const libraryTab =
+              doc.createElement(
+                "button"
+              );
+
+            libraryTab.type =
+              "button";
+
+            libraryTab.className =
+              `pip-add-source-tab${detachedAddSource === "library" ? " active" : ""}`;
+
+            libraryTab.textContent =
+              "BGM LIBRARY";
+
+            libraryTab.addEventListener(
+              "click",
+              () => {
+                detachedAddSource =
+                  "library";
+
+                renderDetachedPlaylist();
+              }
+            );
+
+            sourceTabs.append(
+              youtubeTab,
+              libraryTab
+            );
+
+            addBox.appendChild(
+              sourceTabs
+            );
+          }
+
+          if (
+            detachedAddSource ===
+              "library"
+          ) {
+            if (!account) {
+              const loginNotice =
+                doc.createElement(
+                  "div"
+                );
+
+              loginNotice.className =
+                "pip-library-login-notice";
+
+              loginNotice.textContent =
+                "BGM LIBRARY는 Google 로그인 후 사용할 수 있습니다. 로컬 file:// 미리보기에서는 로그인 상태가 별도로 잡힐 수 있으니 실제 GitHub Pages 주소에서도 확인해 주세요.";
+
+              addBox.appendChild(
+                loginNotice
+              );
+
+            } else {
+              const categories = [
+              {
+                id:
+                  BGM_LIBRARY_UNFILED,
+                name:
+                  "미분류"
+              },
+              ...orderedBgmLibraryCategories()
+            ];
+
+            if (
+              !detachedLibraryCategoryId ||
+              !categories.some(
+                (category) =>
+                  category.id ===
+                  detachedLibraryCategoryId
+              )
+            ) {
+              detachedLibraryCategoryId =
+                categories.some(
+                  (category) =>
+                    category.id ===
+                    selectedBgmLibraryCategoryId
+                )
+                  ? selectedBgmLibraryCategoryId
+                  : BGM_LIBRARY_UNFILED;
             }
-          );
 
-          urlInput.addEventListener(
-            "keydown",
-            (event) => {
-              if (
-                event.key ===
-                "Enter"
+            const toolbar =
+              doc.createElement(
+                "div"
+              );
+
+            toolbar.className =
+              "pip-library-toolbar";
+
+            const categorySelect =
+              doc.createElement(
+                "select"
+              );
+
+            for (
+              const category of
+              categories
+            ) {
+              const option =
+                doc.createElement(
+                  "option"
+                );
+
+              option.value =
+                category.id;
+
+              option.textContent =
+                category.name;
+
+              categorySelect.appendChild(
+                option
+              );
+            }
+
+            categorySelect.value =
+              detachedLibraryCategoryId;
+
+            categorySelect.addEventListener(
+              "change",
+              () => {
+                detachedLibraryCategoryId =
+                  categorySelect.value;
+
+                renderDetachedPlaylist();
+              }
+            );
+
+            const libraryTracks =
+              orderedBgmLibraryTracks(
+                detachedLibraryCategoryId
+              );
+
+            const count =
+              doc.createElement(
+                "span"
+              );
+
+            count.className =
+              "pip-library-count";
+
+            count.textContent =
+              `${libraryTracks.length} BGM`;
+
+            toolbar.append(
+              categorySelect,
+              count
+            );
+
+            addBox.appendChild(
+              toolbar
+            );
+
+            const libraryList =
+              doc.createElement(
+                "div"
+              );
+
+            libraryList.className =
+              "pip-library-list";
+
+            const libraryStatus =
+              doc.createElement(
+                "div"
+              );
+
+            libraryStatus.className =
+              "pip-status";
+
+            if (!libraryTracks.length) {
+              const empty =
+                doc.createElement(
+                  "div"
+                );
+
+              empty.className =
+                "pip-library-empty";
+
+              empty.textContent =
+                "이 카테고리에는 저장된 BGM이 없습니다.";
+
+              libraryList.appendChild(
+                empty
+              );
+
+            } else {
+              for (
+                const track of
+                libraryTracks
               ) {
-                event.preventDefault();
+                const row =
+                  doc.createElement(
+                    "div"
+                  );
 
-                addButton.click();
+                row.className =
+                  "pip-library-row";
+
+                const main =
+                  doc.createElement(
+                    "div"
+                  );
+
+                main.className =
+                  "pip-library-main";
+
+                const title =
+                  doc.createElement(
+                    "div"
+                  );
+
+                title.className =
+                  "pip-library-title";
+
+                title.textContent =
+                  track.title ||
+                  "제목 없음";
+
+                const memo =
+                  doc.createElement(
+                    "div"
+                  );
+
+                memo.className =
+                  "pip-library-memo";
+
+                memo.textContent =
+                  String(
+                    track.memo || ""
+                  ).trim()
+                    ? track.memo
+                    : "메모 없음";
+
+                main.append(
+                  title,
+                  memo
+                );
+
+                const actions =
+                  doc.createElement(
+                    "div"
+                  );
+
+                actions.className =
+                  "pip-library-actions";
+
+                const preview =
+                  doc.createElement(
+                    "button"
+                  );
+
+                preview.type =
+                  "button";
+
+                preview.textContent =
+                  bgmLibraryPreviewVideoId ===
+                    track.videoId
+                    ? "정지"
+                    : "미리듣기";
+
+                preview.addEventListener(
+                  "click",
+                  async () => {
+                    if (
+                      bgmLibraryPreviewVideoId ===
+                      track.videoId
+                    ) {
+                      stopBgmLibraryPreview();
+                    } else {
+                      await previewBgmLibraryTrack(
+                        track
+                      );
+                    }
+
+                    renderDetachedPlaylist();
+                  }
+                );
+
+                const add =
+                  doc.createElement(
+                    "button"
+                  );
+
+                add.type =
+                  "button";
+
+                add.className =
+                  "primary";
+
+                add.textContent =
+                  "추가";
+
+                add.addEventListener(
+                  "click",
+                  async () => {
+                    add.disabled =
+                      true;
+
+                    await addLibraryTrackFromDetachedWindow(
+                      track.id,
+                      libraryStatus
+                    );
+
+                    add.disabled =
+                      false;
+                  }
+                );
+
+                actions.append(
+                  preview,
+                  add
+                );
+
+                row.append(
+                  main,
+                  actions
+                );
+
+                libraryList.appendChild(
+                  row
+                );
               }
             }
-          );
 
-          addBox.append(
-            privateInput,
-            publicInput,
-            urlInput,
-            addButton,
-            addStatus
-          );
+            addBox.append(
+              libraryList,
+              libraryStatus
+            );
+            }
+
+          } else {
+            const privateInput =
+              doc.createElement(
+                "input"
+              );
+
+            privateInput.type =
+              "text";
+
+            privateInput.maxLength =
+              "80";
+
+            privateInput.placeholder =
+              "내 제목 · 비우면 YouTube 제목";
+
+            const publicInput =
+              doc.createElement(
+                "input"
+              );
+
+            publicInput.type =
+              "text";
+
+            publicInput.maxLength =
+              "80";
+
+            publicInput.placeholder =
+              "공개 제목 (선택)";
+
+            const urlInput =
+              doc.createElement(
+                "input"
+              );
+
+            urlInput.type =
+              "url";
+
+            urlInput.placeholder =
+              "YouTube 링크";
+
+            const addButton =
+              doc.createElement(
+                "button"
+              );
+
+            addButton.className =
+              "pip-btn primary";
+
+            addButton.type =
+              "button";
+
+            addButton.textContent =
+              "＋ 현재 폴더에 추가";
+
+            const addStatus =
+              doc.createElement(
+                "div"
+              );
+
+            addStatus.className =
+              "pip-status";
+
+            addButton.addEventListener(
+              "click",
+              async () => {
+                addButton.disabled =
+                  true;
+
+                await addTrackFromDetachedWindow(
+                  privateInput.value,
+                  publicInput.value,
+                  urlInput.value,
+                  addStatus
+                );
+
+                if (
+                  addStatus.textContent ===
+                  "추가했습니다."
+                ) {
+                  privateInput.value =
+                    "";
+                  publicInput.value =
+                    "";
+                  urlInput.value =
+                    "";
+                }
+
+                addButton.disabled =
+                  false;
+              }
+            );
+
+            urlInput.addEventListener(
+              "keydown",
+              (event) => {
+                if (
+                  event.key ===
+                  "Enter"
+                ) {
+                  event.preventDefault();
+
+                  addButton.click();
+                }
+              }
+            );
+
+            addBox.append(
+              privateInput,
+              publicInput,
+              urlInput,
+              addButton,
+              addStatus
+            );
+          }
         }
 
         playlistBody.appendChild(
