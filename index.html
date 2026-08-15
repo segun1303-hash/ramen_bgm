@@ -2568,6 +2568,180 @@
       border-radius: 3px;
     }
 
+  
+    /* v3.10 theme system */
+    :root { color-scheme: light; }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #171716;
+      --panel: #222220;
+      --panel2: #292927;
+      --soft: #2d2d2a;
+      --soft2: #262624;
+      --line: #3d3d38;
+      --line-strong: #55554e;
+      --text: #eeeeea;
+      --muted: #aaa9a1;
+      --faint: #77766f;
+      --accent: #e8e6df;
+      --accent-contrast: #20201e;
+      --danger: #dc8176;
+      --success: #8fc59a;
+    }
+
+    html[data-theme="dark"] body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .card,
+    html[data-theme="dark"] .account-workspace,
+    html[data-theme="dark"] .library-pane,
+    html[data-theme="dark"] .session-library-card,
+    html[data-theme="dark"] .session-row,
+    html[data-theme="dark"] .session-group,
+    html[data-theme="dark"] .master-panel,
+    html[data-theme="dark"] .room-summary,
+    html[data-theme="dark"] .track-info,
+    html[data-theme="dark"] .transport,
+    html[data-theme="dark"] .quick-play-box,
+    html[data-theme="dark"] .playlist-item,
+    html[data-theme="dark"] .playlist-add,
+    html[data-theme="dark"] .memo-box,
+    html[data-theme="dark"] .danger-zone {
+      background: var(--panel);
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    html[data-theme="dark"] .session-group,
+    html[data-theme="dark"] .account-box,
+    html[data-theme="dark"] .pin-box,
+    html[data-theme="dark"] .notice,
+    html[data-theme="dark"] .presence-offline-toggle,
+    html[data-theme="dark"] .soft-box {
+      background: var(--soft2);
+      border-color: var(--line);
+    }
+
+    html[data-theme="dark"] input,
+    html[data-theme="dark"] textarea,
+    html[data-theme="dark"] select {
+      background: #1c1c1b;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] input::placeholder,
+    html[data-theme="dark"] textarea::placeholder {
+      color: #77766f;
+    }
+
+    html[data-theme="dark"] .btn.secondary,
+    html[data-theme="dark"] .mini-btn,
+    html[data-theme="dark"] .session-folder-add,
+    html[data-theme="dark"] .back-to-sessions,
+    html[data-theme="dark"] .presence-offline-toggle,
+    html[data-theme="dark"] .presence-delete,
+    html[data-theme="dark"] .presence-clear-all {
+      background: #2b2b28;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] .btn.primary,
+    html[data-theme="dark"] .session-folder-chip.active {
+      background: #eceae4;
+      color: #20201e;
+      border-color: #eceae4;
+    }
+
+    html[data-theme="dark"] .session-folder-chip,
+    html[data-theme="dark"] .session-sort,
+    html[data-theme="dark"] .session-folder-select {
+      background: #1f1f1d;
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    html[data-theme="dark"] a { color: #d7d6cf; }
+
+    html[data-theme="dark"] .topbar,
+    html[data-theme="dark"] .master-tabs {
+      background: rgba(34, 34, 32, .96);
+      border-color: var(--line);
+    }
+
+    html[data-theme="dark"] .video-frame {
+      background: #0c0c0c;
+      border-color: var(--line);
+    }
+
+    html[data-theme="dark"] .unlock {
+      background: rgba(10, 10, 10, .84);
+    }
+
+    html[data-theme="dark"] .presence-dot { background: #5c5b55; }
+    html[data-theme="dark"] .presence-dot.online { background: #70ba83; }
+
+    html[data-theme="dark"] .danger-zone,
+    html[data-theme="dark"] .presence-delete,
+    html[data-theme="dark"] .presence-clear-all {
+      color: #e7988e;
+      border-color: #68433e;
+    }
+
+    .theme-control {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 5px;
+      margin-left: auto;
+    }
+
+    .theme-select {
+      min-height: 32px;
+      padding: 0 26px 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+    }
+
+    html[data-theme="dark"] .theme-select {
+      background: #1f1f1d;
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    @media (max-width: 620px) {
+      .theme-control { margin-left: 0; }
+      .theme-select {
+        min-height: 36px;
+        width: 90px;
+        font-size: 11px;
+      }
+    }
+
+  
+    .playlist-toolbar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 620px) {
+      .playlist-toolbar-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+
   </style>
 </head>
 
@@ -2592,6 +2766,13 @@
             </div>
 
             <div class="account-actions">
+              <div class="theme-control">
+                <select id="themeSelectEntry" class="theme-select" aria-label="화면 테마">
+                  <option value="system">시스템</option>
+                  <option value="light">라이트</option>
+                  <option value="dark">다크</option>
+                </select>
+              </div>
               <button id="googleLoginButton" class="mini-btn">Google 로그인</button>
               <button id="logoutButton" class="mini-btn hidden">로그아웃</button>
             </div>
@@ -2701,11 +2882,18 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.9.3</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.11</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
-        <span id="roleBadge" class="badge">PLAYER</span>
+        <div class="theme-control">
+          <select id="themeSelectApp" class="theme-select" aria-label="화면 테마">
+            <option value="system">시스템</option>
+            <option value="light">라이트</option>
+            <option value="dark">다크</option>
+          </select>
+          <span id="roleBadge" class="badge">PLAYER</span>
+        </div>
       </header>
 
       <div class="main-grid">
@@ -2865,7 +3053,10 @@
                 <h2 class="section-title">PLAYLIST</h2>
                 <div id="playlistCount" class="playlist-count">0 BGM</div>
               </div>
-              <span class="version-text">방에 저장됨</span>
+              <div class="playlist-toolbar-actions">
+                <span class="version-text">방에 저장됨</span>
+                <button id="detachPlaylistButton" class="mini-btn" title="플레이리스트를 별도 항상 위 창으로 열기">분리 ↗</button>
+              </div>
             </div>
 
             <button id="playlistMemoToggle" class="playlist-memo-toggle">
@@ -3011,6 +3202,8 @@
     const googleLoginButton = $("#googleLoginButton");
     const logoutButton = $("#logoutButton");
     const accountStatus = $("#accountStatus");
+    const themeSelectEntry = $("#themeSelectEntry");
+    const themeSelectApp = $("#themeSelectApp");
     const sessionHub = $("#sessionHub");
     const masterSessionList = $("#masterSessionList");
     const playerSessionList = $("#playerSessionList");
@@ -3107,6 +3300,7 @@
     const playlistAddToggle = $("#playlistAddToggle");
     const playlistAddPanel = $("#playlistAddPanel");
     const playlistCount = $("#playlistCount");
+    const detachPlaylistButton = $("#detachPlaylistButton");
 
     const newPrivateTitle = $("#newPrivateTitle");
     const newPublicTitle = $("#newPublicTitle");
@@ -3162,6 +3356,10 @@
     let folderData = {};
     let playlistMemo = "";
     let playlistUnsubscribe = null;
+
+    let detachedPlaylistWindow = null;
+    let detachedPlaylistMode = null;
+    let detachedSelectedFolderId = UNFILED_FOLDER_ID;
 
     const UNFILED_FOLDER_ID = "__unfiled__";
     let selectedFolderId = UNFILED_FOLDER_ID;
@@ -4969,6 +5167,8 @@
         subscribeMasterPlaylist();
         setMasterTab(activeMasterTab);
       } else {
+        closeDetachedPlaylistWindow();
+
         masterTabs.classList.add("hidden");
         masterControls.classList.add("hidden");
         quickPlayBox.classList.add("hidden");
@@ -7312,6 +7512,1046 @@
       }
     }
 
+    function detachedWindowIsOpen() {
+      return Boolean(
+        detachedPlaylistWindow &&
+        !detachedPlaylistWindow.closed
+      );
+    }
+
+    function closeDetachedPlaylistWindow() {
+      if (!detachedWindowIsOpen()) {
+        detachedPlaylistWindow = null;
+        detachedPlaylistMode = null;
+        return;
+      }
+
+      try {
+        detachedPlaylistWindow.close();
+      } catch {}
+
+      detachedPlaylistWindow = null;
+      detachedPlaylistMode = null;
+    }
+
+    function detachedTheme() {
+      return (
+        document.documentElement.dataset.theme ||
+        "light"
+      );
+    }
+
+    function detachedPlaylistCss() {
+      return `
+        :root {
+          color-scheme: light;
+          --bg: #f3f2ef;
+          --panel: #ffffff;
+          --panel2: #f7f6f3;
+          --line: #d8d6d0;
+          --text: #282724;
+          --muted: #77736b;
+          --accent: #282724;
+          --accentText: #ffffff;
+          --danger: #a4473e;
+        }
+
+        html[data-theme="dark"] {
+          color-scheme: dark;
+          --bg: #171716;
+          --panel: #222220;
+          --panel2: #292927;
+          --line: #41413b;
+          --text: #eeeeea;
+          --muted: #aaa9a1;
+          --accent: #eceae4;
+          --accentText: #20201e;
+          --danger: #e18e84;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        html,
+        body {
+          width: 100%;
+          min-width: 0;
+          min-height: 100%;
+          margin: 0;
+          background: var(--bg);
+          color: var(--text);
+          font-family:
+            -apple-system, BlinkMacSystemFont,
+            "Segoe UI", "Noto Sans KR",
+            sans-serif;
+        }
+
+        body {
+          padding: 12px;
+          overflow: auto;
+        }
+
+        button,
+        input,
+        select {
+          font: inherit;
+        }
+
+        .pip-shell {
+          display: grid;
+          gap: 10px;
+          min-width: 0;
+        }
+
+        .pip-head {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 10px;
+        }
+
+        .pip-title {
+          font-size: 15px;
+          font-weight: 850;
+          letter-spacing: -.02em;
+        }
+
+        .pip-subtitle {
+          margin-top: 3px;
+          color: var(--muted);
+          font-size: 10px;
+          line-height: 1.45;
+        }
+
+        .pip-badge {
+          flex: 0 0 auto;
+          padding: 5px 7px;
+          border: 1px solid var(--line);
+          border-radius: 999px;
+          color: var(--muted);
+          font-size: 9px;
+          font-weight: 750;
+        }
+
+        .pip-folders {
+          display: flex;
+          gap: 5px;
+          min-width: 0;
+          overflow-x: auto;
+          padding-bottom: 3px;
+        }
+
+        .pip-folder {
+          flex: 0 0 auto;
+          min-height: 32px;
+          padding: 0 10px;
+          border: 1px solid var(--line);
+          border-radius: 999px;
+          background: var(--panel);
+          color: var(--muted);
+          font-size: 11px;
+          font-weight: 700;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+
+        .pip-folder.active {
+          background: var(--accent);
+          color: var(--accentText);
+          border-color: var(--accent);
+        }
+
+        .pip-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 10px;
+          min-width: 0;
+        }
+
+        .pip-card {
+          min-width: 0;
+          padding: 10px;
+          border: 1px solid var(--line);
+          border-radius: 11px;
+          background: var(--panel);
+        }
+
+        .pip-card-title {
+          margin-bottom: 8px;
+          font-size: 10px;
+          font-weight: 800;
+          color: var(--muted);
+          letter-spacing: .04em;
+        }
+
+        .pip-add {
+          display: grid;
+          gap: 6px;
+        }
+
+        .pip-add-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: 6px;
+        }
+
+        input {
+          width: 100%;
+          min-width: 0;
+          min-height: 36px;
+          padding: 0 9px;
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          background: var(--panel2);
+          color: var(--text);
+        }
+
+        input::placeholder {
+          color: var(--muted);
+        }
+
+        .pip-btn {
+          min-height: 34px;
+          padding: 0 10px;
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          background: var(--panel2);
+          color: var(--text);
+          cursor: pointer;
+          font-size: 10px;
+          font-weight: 750;
+        }
+
+        .pip-btn.primary {
+          background: var(--accent);
+          color: var(--accentText);
+          border-color: var(--accent);
+        }
+
+        .pip-status {
+          min-height: 14px;
+          color: var(--muted);
+          font-size: 9px;
+          line-height: 1.4;
+        }
+
+        .pip-list {
+          display: grid;
+          gap: 6px;
+          min-width: 0;
+          max-height: min(58vh, 620px);
+          overflow-y: auto;
+          padding-right: 2px;
+        }
+
+        .pip-empty {
+          padding: 18px 8px;
+          color: var(--muted);
+          font-size: 10px;
+          text-align: center;
+        }
+
+        .pip-track {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 8px;
+          align-items: center;
+          min-width: 0;
+          padding: 8px;
+          border: 1px solid var(--line);
+          border-radius: 9px;
+          background: var(--panel2);
+        }
+
+        .pip-track-main {
+          min-width: 0;
+        }
+
+        .pip-track-private {
+          overflow: hidden;
+          font-size: 11px;
+          font-weight: 780;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-track-public {
+          margin-top: 2px;
+          overflow: hidden;
+          color: var(--muted);
+          font-size: 9px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pip-play {
+          width: 36px;
+          min-height: 34px;
+          border: 1px solid var(--line);
+          border-radius: 8px;
+          background: var(--panel);
+          color: var(--text);
+          cursor: pointer;
+          font-weight: 800;
+        }
+
+        .pip-footer {
+          display: flex;
+          justify-content: space-between;
+          gap: 8px;
+          color: var(--muted);
+          font-size: 9px;
+          line-height: 1.4;
+        }
+
+        @media (min-width: 620px) {
+          body {
+            padding: 14px;
+          }
+
+          .pip-grid {
+            grid-template-columns: minmax(190px, .78fr) minmax(280px, 1.22fr);
+            align-items: start;
+          }
+
+          .pip-add-row {
+            grid-template-columns: 1fr;
+          }
+
+          .pip-list {
+            max-height: min(72vh, 760px);
+          }
+        }
+
+        @media (min-width: 900px) {
+          .pip-grid {
+            grid-template-columns: minmax(240px, .72fr) minmax(420px, 1.28fr);
+          }
+
+          .pip-title {
+            font-size: 17px;
+          }
+
+          .pip-track-private {
+            font-size: 12px;
+          }
+        }
+      `;
+    }
+
+    function initializeDetachedPlaylistDocument(win) {
+      const doc = win.document;
+
+      doc.open();
+      doc.write(`<!doctype html>
+        <html lang="ko" data-theme="${detachedTheme()}">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>CCFOLIA BGM · PLAYLIST</title>
+            <style>${detachedPlaylistCss()}</style>
+          </head>
+          <body>
+            <main id="pipRoot" class="pip-shell"></main>
+          </body>
+        </html>`);
+      doc.close();
+    }
+
+    function syncDetachedPlaylistTheme() {
+      if (!detachedWindowIsOpen()) return;
+
+      try {
+        detachedPlaylistWindow.document.documentElement.dataset.theme =
+          detachedTheme();
+      } catch {}
+    }
+
+    function detachedFolderTracks(folderId) {
+      return Object.entries(
+        playlistData || {}
+      )
+      .map(([id, value]) => ({
+        id,
+        ...(value || {})
+      }))
+      .filter(
+        (track) =>
+          normalizeTrackFolderId(track) ===
+          folderId
+      )
+      .sort((a, b) => {
+        const ao =
+          Number(a.order ?? 0);
+        const bo =
+          Number(b.order ?? 0);
+
+        if (ao !== bo) {
+          return ao - bo;
+        }
+
+        return String(
+          a.privateTitle || ""
+        ).localeCompare(
+          String(
+            b.privateTitle || ""
+          ),
+          "ko"
+        );
+      });
+    }
+
+    async function addTrackFromDetachedWindow(
+      privateTitle,
+      publicTitle,
+      rawUrl,
+      statusElement
+    ) {
+      if (
+        !isMaster ||
+        !currentRoomId
+      ) {
+        statusElement.textContent =
+          "현재 MASTER가 아닙니다.";
+        return;
+      }
+
+      const privateName =
+        String(privateTitle || "").trim();
+
+      const publicName =
+        String(publicTitle || "").trim();
+
+      const videoId =
+        extractYoutubeVideoId(
+          String(rawUrl || "").trim()
+        );
+
+      if (!privateName) {
+        statusElement.textContent =
+          "내 제목을 입력해 주세요.";
+        return;
+      }
+
+      if (!videoId) {
+        statusElement.textContent =
+          "올바른 YouTube 링크를 입력해 주세요.";
+        return;
+      }
+
+      try {
+        statusElement.textContent =
+          "추가하는 중…";
+
+        const trackRef =
+          push(
+            ref(
+              db,
+              `rooms/${currentRoomId}/master/playlist`
+            )
+          );
+
+        const data = {
+          privateTitle:
+            privateName,
+          publicTitle:
+            publicName,
+          memo: "",
+          youtubeUrl:
+            canonicalYoutubeUrl(
+              videoId
+            ),
+          videoId,
+          order:
+            maxTrackOrderInFolder(
+              detachedSelectedFolderId
+            ) + 10,
+          createdAt:
+            serverTimestamp()
+        };
+
+        if (
+          detachedSelectedFolderId !==
+          UNFILED_FOLDER_ID
+        ) {
+          data.folderId =
+            detachedSelectedFolderId;
+        }
+
+        await set(
+          trackRef,
+          data
+        );
+
+        statusElement.textContent =
+          "추가했습니다.";
+
+      } catch (error) {
+        console.error(
+          "detached add failed",
+          error
+        );
+
+        statusElement.textContent =
+          error?.message ??
+          "BGM 추가에 실패했습니다.";
+      }
+    }
+
+    function renderDetachedPlaylist() {
+      if (
+        !detachedWindowIsOpen()
+      ) {
+        return;
+      }
+
+      const win =
+        detachedPlaylistWindow;
+
+      const doc =
+        win.document;
+
+      const root =
+        doc.getElementById(
+          "pipRoot"
+        );
+
+      if (!root) return;
+
+      if (!isMaster) {
+        root.innerHTML = "";
+
+        const card =
+          doc.createElement("div");
+
+        card.className =
+          "pip-card pip-empty";
+
+        card.textContent =
+          "MASTER 권한이 없어 분리 플레이리스트를 사용할 수 없습니다.";
+
+        root.appendChild(card);
+        return;
+      }
+
+      if (
+        detachedSelectedFolderId !==
+        UNFILED_FOLDER_ID &&
+        !folderData[
+          detachedSelectedFolderId
+        ]
+      ) {
+        detachedSelectedFolderId =
+          UNFILED_FOLDER_ID;
+      }
+
+      root.replaceChildren();
+
+      const head =
+        doc.createElement("div");
+
+      head.className =
+        "pip-head";
+
+      const titleWrap =
+        doc.createElement("div");
+
+      const title =
+        doc.createElement("div");
+
+      title.className =
+        "pip-title";
+
+      title.textContent =
+        "PLAYLIST · MASTER";
+
+      const subtitle =
+        doc.createElement("div");
+
+      subtitle.className =
+        "pip-subtitle";
+
+      subtitle.textContent =
+        `${currentRoomName || "이름 없는 방"} · 별도 플레이리스트 관리창`;
+
+      titleWrap.append(
+        title,
+        subtitle
+      );
+
+      const badge =
+        doc.createElement("div");
+
+      badge.className =
+        "pip-badge";
+
+      badge.textContent =
+        detachedPlaylistMode === "pip"
+          ? "PICTURE IN PICTURE"
+          : "POPUP";
+
+      head.append(
+        titleWrap,
+        badge
+      );
+
+      root.appendChild(head);
+
+      const folderStrip =
+        doc.createElement("div");
+
+      folderStrip.className =
+        "pip-folders";
+
+      const folders = [
+        {
+          id:
+            UNFILED_FOLDER_ID,
+          name:
+            "미분류"
+        },
+        ...orderedFolders()
+      ];
+
+      for (
+        const folder of
+        folders
+      ) {
+        const count =
+          detachedFolderTracks(
+            folder.id
+          ).length;
+
+        const button =
+          doc.createElement("button");
+
+        button.className =
+          `pip-folder${detachedSelectedFolderId === folder.id ? " active" : ""}`;
+
+        button.textContent =
+          count
+            ? `${folder.name} · ${count}`
+            : folder.name;
+
+        button.addEventListener(
+          "click",
+          () => {
+            detachedSelectedFolderId =
+              folder.id;
+
+            selectedFolderId =
+              folder.id;
+
+            expandedTracks.clear();
+
+            renderFolderStrip();
+            renderPlaylist();
+            renderDetachedPlaylist();
+          }
+        );
+
+        folderStrip.appendChild(
+          button
+        );
+      }
+
+      root.appendChild(
+        folderStrip
+      );
+
+      const grid =
+        doc.createElement("div");
+
+      grid.className =
+        "pip-grid";
+
+      const addCard =
+        doc.createElement("section");
+
+      addCard.className =
+        "pip-card";
+
+      const addTitle =
+        doc.createElement("div");
+
+      addTitle.className =
+        "pip-card-title";
+
+      addTitle.textContent =
+        `빠른 추가 · ${folderName(detachedSelectedFolderId)}`;
+
+      const addWrap =
+        doc.createElement("div");
+
+      addWrap.className =
+        "pip-add";
+
+      const privateInput =
+        doc.createElement("input");
+
+      privateInput.type =
+        "text";
+
+      privateInput.maxLength =
+        80;
+
+      privateInput.placeholder =
+        "내 제목";
+
+      const publicInput =
+        doc.createElement("input");
+
+      publicInput.type =
+        "text";
+
+      publicInput.maxLength =
+        80;
+
+      publicInput.placeholder =
+        "공개 제목 (선택)";
+
+      const urlInput =
+        doc.createElement("input");
+
+      urlInput.type =
+        "url";
+
+      urlInput.placeholder =
+        "YouTube 링크";
+
+      const addButton =
+        doc.createElement("button");
+
+      addButton.className =
+        "pip-btn primary";
+
+      addButton.textContent =
+        "＋ 현재 폴더에 추가";
+
+      const status =
+        doc.createElement("div");
+
+      status.className =
+        "pip-status";
+
+      addButton.addEventListener(
+        "click",
+        async () => {
+          addButton.disabled =
+            true;
+
+          await addTrackFromDetachedWindow(
+            privateInput.value,
+            publicInput.value,
+            urlInput.value,
+            status
+          );
+
+          if (
+            status.textContent ===
+            "추가했습니다."
+          ) {
+            privateInput.value =
+              "";
+            publicInput.value =
+              "";
+            urlInput.value =
+              "";
+          }
+
+          addButton.disabled =
+            false;
+        }
+      );
+
+      urlInput.addEventListener(
+        "keydown",
+        (event) => {
+          if (
+            event.key ===
+            "Enter"
+          ) {
+            event.preventDefault();
+            addButton.click();
+          }
+        }
+      );
+
+      addWrap.append(
+        privateInput,
+        publicInput,
+        urlInput,
+        addButton,
+        status
+      );
+
+      addCard.append(
+        addTitle,
+        addWrap
+      );
+
+      const listCard =
+        doc.createElement("section");
+
+      listCard.className =
+        "pip-card";
+
+      const listTitle =
+        doc.createElement("div");
+
+      listTitle.className =
+        "pip-card-title";
+
+      const tracks =
+        detachedFolderTracks(
+          detachedSelectedFolderId
+        );
+
+      listTitle.textContent =
+        `${folderName(detachedSelectedFolderId)} · ${tracks.length} BGM`;
+
+      const list =
+        doc.createElement("div");
+
+      list.className =
+        "pip-list";
+
+      if (!tracks.length) {
+        const empty =
+          doc.createElement("div");
+
+        empty.className =
+          "pip-empty";
+
+        empty.textContent =
+          "이 폴더에는 아직 BGM이 없습니다.";
+
+        list.appendChild(
+          empty
+        );
+      } else {
+        for (
+          const track of
+          tracks
+        ) {
+          const row =
+            doc.createElement("div");
+
+          row.className =
+            "pip-track";
+
+          const main =
+            doc.createElement("div");
+
+          main.className =
+            "pip-track-main";
+
+          const privateName =
+            doc.createElement("div");
+
+          privateName.className =
+            "pip-track-private";
+
+          privateName.textContent =
+            track.privateTitle ||
+            "(제목 없음)";
+
+          const publicName =
+            doc.createElement("div");
+
+          publicName.className =
+            "pip-track-public";
+
+          publicName.textContent =
+            `공개: ${track.publicTitle || "(비어 있음)"}`;
+
+          main.append(
+            privateName,
+            publicName
+          );
+
+          const play =
+            doc.createElement("button");
+
+          play.className =
+            "pip-play";
+
+          play.textContent =
+            "▶";
+
+          play.title =
+            "재생";
+
+          play.addEventListener(
+            "click",
+            () => {
+              playPlaylistTrack(
+                track
+              );
+            }
+          );
+
+          row.append(
+            main,
+            play
+          );
+
+          list.appendChild(
+            row
+          );
+        }
+      }
+
+      listCard.append(
+        listTitle,
+        list
+      );
+
+      grid.append(
+        addCard,
+        listCard
+      );
+
+      root.appendChild(
+        grid
+      );
+
+      const footer =
+        doc.createElement("div");
+
+      footer.className =
+        "pip-footer";
+
+      const left =
+        doc.createElement("span");
+
+      left.textContent =
+        "재생·빠른 추가 전용";
+
+      const right =
+        doc.createElement("span");
+
+      right.textContent =
+        "제목/메모/삭제/순서 변경은 메인 화면에서";
+
+      footer.append(
+        left,
+        right
+      );
+
+      root.appendChild(
+        footer
+      );
+    }
+
+    async function openDetachedPlaylistWindow() {
+      if (!isMaster) {
+        return;
+      }
+
+      if (
+        detachedWindowIsOpen()
+      ) {
+        try {
+          detachedPlaylistWindow.focus();
+        } catch {}
+
+        renderDetachedPlaylist();
+        return;
+      }
+
+      detachedSelectedFolderId =
+        selectedFolderId;
+
+      try {
+        if (
+          "documentPictureInPicture" in
+          window
+        ) {
+          const pipWindow =
+            await window.documentPictureInPicture.requestWindow({
+              width: 520,
+              height: 650
+            });
+
+          detachedPlaylistWindow =
+            pipWindow;
+
+          detachedPlaylistMode =
+            "pip";
+
+          initializeDetachedPlaylistDocument(
+            pipWindow
+          );
+
+          pipWindow.addEventListener(
+            "pagehide",
+            () => {
+              detachedPlaylistWindow =
+                null;
+
+              detachedPlaylistMode =
+                null;
+            },
+            {
+              once: true
+            }
+          );
+
+        } else {
+          const popup =
+            window.open(
+              "",
+              "ccfoliaBgmPlaylist",
+              "popup=yes,width=560,height=720,resizable=yes,scrollbars=yes"
+            );
+
+          if (!popup) {
+            throw new Error(
+              "팝업이 차단되었습니다. 브라우저에서 이 사이트의 팝업을 허용해 주세요."
+            );
+          }
+
+          detachedPlaylistWindow =
+            popup;
+
+          detachedPlaylistMode =
+            "popup";
+
+          initializeDetachedPlaylistDocument(
+            popup
+          );
+
+          popup.addEventListener(
+            "beforeunload",
+            () => {
+              detachedPlaylistWindow =
+                null;
+
+              detachedPlaylistMode =
+                null;
+            },
+            {
+              once: true
+            }
+          );
+        }
+
+        renderDetachedPlaylist();
+
+      } catch (error) {
+        console.error(
+          "detached playlist open failed",
+          error
+        );
+
+        masterStatus.textContent =
+          error?.message ??
+          "플레이리스트 분리창을 열지 못했습니다.";
+      }
+    }
+
     function subscribeMasterPlaylist() {
       if (!currentRoomId || !currentUser || !isMaster || playlistUnsubscribe) {
         return;
@@ -7349,6 +8589,7 @@
 
           renderFolderStrip();
           renderPlaylist();
+          renderDetachedPlaylist();
         },
         (error) => {
           console.error("master library read failed", error);
@@ -7458,9 +8699,11 @@
 
         button.addEventListener("click", () => {
           selectedFolderId = folder.id;
+          detachedSelectedFolderId = folder.id;
           expandedTracks.clear();
           renderFolderStrip();
           renderPlaylist();
+          renderDetachedPlaylist();
         });
 
         folderStrip.appendChild(button);
@@ -8591,6 +9834,110 @@
         }, 500);
     }
 
+    const THEME_STORAGE_KEY =
+      "ccfolia-bgm-theme";
+
+    const systemThemeQuery =
+      window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      );
+
+    function storedThemeMode() {
+      const value =
+        localStorage.getItem(
+          THEME_STORAGE_KEY
+        );
+
+      return [
+        "system",
+        "light",
+        "dark"
+      ].includes(value)
+        ? value
+        : "system";
+    }
+
+    function resolvedTheme(mode) {
+      if (mode === "dark") return "dark";
+      if (mode === "light") return "light";
+
+      return systemThemeQuery.matches
+        ? "dark"
+        : "light";
+    }
+
+    function applyTheme(mode) {
+      const safeMode =
+        [
+          "system",
+          "light",
+          "dark"
+        ].includes(mode)
+          ? mode
+          : "system";
+
+      document.documentElement.dataset.theme =
+        resolvedTheme(safeMode);
+
+      themeSelectEntry.value =
+        safeMode;
+
+      themeSelectApp.value =
+        safeMode;
+
+      syncDetachedPlaylistTheme();
+    }
+
+    function setThemeMode(mode) {
+      localStorage.setItem(
+        THEME_STORAGE_KEY,
+        mode
+      );
+
+      applyTheme(mode);
+    }
+
+    themeSelectEntry.addEventListener(
+      "change",
+      () => {
+        setThemeMode(
+          themeSelectEntry.value
+        );
+      }
+    );
+
+    themeSelectApp.addEventListener(
+      "change",
+      () => {
+        setThemeMode(
+          themeSelectApp.value
+        );
+      }
+    );
+
+    systemThemeQuery.addEventListener(
+      "change",
+      () => {
+        if (
+          storedThemeMode() ===
+          "system"
+        ) {
+          applyTheme("system");
+        }
+      }
+    );
+
+    applyTheme(
+      storedThemeMode()
+    );
+
+    window.addEventListener(
+      "beforeunload",
+      () => {
+        closeDetachedPlaylistWindow();
+      }
+    );
+
     ensureInitialHistoryState();
 
     window.addEventListener(
@@ -8780,6 +10127,11 @@
         alert(error?.message ?? "폴더 삭제에 실패했습니다.");
       }
     });
+
+    detachPlaylistButton.addEventListener(
+      "click",
+      openDetachedPlaylistWindow
+    );
 
     playlistAddToggle.addEventListener("click", () => {
       const willOpen = playlistAddPanel.classList.contains("hidden");
