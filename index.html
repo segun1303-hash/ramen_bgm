@@ -2742,6 +2742,95 @@
       }
     }
 
+  
+    /* =========================================================
+       v3.12 direct theme toggle
+       ========================================================= */
+
+    .entry-stage {
+      position: relative;
+    }
+
+    .theme-toggle-button {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, .06);
+      cursor: pointer;
+      font-size: 19px;
+      line-height: 1;
+      transition:
+        background .15s ease,
+        border-color .15s ease,
+        transform .12s ease;
+    }
+
+    .theme-toggle-button:hover {
+      background: var(--soft2);
+    }
+
+    .theme-toggle-button:active {
+      transform: translateY(1px);
+    }
+
+    .theme-toggle-button:focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    .entry-theme-toggle {
+      position: absolute;
+      top: 6px;
+      left: -50px;
+      z-index: 8;
+    }
+
+    .app-theme-toggle {
+      flex: 0 0 auto;
+      box-shadow: none;
+    }
+
+    html[data-theme="dark"] .theme-toggle-button {
+      background: #242422;
+      color: #f0eee8;
+      border-color: #4a4944;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
+    }
+
+    html[data-theme="dark"] .theme-toggle-button:hover {
+      background: #30302d;
+    }
+
+    /* v3.10 select is no longer shown, but keep old class harmless if cached markup appears */
+    .theme-select {
+      display: none !important;
+    }
+
+    @media (max-width: 620px) {
+      .entry-theme-toggle {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        left: auto;
+        z-index: 30;
+      }
+
+      .theme-toggle-button {
+        width: 40px;
+        height: 40px;
+      }
+
+      .app-theme-toggle {
+        position: static;
+      }
+    }
+
   </style>
 </head>
 
@@ -2749,6 +2838,7 @@
   <div class="shell">
 
     <section id="entryView" class="entry-stage">
+      <button id="themeToggleEntry" class="theme-toggle-button entry-theme-toggle" type="button" aria-label="다크 모드로 전환" title="다크 모드로 전환">☾</button>
 
       <div id="accountWorkspace" class="card account-workspace guest-workspace">
         <div class="entry-pane">
@@ -2762,18 +2852,11 @@
           <div class="account-row">
             <div class="account-state">
               <div class="account-label">ACCOUNT</div>
-              <div id="accountName" class="account-name">게스트로 사용할 수 있습니다.</div>
+              <div id="accountName" class="account-name">로그인 상태 확인 중…</div>
             </div>
 
             <div class="account-actions">
-              <div class="theme-control">
-                <select id="themeSelectEntry" class="theme-select" aria-label="화면 테마">
-                  <option value="system">시스템</option>
-                  <option value="light">라이트</option>
-                  <option value="dark">다크</option>
-                </select>
-              </div>
-              <button id="googleLoginButton" class="mini-btn">Google 로그인</button>
+              <button id="googleLoginButton" class="mini-btn" disabled>연결 확인 중…</button>
               <button id="logoutButton" class="mini-btn hidden">로그아웃</button>
             </div>
           </div>
@@ -2882,16 +2965,12 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.11</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.12</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
         <div class="theme-control">
-          <select id="themeSelectApp" class="theme-select" aria-label="화면 테마">
-            <option value="system">시스템</option>
-            <option value="light">라이트</option>
-            <option value="dark">다크</option>
-          </select>
+          <button id="themeToggleApp" class="theme-toggle-button app-theme-toggle" type="button" aria-label="다크 모드로 전환" title="다크 모드로 전환">☾</button>
           <span id="roleBadge" class="badge">PLAYER</span>
         </div>
       </header>
@@ -3202,8 +3281,8 @@
     const googleLoginButton = $("#googleLoginButton");
     const logoutButton = $("#logoutButton");
     const accountStatus = $("#accountStatus");
-    const themeSelectEntry = $("#themeSelectEntry");
-    const themeSelectApp = $("#themeSelectApp");
+    const themeToggleEntry = $("#themeToggleEntry");
+    const themeToggleApp = $("#themeToggleApp");
     const sessionHub = $("#sessionHub");
     const masterSessionList = $("#masterSessionList");
     const playerSessionList = $("#playerSessionList");
@@ -3488,6 +3567,13 @@
           );
         }
 
+        currentUser =
+          result.user;
+
+        updateAccountUi(
+          result.user
+        );
+
         accountStatus.textContent =
           "Google 계정으로 로그인했습니다.";
 
@@ -3550,6 +3636,12 @@
         "hidden",
         account
       );
+
+      googleLoginButton.disabled =
+        account;
+
+      googleLoginButton.textContent =
+        "Google 로그인";
 
       logoutButton.classList.toggle(
         "hidden",
@@ -9842,93 +9934,128 @@
         "(prefers-color-scheme: dark)"
       );
 
-    function storedThemeMode() {
-      const value =
+    function initialThemeMode() {
+      const stored =
         localStorage.getItem(
           THEME_STORAGE_KEY
         );
 
-      return [
-        "system",
-        "light",
-        "dark"
-      ].includes(value)
-        ? value
-        : "system";
+      if (
+        stored === "light" ||
+        stored === "dark"
+      ) {
+        return stored;
+      }
+
+      const resolved =
+        systemThemeQuery.matches
+          ? "dark"
+          : "light";
+
+      // v3.10/v3.11의 "system" 값이나 저장값 없음은
+      // 현재 화면 상태로 한 번 변환한다.
+      localStorage.setItem(
+        THEME_STORAGE_KEY,
+        resolved
+      );
+
+      return resolved;
     }
 
-    function resolvedTheme(mode) {
-      if (mode === "dark") return "dark";
-      if (mode === "light") return "light";
+    function updateThemeToggleButtons(mode) {
+      const isDark =
+        mode === "dark";
 
-      return systemThemeQuery.matches
-        ? "dark"
-        : "light";
+      const icon =
+        isDark
+          ? "☀"
+          : "☾";
+
+      const label =
+        isDark
+          ? "라이트 모드로 전환"
+          : "다크 모드로 전환";
+
+      for (
+        const button of
+        [
+          themeToggleEntry,
+          themeToggleApp
+        ]
+      ) {
+        if (!button) continue;
+
+        button.textContent =
+          icon;
+
+        button.setAttribute(
+          "aria-label",
+          label
+        );
+
+        button.title =
+          label;
+      }
     }
 
     function applyTheme(mode) {
       const safeMode =
-        [
-          "system",
-          "light",
-          "dark"
-        ].includes(mode)
-          ? mode
-          : "system";
+        mode === "dark"
+          ? "dark"
+          : "light";
 
       document.documentElement.dataset.theme =
-        resolvedTheme(safeMode);
-
-      themeSelectEntry.value =
         safeMode;
 
-      themeSelectApp.value =
-        safeMode;
+      updateThemeToggleButtons(
+        safeMode
+      );
 
       syncDetachedPlaylistTheme();
     }
 
     function setThemeMode(mode) {
+      const safeMode =
+        mode === "dark"
+          ? "dark"
+          : "light";
+
       localStorage.setItem(
         THEME_STORAGE_KEY,
-        mode
+        safeMode
       );
 
-      applyTheme(mode);
+      applyTheme(
+        safeMode
+      );
     }
 
-    themeSelectEntry.addEventListener(
-      "change",
-      () => {
-        setThemeMode(
-          themeSelectEntry.value
-        );
-      }
+    function toggleThemeMode() {
+      const current =
+        document.documentElement.dataset.theme ===
+        "dark"
+          ? "dark"
+          : "light";
+
+      setThemeMode(
+        current === "dark"
+          ? "light"
+          : "dark"
+      );
+    }
+
+    themeToggleEntry.addEventListener(
+      "click",
+      toggleThemeMode
     );
 
-    themeSelectApp.addEventListener(
-      "change",
-      () => {
-        setThemeMode(
-          themeSelectApp.value
-        );
-      }
-    );
-
-    systemThemeQuery.addEventListener(
-      "change",
-      () => {
-        if (
-          storedThemeMode() ===
-          "system"
-        ) {
-          applyTheme("system");
-        }
-      }
+    themeToggleApp.addEventListener(
+      "click",
+      toggleThemeMode
     );
 
     applyTheme(
-      storedThemeMode()
+      initialThemeMode()
     );
 
     window.addEventListener(
@@ -9956,20 +10083,76 @@
       }
     );
 
+    let initialAuthSettled = false;
+    let initialRoomRestoreHandled = false;
+
+    async function applySettledAuthState(
+      user
+    ) {
+      currentUser =
+        user || null;
+
+      updateAccountUi(
+        user
+      );
+
+      if (
+        !initialRoomRestoreHandled &&
+        history.state?.ccfoliaBgmView ===
+        "room"
+      ) {
+        initialRoomRestoreHandled =
+          true;
+
+        await restoreActiveRoomAfterRefresh();
+      }
+    }
+
     onAuthStateChanged(
       auth,
       async (user) => {
-        currentUser = user || null;
-        updateAccountUi(user);
-
-        if (
-          history.state?.ccfoliaBgmView ===
-          "room"
-        ) {
-          await restoreActiveRoomAfterRefresh();
+        if (!initialAuthSettled) {
+          return;
         }
+
+        await applySettledAuthState(
+          user
+        );
       }
     );
+
+    auth.authStateReady()
+      .then(
+        async () => {
+          initialAuthSettled =
+            true;
+
+          await applySettledAuthState(
+            auth.currentUser
+          );
+        }
+      )
+      .catch(
+        (error) => {
+          console.error(
+            "initial auth state failed",
+            error
+          );
+
+          initialAuthSettled =
+            true;
+
+          currentUser =
+            auth.currentUser || null;
+
+          updateAccountUi(
+            currentUser
+          );
+
+          accountStatus.textContent =
+            "로그인 상태 확인이 지연되고 있습니다. 필요하면 새로고침해 주세요.";
+        }
+      );
 
     backToSessionsButton.addEventListener(
       "click",
