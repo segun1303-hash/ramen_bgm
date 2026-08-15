@@ -3377,6 +3377,115 @@
     html[data-theme="dark"] .bgm-library-move-select{background:#242421;color:var(--text);border-color:var(--line-strong)}
     @media(max-width:620px){.bgm-library-move-select{max-width:none;flex:1}}
 
+  
+    /* =========================================================
+       v3.18.1 BGM category edit modal
+       ========================================================= */
+
+    .bgm-category-edit-modal {
+      width: min(430px, calc(100vw - 28px));
+      padding: 16px;
+    }
+
+    .bgm-category-edit-modal .modal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .bgm-category-edit-modal .modal-title {
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .bgm-category-edit-modal .modal-desc {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .bgm-category-edit-modal .modal-close {
+      width: 30px;
+      min-height: 30px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--soft2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .bgm-category-edit-modal .modal-section {
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft2);
+    }
+
+    .bgm-category-edit-modal .modal-section + .modal-section {
+      margin-top: 10px;
+    }
+
+    .bgm-category-edit-modal .modal-section-title {
+      margin-bottom: 7px;
+      font-size: 10px;
+      font-weight: 820;
+    }
+
+    .bgm-category-edit-modal .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .bgm-category-edit-modal .danger-section {
+      border-color: #d7aaa4;
+      background: #fff7f5;
+    }
+
+    .bgm-category-edit-modal .danger-note {
+      color: #8b4f48;
+      font-size: 9px;
+      line-height: 1.5;
+    }
+
+    .bgm-category-edit-modal .danger-button {
+      background: #fff;
+      color: #a44137;
+      border-color: #c9786f;
+    }
+
+    .bgm-category-edit-modal .readonly-note {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft2);
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    html[data-theme="dark"] .bgm-category-edit-modal .danger-section {
+      border-color: #68433e;
+      background: #2b211f;
+    }
+
+    html[data-theme="dark"] .bgm-category-edit-modal .danger-note {
+      color: #e0aaa3;
+    }
+
+    html[data-theme="dark"] .bgm-category-edit-modal .danger-button {
+      background: #312623;
+      color: #efaaa1;
+      border-color: #7e514b;
+    }
+
   </style>
 </head>
 
@@ -3560,7 +3669,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.18</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.18.1</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5204,34 +5313,419 @@
       );
     }
 
-    async function editSelectedBgmLibraryCategory() {
-      if (
-        selectedBgmLibraryCategoryId ===
-        BGM_LIBRARY_UNFILED
-      ) {
+    function openBgmLibraryCategoryEditModal() {
+      const categoryId =
+        selectedBgmLibraryCategoryId;
+
+      const isUnfiled =
+        categoryId ===
+        BGM_LIBRARY_UNFILED;
+
+      const current =
+        isUnfiled
+          ? {
+              name:
+                "미분류"
+            }
+          : bgmLibraryCategories[
+              categoryId
+            ];
+
+      if (!current) {
         alert(
-          "미분류는 기본 카테고리라 이름 변경이나 삭제를 할 수 없습니다."
+          "선택한 카테고리를 찾지 못했습니다."
         );
         return;
       }
 
-      const current =
-        bgmLibraryCategories[
-          selectedBgmLibraryCategoryId
-        ];
+      const overlay =
+        document.createElement(
+          "div"
+        );
 
-      if (!current) return;
+      overlay.className =
+        "unlock";
 
-      const action =
-        prompt(
-          `「${current.name || "카테고리"}」 편집\\n\\n1 = 이름 변경\\n2 = 카테고리 삭제`,
-          "1"
-        )?.trim();
+      overlay.style.zIndex =
+        "500";
 
-      if (action === "1") {
-        await renameSelectedBgmLibraryCategory();
-      } else if (action === "2") {
-        await deleteSelectedBgmLibraryCategory();
+      const dialog =
+        document.createElement(
+          "div"
+        );
+
+      dialog.className =
+        "card bgm-category-edit-modal";
+
+      const head =
+        document.createElement(
+          "div"
+        );
+
+      head.className =
+        "modal-head";
+
+      const headText =
+        document.createElement(
+          "div"
+        );
+
+      const title =
+        document.createElement(
+          "div"
+        );
+
+      title.className =
+        "modal-title";
+
+      title.textContent =
+        "카테고리 편집";
+
+      const desc =
+        document.createElement(
+          "div"
+        );
+
+      desc.className =
+        "modal-desc";
+
+      desc.textContent =
+        `현재 선택: ${current.name || "이름 없음"}`;
+
+      headText.append(
+        title,
+        desc
+      );
+
+      const closeButton =
+        document.createElement(
+          "button"
+        );
+
+      closeButton.className =
+        "modal-close";
+
+      closeButton.type =
+        "button";
+
+      closeButton.textContent =
+        "×";
+
+      closeButton.title =
+        "닫기";
+
+      const closeModal =
+        () => {
+          overlay.remove();
+        };
+
+      closeButton.addEventListener(
+        "click",
+        closeModal
+      );
+
+      head.append(
+        headText,
+        closeButton
+      );
+
+      dialog.appendChild(
+        head
+      );
+
+      if (isUnfiled) {
+        const note =
+          document.createElement(
+            "div"
+          );
+
+        note.className =
+          "readonly-note";
+
+        note.textContent =
+          "미분류는 시스템 기본 카테고리입니다. 이름 변경이나 삭제는 할 수 없습니다. BGM 항목의 카테고리 선택 메뉴에서 다른 카테고리로 이동할 수 있습니다.";
+
+        dialog.appendChild(
+          note
+        );
+
+      } else {
+        const renameSection =
+          document.createElement(
+            "section"
+          );
+
+        renameSection.className =
+          "modal-section";
+
+        const renameTitle =
+          document.createElement(
+            "div"
+          );
+
+        renameTitle.className =
+          "modal-section-title";
+
+        renameTitle.textContent =
+          "이름 변경";
+
+        const input =
+          document.createElement(
+            "input"
+          );
+
+        input.type =
+          "text";
+
+        input.maxLength =
+          40;
+
+        input.value =
+          current.name || "";
+
+        input.placeholder =
+          "카테고리 이름";
+
+        const renameStatus =
+          document.createElement(
+            "div"
+          );
+
+        renameStatus.className =
+          "status-line";
+
+        const renameActions =
+          document.createElement(
+            "div"
+          );
+
+        renameActions.className =
+          "modal-actions";
+
+        const saveButton =
+          document.createElement(
+            "button"
+          );
+
+        saveButton.className =
+          "btn primary";
+
+        saveButton.type =
+          "button";
+
+        saveButton.textContent =
+          "이름 저장";
+
+        saveButton.addEventListener(
+          "click",
+          async () => {
+            const next =
+              input.value.trim();
+
+            if (!next) {
+              renameStatus.textContent =
+                "카테고리 이름을 입력해 주세요.";
+              return;
+            }
+
+            try {
+              saveButton.disabled =
+                true;
+
+              await set(
+                ref(
+                  db,
+                  `users/${auth.currentUser.uid}/bgmLibrary/categories/${categoryId}/name`
+                ),
+                next
+              );
+
+              renameStatus.textContent =
+                "이름을 변경했습니다.";
+
+              desc.textContent =
+                `현재 선택: ${next}`;
+
+            } catch (error) {
+              console.error(
+                "category rename failed",
+                error
+              );
+
+              renameStatus.textContent =
+                error?.message ??
+                "이름 변경에 실패했습니다.";
+            } finally {
+              saveButton.disabled =
+                false;
+            }
+          }
+        );
+
+        input.addEventListener(
+          "keydown",
+          (event) => {
+            if (
+              event.key ===
+              "Enter"
+            ) {
+              event.preventDefault();
+              saveButton.click();
+            }
+          }
+        );
+
+        renameActions.appendChild(
+          saveButton
+        );
+
+        renameSection.append(
+          renameTitle,
+          input,
+          renameActions,
+          renameStatus
+        );
+
+        const dangerSection =
+          document.createElement(
+            "section"
+          );
+
+        dangerSection.className =
+          "modal-section danger-section";
+
+        const dangerTitle =
+          document.createElement(
+            "div"
+          );
+
+        dangerTitle.className =
+          "modal-section-title";
+
+        dangerTitle.textContent =
+          "카테고리 삭제";
+
+        const dangerNote =
+          document.createElement(
+            "div"
+          );
+
+        dangerNote.className =
+          "danger-note";
+
+        dangerNote.textContent =
+          "카테고리만 삭제합니다. 이 카테고리에 들어 있던 BGM은 삭제되지 않고 모두 '미분류'로 이동합니다.";
+
+        const dangerActions =
+          document.createElement(
+            "div"
+          );
+
+        dangerActions.className =
+          "modal-actions";
+
+        const deleteButton =
+          document.createElement(
+            "button"
+          );
+
+        deleteButton.className =
+          "btn secondary danger-button";
+
+        deleteButton.type =
+          "button";
+
+        deleteButton.textContent =
+          "카테고리 삭제";
+
+        deleteButton.addEventListener(
+          "click",
+          async () => {
+            const latestName =
+              bgmLibraryCategories[
+                categoryId
+              ]?.name ||
+              current.name ||
+              "이 카테고리";
+
+            if (
+              !confirm(
+                `「${latestName}」 카테고리를 삭제할까요?\n\n곡은 삭제하지 않고 '미분류'로 이동합니다.`
+              )
+            ) {
+              return;
+            }
+
+            try {
+              deleteButton.disabled =
+                true;
+
+              await deleteSelectedBgmLibraryCategory();
+
+              closeModal();
+
+            } catch (error) {
+              console.error(
+                "category delete failed",
+                error
+              );
+
+              alert(
+                error?.message ??
+                "카테고리 삭제에 실패했습니다."
+              );
+
+              deleteButton.disabled =
+                false;
+            }
+          }
+        );
+
+        dangerActions.appendChild(
+          deleteButton
+        );
+
+        dangerSection.append(
+          dangerTitle,
+          dangerNote,
+          dangerActions
+        );
+
+        dialog.append(
+          renameSection,
+          dangerSection
+        );
+      }
+
+      overlay.appendChild(
+        dialog
+      );
+
+      overlay.addEventListener(
+        "click",
+        (event) => {
+          if (
+            event.target ===
+            overlay
+          ) {
+            closeModal();
+          }
+        }
+      );
+
+      document.body.appendChild(
+        overlay
+      );
+
+      if (!isUnfiled) {
+        setTimeout(
+          () => {
+            dialog.querySelector(
+              "input"
+            )?.focus();
+          },
+          0
+        );
       }
     }
 
@@ -14939,16 +15433,7 @@
       () => {
         closeBgmCategoryMenu();
 
-        editSelectedBgmLibraryCategory()
-          .catch(
-            (error) => {
-              console.error(error);
-              alert(
-                error?.message ??
-                "카테고리 편집에 실패했습니다."
-              );
-            }
-          );
+        openBgmLibraryCategoryEditModal();
       }
     );
 
