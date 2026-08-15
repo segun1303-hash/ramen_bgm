@@ -3992,8 +3992,21 @@
 
     .listen-transport-buttons {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 5px;
+    }
+
+    .listen-loop-button.active {
+      background: var(--text);
+      color: var(--panel);
+      border-color: var(--text);
+      font-weight: 820;
+    }
+
+    html[data-theme="dark"] .listen-loop-button.active {
+      background: #eceae4;
+      color: #20201e;
+      border-color: #eceae4;
     }
 
     .listen-volume-row {
@@ -4185,6 +4198,10 @@
 
       .listen-transport-buttons {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .listen-loop-button {
+        grid-column: 1 / -1;
       }
     }
 
@@ -4463,6 +4480,7 @@
               <button id="listenResumeButton" class="btn secondary" type="button" disabled>▶ 재생</button>
               <button id="listenPauseButton" class="btn secondary" type="button" disabled>Ⅱ 일시정지</button>
               <button id="listenNextButton" class="btn secondary" type="button" disabled>다음 ›</button>
+              <button id="listenLoopButton" class="btn secondary listen-loop-button" type="button" disabled aria-pressed="false">↻ 루프</button>
             </div>
 
             <div class="seek-wrap">
@@ -4557,7 +4575,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.23</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.23.1</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5052,6 +5070,7 @@
     const listenResumeButton = $("#listenResumeButton");
     const listenPauseButton = $("#listenPauseButton");
     const listenNextButton = $("#listenNextButton");
+    const listenLoopButton = $("#listenLoopButton");
     const listenSeekSlider = $("#listenSeekSlider");
     const listenSeekTimeText = $("#listenSeekTimeText");
     const listenTrackTitle = $("#listenTrackTitle");
@@ -10656,6 +10675,8 @@
                         0,
                       index:
                         0,
+                      loop:
+                        false,
                       updatedAt:
                         serverTimestamp()
                     }
@@ -10850,6 +10871,113 @@
               0,
               index
             ),
+          loop:
+            Boolean(
+              listenPlayback?.mode ===
+                "queue" &&
+              listenPlayback?.loop
+            ),
+          updatedAt:
+            serverTimestamp()
+        }
+      );
+    }
+
+    async function toggleListenQueueLoop() {
+      if (
+        !listenIsHost ||
+        !listenRoomId ||
+        listenPlayback?.mode !==
+          "queue"
+      ) {
+        return;
+      }
+
+      const nextLoop =
+        !Boolean(
+          listenPlayback.loop
+        );
+
+      try {
+        listenLoopButton.disabled =
+          true;
+
+        await update(
+          ref(
+            db,
+            `listenRooms/${listenRoomId}/playback`
+          ),
+          {
+            loop:
+              nextLoop,
+            updatedAt:
+              serverTimestamp()
+          }
+        );
+
+      } catch (error) {
+        listenPlayerStatus.textContent =
+          error?.message ??
+          "루프 설정을 변경하지 못했습니다.";
+
+      } finally {
+        listenLoopButton.disabled =
+          false;
+      }
+    }
+
+    async function restartListenQueueLoop() {
+      if (
+        !listenIsHost ||
+        !listenRoomId ||
+        listenPlayback?.mode !==
+          "queue" ||
+        !listenPlayback.queueId
+      ) {
+        return;
+      }
+
+      const item =
+        listenQueue[
+          listenPlayback.queueId
+        ];
+
+      if (!item?.videoId) {
+        return;
+      }
+
+      listenSuppressEventsUntil =
+        Date.now() +
+        1000;
+
+      if (
+        listenPlayerReady &&
+        listenPlayer
+      ) {
+        try {
+          listenPlayer.seekTo(
+            0,
+            true
+          );
+
+          listenPlayer.playVideo();
+        } catch {}
+      }
+
+      await update(
+        ref(
+          db,
+          `listenRooms/${listenRoomId}/playback`
+        ),
+        {
+          status:
+            "playing",
+          position:
+            0,
+          videoId:
+            item.videoId,
+          loop:
+            true,
           updatedAt:
             serverTimestamp()
         }
@@ -11675,11 +11803,20 @@
         listenPlayback.mode ===
           "queue"
       ) {
-        hostMoveListenQueue(
-          1
-        ).catch(
-          console.error
-        );
+        if (
+          listenPlayback.loop
+        ) {
+          restartListenQueueLoop()
+            .catch(
+              console.error
+            );
+        } else {
+          hostMoveListenQueue(
+            1
+          ).catch(
+            console.error
+          );
+        }
 
       } else if (
         state ===
@@ -11730,6 +11867,37 @@
 
       listenNextButton.disabled =
         !canStep;
+
+      const canLoop =
+        hostCanControl &&
+        listenPlayback.mode ===
+          "queue";
+
+      listenLoopButton.disabled =
+        !canLoop;
+
+      const loopActive =
+        Boolean(
+          canLoop &&
+          listenPlayback.loop
+        );
+
+      listenLoopButton.classList.toggle(
+        "active",
+        loopActive
+      );
+
+      listenLoopButton.setAttribute(
+        "aria-pressed",
+        loopActive
+          ? "true"
+          : "false"
+      );
+
+      listenLoopButton.textContent =
+        loopActive
+          ? "↻ 루프 ON"
+          : "↻ 루프";
 
       listenHostPanel.classList.toggle(
         "hidden",
@@ -12359,6 +12527,8 @@
                   0,
                 index:
                   0,
+                loop:
+                  false,
                 updatedAt:
                   listenServerNowMs()
               };
@@ -12670,6 +12840,8 @@
                 0,
               index:
                 0,
+              loop:
+                false,
               updatedAt:
                 serverTimestamp()
             }
@@ -13021,6 +13193,8 @@
             0,
           index:
             0,
+          loop:
+            false,
           updatedAt:
             serverTimestamp()
         };
@@ -21376,6 +21550,11 @@
           1
         );
       }
+    );
+
+    listenLoopButton.addEventListener(
+      "click",
+      toggleListenQueueLoop
     );
 
     listenPrevButton.addEventListener(
