@@ -3687,6 +3687,238 @@
       border-color: var(--line-strong);
     }
 
+  
+    /* =========================================================
+       v3.21 QUICK PLAY library picker
+       ========================================================= */
+
+    .quick-play-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
+
+    .quick-play-head .quick-play-title {
+      margin-bottom: 0;
+    }
+
+    .quick-library-button {
+      min-height: 27px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 820;
+      letter-spacing: .04em;
+      cursor: pointer;
+    }
+
+    .quick-library-button:hover {
+      background: var(--soft);
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    .quick-library-picker-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 560;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      background: rgba(0, 0, 0, .38);
+    }
+
+    .quick-library-picker-card {
+      display: flex;
+      width: min(560px, 100%);
+      max-height: min(76vh, 680px);
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, .2);
+    }
+
+    .quick-library-picker-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 13px 14px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .quick-library-picker-title {
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .quick-library-picker-desc {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+    .quick-library-picker-close {
+      display: inline-grid;
+      place-items: center;
+      width: 29px;
+      height: 29px;
+      min-height: 29px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--soft2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .quick-library-picker-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(130px, .55fr);
+      gap: 7px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: var(--soft2);
+    }
+
+    .quick-library-picker-field {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .quick-library-picker-field label {
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 800;
+    }
+
+    .quick-library-picker-field input,
+    .quick-library-picker-field select {
+      width: 100%;
+      min-width: 0;
+      min-height: 34px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+    }
+
+    .quick-library-picker-list {
+      display: grid;
+      gap: 5px;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 10px 14px 14px;
+      scrollbar-width: thin;
+    }
+
+    .quick-library-picker-empty {
+      padding: 18px 8px;
+      color: var(--muted);
+      font-size: 10px;
+      text-align: center;
+    }
+
+    .quick-library-picker-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--soft2);
+    }
+
+    .quick-library-picker-main {
+      min-width: 0;
+    }
+
+    .quick-library-picker-track-title {
+      overflow: hidden;
+      font-size: 10px;
+      font-weight: 820;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .quick-library-picker-memo {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .quick-library-picker-actions {
+      display: flex;
+      flex: 0 0 auto;
+      gap: 4px;
+    }
+
+    .quick-library-picker-actions button {
+      min-height: 29px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+      font-size: 9px;
+      font-weight: 760;
+      cursor: pointer;
+    }
+
+    .quick-library-picker-actions button.primary {
+      background: var(--text);
+      color: var(--panel);
+      border-color: var(--text);
+    }
+
+    html[data-theme="dark"] .quick-library-button,
+    html[data-theme="dark"] .quick-library-picker-field input,
+    html[data-theme="dark"] .quick-library-picker-field select,
+    html[data-theme="dark"] .quick-library-picker-actions button {
+      background: #242421;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    html[data-theme="dark"] .quick-library-picker-actions button.primary {
+      background: #eceae4;
+      color: #20201e;
+      border-color: #eceae4;
+    }
+
+    @media (max-width: 520px) {
+      .quick-library-picker-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-library-picker-row {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-library-picker-actions {
+        justify-content: flex-end;
+      }
+    }
+
   </style>
 </head>
 
@@ -3876,7 +4108,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.20</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.21</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -3946,7 +4178,10 @@
           <div id="playerStatus" class="status-line"></div>
 
           <div id="quickPlayBox" class="quick-play-box hidden">
-            <div class="quick-play-title">QUICK PLAY</div>
+            <div class="quick-play-head">
+              <div class="quick-play-title">QUICK PLAY</div>
+              <button id="quickLibraryButton" class="quick-library-button hidden" type="button">LIBRARY</button>
+            </div>
             <div class="quick-play-grid">
               <input id="quickPublicTitleInput" type="text" maxlength="80" placeholder="공개 제목 · 비우면 YouTube 제목">
               <input id="youtubeUrlInput" type="url" placeholder="YouTube 링크">
@@ -4449,6 +4684,7 @@
     const quickPublicTitleInput = $("#quickPublicTitleInput");
     const youtubeUrlInput = $("#youtubeUrlInput");
     const loadAndPlayButton = $("#loadAndPlayButton");
+    const quickLibraryButton = $("#quickLibraryButton");
     const resumeButton = $("#resumeButton");
     const pauseButton = $("#pauseButton");
     const restartButton = $("#restartButton");
@@ -4799,6 +5035,11 @@
         providerDisplayName(user);
 
       const account = isPersistentAccount(user);
+
+      quickLibraryButton.classList.toggle(
+        "hidden",
+        !account
+      );
 
       googleLoginButton.classList.toggle(
         "hidden",
@@ -6923,6 +7164,482 @@
           row
         );
       }
+    }
+
+    function openQuickPlayLibraryPicker(
+      targetDocument,
+      onSelect
+    ) {
+      const user =
+        auth.currentUser;
+
+      if (
+        !isPersistentAccount(user)
+      ) {
+        alert(
+          "BGM LIBRARY는 로그인 사용자만 사용할 수 있습니다."
+        );
+        return;
+      }
+
+      const doc =
+        targetDocument ||
+        document;
+
+      doc
+        .querySelector(
+          ".quick-library-picker-overlay"
+        )
+        ?.remove();
+
+      let pickerPreviewVideoId =
+        "";
+
+      const overlay =
+        doc.createElement(
+          "div"
+        );
+
+      overlay.className =
+        "quick-library-picker-overlay";
+
+      const card =
+        doc.createElement(
+          "div"
+        );
+
+      card.className =
+        "quick-library-picker-card";
+
+      const head =
+        doc.createElement(
+          "div"
+        );
+
+      head.className =
+        "quick-library-picker-head";
+
+      const headMain =
+        doc.createElement(
+          "div"
+        );
+
+      const title =
+        doc.createElement(
+          "div"
+        );
+
+      title.className =
+        "quick-library-picker-title";
+
+      title.textContent =
+        "BGM LIBRARY";
+
+      const desc =
+        doc.createElement(
+          "div"
+        );
+
+      desc.className =
+        "quick-library-picker-desc";
+
+      desc.textContent =
+        "미리듣기는 나에게만 들립니다. 선택하면 QUICK PLAY 입력칸에만 채워지고 바로 재생되지는 않습니다.";
+
+      headMain.append(
+        title,
+        desc
+      );
+
+      const close =
+        doc.createElement(
+          "button"
+        );
+
+      close.type =
+        "button";
+
+      close.className =
+        "quick-library-picker-close";
+
+      close.textContent =
+        "×";
+
+      close.title =
+        "닫기";
+
+      head.append(
+        headMain,
+        close
+      );
+
+      const controls =
+        doc.createElement(
+          "div"
+        );
+
+      controls.className =
+        "quick-library-picker-controls";
+
+      const publicField =
+        doc.createElement(
+          "div"
+        );
+
+      publicField.className =
+        "quick-library-picker-field";
+
+      const publicLabel =
+        doc.createElement(
+          "label"
+        );
+
+      publicLabel.textContent =
+        "공개 제목";
+
+      const publicInput =
+        doc.createElement(
+          "input"
+        );
+
+      publicInput.type =
+        "text";
+
+      publicInput.maxLength =
+        "80";
+
+      publicInput.placeholder =
+        "비우면 선택한 BGM 제목";
+
+      publicField.append(
+        publicLabel,
+        publicInput
+      );
+
+      const categoryField =
+        doc.createElement(
+          "div"
+        );
+
+      categoryField.className =
+        "quick-library-picker-field";
+
+      const categoryLabel =
+        doc.createElement(
+          "label"
+        );
+
+      categoryLabel.textContent =
+        "카테고리";
+
+      const categorySelect =
+        doc.createElement(
+          "select"
+        );
+
+      categoryField.append(
+        categoryLabel,
+        categorySelect
+      );
+
+      controls.append(
+        publicField,
+        categoryField
+      );
+
+      const list =
+        doc.createElement(
+          "div"
+        );
+
+      list.className =
+        "quick-library-picker-list";
+
+      const categories = [
+        {
+          id:
+            BGM_LIBRARY_UNFILED,
+          name:
+            "미분류"
+        },
+        ...orderedBgmLibraryCategories()
+      ];
+
+      for (
+        const category of
+        categories
+      ) {
+        const option =
+          doc.createElement(
+            "option"
+          );
+
+        option.value =
+          category.id;
+
+        option.textContent =
+          category.name;
+
+        categorySelect.appendChild(
+          option
+        );
+      }
+
+      const preferredCategory =
+        categories.some(
+          (category) =>
+            category.id ===
+            selectedBgmLibraryCategoryId
+        )
+          ? selectedBgmLibraryCategoryId
+          : BGM_LIBRARY_UNFILED;
+
+      categorySelect.value =
+        preferredCategory;
+
+      const closePicker =
+        () => {
+          if (
+            pickerPreviewVideoId &&
+            bgmLibraryPreviewVideoId ===
+              pickerPreviewVideoId
+          ) {
+            stopBgmLibraryPreview();
+          }
+
+          overlay.remove();
+        };
+
+      close.addEventListener(
+        "click",
+        closePicker
+      );
+
+      overlay.addEventListener(
+        "click",
+        (event) => {
+          if (
+            event.target ===
+            overlay
+          ) {
+            closePicker();
+          }
+        }
+      );
+
+      const renderTracks =
+        () => {
+          list.replaceChildren();
+
+          const tracks =
+            orderedBgmLibraryTracks(
+              categorySelect.value
+            );
+
+          if (!tracks.length) {
+            const empty =
+              doc.createElement(
+                "div"
+              );
+
+            empty.className =
+              "quick-library-picker-empty";
+
+            empty.textContent =
+              "이 카테고리에는 저장된 BGM이 없습니다.";
+
+            list.appendChild(
+              empty
+            );
+
+            return;
+          }
+
+          for (
+            const track of
+            tracks
+          ) {
+            const row =
+              doc.createElement(
+                "div"
+              );
+
+            row.className =
+              "quick-library-picker-row";
+
+            const main =
+              doc.createElement(
+                "div"
+              );
+
+            main.className =
+              "quick-library-picker-main";
+
+            const trackTitle =
+              doc.createElement(
+                "div"
+              );
+
+            trackTitle.className =
+              "quick-library-picker-track-title";
+
+            trackTitle.textContent =
+              track.title ||
+              "제목 없음";
+
+            const memo =
+              doc.createElement(
+                "div"
+              );
+
+            memo.className =
+              "quick-library-picker-memo";
+
+            memo.textContent =
+              String(
+                track.memo || ""
+              ).trim()
+                ? track.memo
+                : "메모 없음";
+
+            main.append(
+              trackTitle,
+              memo
+            );
+
+            const actions =
+              doc.createElement(
+                "div"
+              );
+
+            actions.className =
+              "quick-library-picker-actions";
+
+            const preview =
+              doc.createElement(
+                "button"
+              );
+
+            preview.type =
+              "button";
+
+            preview.textContent =
+              bgmLibraryPreviewVideoId ===
+                track.videoId
+                ? "정지"
+                : "미리듣기";
+
+            preview.addEventListener(
+              "click",
+              async () => {
+                if (
+                  bgmLibraryPreviewVideoId ===
+                  track.videoId
+                ) {
+                  stopBgmLibraryPreview();
+                  pickerPreviewVideoId =
+                    "";
+                } else {
+                  await previewBgmLibraryTrack(
+                    track
+                  );
+
+                  pickerPreviewVideoId =
+                    track.videoId;
+                }
+
+                renderTracks();
+              }
+            );
+
+            const select =
+              doc.createElement(
+                "button"
+              );
+
+            select.type =
+              "button";
+
+            select.className =
+              "primary";
+
+            select.textContent =
+              "선택";
+
+            select.addEventListener(
+              "click",
+              () => {
+                const chosenPublicTitle =
+                  publicInput.value.trim() ||
+                  track.title ||
+                  "BGM";
+
+                const url =
+                  track.youtubeUrl ||
+                  canonicalYoutubeUrl(
+                    track.videoId
+                  );
+
+                if (
+                  pickerPreviewVideoId &&
+                  bgmLibraryPreviewVideoId ===
+                    pickerPreviewVideoId
+                ) {
+                  stopBgmLibraryPreview();
+                }
+
+                onSelect?.(
+                  track,
+                  chosenPublicTitle,
+                  url
+                );
+
+                overlay.remove();
+              }
+            );
+
+            actions.append(
+              preview,
+              select
+            );
+
+            row.append(
+              main,
+              actions
+            );
+
+            list.appendChild(
+              row
+            );
+          }
+        };
+
+      categorySelect.addEventListener(
+        "change",
+        renderTracks
+      );
+
+      renderTracks();
+
+      card.append(
+        head,
+        controls,
+        list
+      );
+
+      overlay.appendChild(
+        card
+      );
+
+      doc.body.appendChild(
+        overlay
+      );
+
+      requestAnimationFrame(
+        () => {
+          publicInput.focus();
+        }
+      );
     }
 
     async function addLibraryTrackToCurrentRoom(
@@ -12210,6 +12927,184 @@
           font-size: 8px;
         }
 
+        .quick-library-picker-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 100;
+          display: grid;
+          place-items: center;
+          padding: 8px;
+          background: rgba(0, 0, 0, .42);
+        }
+
+        .quick-library-picker-card {
+          display: flex;
+          width: min(520px, 100%);
+          max-height: calc(100vh - 16px);
+          flex-direction: column;
+          overflow: hidden;
+          border: 1px solid var(--lineStrong);
+          border-radius: 10px;
+          background: var(--panel);
+          color: var(--text);
+          box-shadow: 0 14px 36px rgba(0, 0, 0, .24);
+        }
+
+        .quick-library-picker-head {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 7px;
+          padding: 9px;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .quick-library-picker-title {
+          font-size: 11px;
+          font-weight: 850;
+        }
+
+        .quick-library-picker-desc {
+          margin-top: 2px;
+          color: var(--muted);
+          font-size: 8px;
+          line-height: 1.35;
+        }
+
+        .quick-library-picker-close {
+          display: inline-grid;
+          place-items: center;
+          width: 27px;
+          height: 27px;
+          min-height: 27px;
+          padding: 0;
+          border: 1px solid var(--line);
+          border-radius: 6px;
+          background: var(--panel2);
+          color: var(--text);
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .quick-library-picker-controls {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(110px, .55fr);
+          gap: 5px;
+          padding: 7px 9px;
+          border-bottom: 1px solid var(--line);
+          background: var(--panel2);
+        }
+
+        .quick-library-picker-field {
+          display: grid;
+          gap: 3px;
+          min-width: 0;
+        }
+
+        .quick-library-picker-field label {
+          color: var(--muted);
+          font-size: 7px;
+          font-weight: 800;
+        }
+
+        .quick-library-picker-field input,
+        .quick-library-picker-field select {
+          width: 100%;
+          min-width: 0;
+          min-height: 30px;
+          padding: 0 7px;
+          border: 1px solid var(--line);
+          border-radius: 6px;
+          background: var(--panel);
+          color: var(--text);
+          font: inherit;
+          font-size: 8px;
+        }
+
+        .quick-library-picker-list {
+          display: grid;
+          gap: 4px;
+          min-height: 0;
+          overflow-y: auto;
+          padding: 7px 9px 9px;
+          scrollbar-width: thin;
+        }
+
+        .quick-library-picker-empty {
+          padding: 14px 7px;
+          color: var(--muted);
+          font-size: 8px;
+          text-align: center;
+        }
+
+        .quick-library-picker-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 5px;
+          align-items: center;
+          padding: 6px;
+          border: 1px solid var(--line);
+          border-radius: 7px;
+          background: var(--panel2);
+        }
+
+        .quick-library-picker-main {
+          min-width: 0;
+        }
+
+        .quick-library-picker-track-title {
+          overflow: hidden;
+          font-size: 9px;
+          font-weight: 800;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .quick-library-picker-memo {
+          margin-top: 2px;
+          color: var(--muted);
+          font-size: 8px;
+          line-height: 1.35;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+        }
+
+        .quick-library-picker-actions {
+          display: flex;
+          flex: 0 0 auto;
+          gap: 3px;
+        }
+
+        .quick-library-picker-actions button {
+          min-height: 27px;
+          padding: 0 7px;
+          border: 1px solid var(--line);
+          border-radius: 6px;
+          background: var(--panel);
+          color: var(--text);
+          font: inherit;
+          font-size: 8px;
+          font-weight: 750;
+          cursor: pointer;
+        }
+
+        .quick-library-picker-actions button.primary {
+          background: var(--accent);
+          color: var(--accentText);
+          border-color: var(--accent);
+        }
+
+        @media (max-width: 390px) {
+          .quick-library-picker-controls,
+          .quick-library-picker-row {
+            grid-template-columns: 1fr;
+          }
+
+          .quick-library-picker-actions {
+            justify-content: flex-end;
+          }
+        }
+
         @media (max-width: 430px) {
           .pip-badge,
           .pip-subtitle {
@@ -12912,6 +13807,18 @@
           <svg ${common}>
             <path d="M12 5v14"></path>
             <path d="M5 12h14"></path>
+          </svg>
+        `;
+      }
+
+      if (name === "library") {
+        return `
+          <svg ${common}>
+            <path d="M3.5 6.5h6l2 2h9v9H3.5v-11Z"></path>
+            <path d="M14.5 11.5v3.2"></path>
+            <path d="M14.5 11.5l3-.7v3.1"></path>
+            <circle cx="13.5" cy="15.3" r="1"></circle>
+            <circle cx="16.5" cy="14.5" r="1"></circle>
           </svg>
         `;
       }
@@ -13630,6 +14537,12 @@
       quickSection.className =
         `pip-section${detachedPanelOpen("quick") ? " open" : ""}`;
 
+      let detachedQuickPublicInput =
+        null;
+
+      let detachedQuickUrlInput =
+        null;
+
       const quickHead =
         doc.createElement("div");
 
@@ -13703,6 +14616,82 @@
         quickToggle
       );
 
+      if (
+        isPersistentAccount(
+          auth.currentUser
+        )
+      ) {
+        const quickActions =
+          doc.createElement(
+            "div"
+          );
+
+        quickActions.className =
+          "pip-section-actions";
+
+        const libraryButton =
+          doc.createElement(
+            "button"
+          );
+
+        libraryButton.className =
+          "pip-icon-btn";
+
+        libraryButton.type =
+          "button";
+
+        setDetachedIcon(
+          libraryButton,
+          "library"
+        );
+
+        libraryButton.title =
+          "내 BGM LIBRARY에서 선택";
+
+        libraryButton.setAttribute(
+          "aria-label",
+          "내 BGM LIBRARY에서 QUICK PLAY 곡 선택"
+        );
+
+        libraryButton.addEventListener(
+          "click",
+          (event) => {
+            event.stopPropagation();
+
+            openQuickPlayLibraryPicker(
+              doc,
+              (
+                track,
+                publicTitle,
+                url
+              ) => {
+                if (
+                  detachedQuickPublicInput
+                ) {
+                  detachedQuickPublicInput.value =
+                    publicTitle;
+                }
+
+                if (
+                  detachedQuickUrlInput
+                ) {
+                  detachedQuickUrlInput.value =
+                    url;
+                }
+              }
+            );
+          }
+        );
+
+        quickActions.appendChild(
+          libraryButton
+        );
+
+        quickHead.appendChild(
+          quickActions
+        );
+      }
+
       quickSection.appendChild(
         quickHead
       );
@@ -13730,6 +14719,9 @@
         publicInput.placeholder =
           "공개 제목 · 비우면 YouTube 제목";
 
+        detachedQuickPublicInput =
+          publicInput;
+
         const urlInput =
           doc.createElement("input");
 
@@ -13738,6 +14730,9 @@
 
         urlInput.placeholder =
           "YouTube 링크";
+
+        detachedQuickUrlInput =
+          urlInput;
 
         const button =
           doc.createElement("button");
@@ -16516,6 +17511,29 @@
         // 반드시 이 동기식 click 핸들러에서 재생 함수를 호출하도록
         // activateAudioFromGesture() 내부가 구성되어 있다.
         activateAudioFromGesture();
+      }
+    );
+
+    quickLibraryButton.addEventListener(
+      "click",
+      () => {
+        openQuickPlayLibraryPicker(
+          document,
+          (
+            track,
+            publicTitle,
+            url
+          ) => {
+            quickPublicTitleInput.value =
+              publicTitle;
+
+            youtubeUrlInput.value =
+              url;
+
+            masterError.textContent =
+              "";
+          }
+        );
       }
     );
 
