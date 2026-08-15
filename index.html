@@ -3063,6 +3063,303 @@
       border-color: #4b4a44;
     }
 
+  
+    /* =========================================================
+       v3.17 account BGM library
+       ========================================================= */
+
+    .account-library-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      margin-bottom: 12px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft2);
+    }
+
+    .account-library-tab,
+    .playlist-source-tab {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 820;
+      cursor: pointer;
+    }
+
+    .account-library-tab.active,
+    .playlist-source-tab.active {
+      background: var(--text);
+      color: #fff;
+    }
+
+    .bgm-library-panel {
+      display: grid;
+      gap: 9px;
+      min-height: 0;
+    }
+
+    .bgm-library-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .bgm-library-category-strip {
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      gap: 5px;
+      overflow-x: auto;
+      padding: 1px 1px 4px;
+      scrollbar-width: thin;
+    }
+
+    .bgm-library-category-chip {
+      flex: 0 0 auto;
+      min-height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 760;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .bgm-library-category-chip.active {
+      background: var(--text);
+      color: #fff;
+      border-color: var(--text);
+    }
+
+    .bgm-library-manage {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .bgm-library-manage-actions {
+      display: flex;
+      flex: 0 0 auto;
+      gap: 5px;
+    }
+
+    .bgm-library-add {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft2);
+    }
+
+    .bgm-library-add textarea {
+      width: 100%;
+      min-height: 74px;
+      resize: vertical;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .bgm-library-track-list {
+      display: grid;
+      align-content: start;
+      gap: 6px;
+      min-height: 0;
+      max-height: 348px;
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+    }
+
+    .bgm-library-track-row,
+    .room-library-track-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+    }
+
+    .bgm-library-track-main,
+    .room-library-track-main {
+      min-width: 0;
+    }
+
+    .bgm-library-track-title,
+    .room-library-track-title {
+      overflow: hidden;
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 820;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bgm-library-track-memo,
+    .room-library-track-memo {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .bgm-library-track-actions,
+    .room-library-track-actions {
+      display: flex;
+      flex: 0 0 auto;
+      gap: 4px;
+    }
+
+    .playlist-source-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      margin-bottom: 10px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--soft2);
+    }
+
+    .playlist-source-tab {
+      min-height: 30px;
+      border: 1px solid transparent;
+    }
+
+    .room-library-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .room-library-toolbar select {
+      min-width: 0;
+      flex: 1;
+      min-height: 32px;
+      padding: 0 28px 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 10px;
+    }
+
+    .room-library-track-list {
+      display: grid;
+      gap: 5px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 2px;
+      scrollbar-width: thin;
+    }
+
+    .bgm-preview-dock {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 200;
+      display: grid;
+      grid-template-columns: minmax(150px, 1fr) 150px auto;
+      gap: 9px;
+      align-items: center;
+      width: min(520px, calc(100vw - 28px));
+      padding: 9px;
+      border: 1px solid var(--line-strong);
+      border-radius: 11px;
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, .22);
+    }
+
+    .bgm-preview-dock.hidden {
+      display: none;
+    }
+
+    .bgm-preview-title {
+      margin-top: 2px;
+      overflow: hidden;
+      font-size: 11px;
+      font-weight: 820;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .bgm-preview-player-wrap {
+      width: 150px;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 7px;
+      background: #000;
+    }
+
+    .bgm-preview-player-wrap iframe {
+      width: 100%;
+      height: 100%;
+    }
+
+    html[data-theme="dark"] .account-library-tab.active,
+    html[data-theme="dark"] .playlist-source-tab.active,
+    html[data-theme="dark"] .bgm-library-category-chip.active {
+      background: #eceae4;
+      color: #20201e;
+      border-color: #eceae4;
+    }
+
+    html[data-theme="dark"] .bgm-library-category-chip,
+    html[data-theme="dark"] .bgm-library-track-row,
+    html[data-theme="dark"] .room-library-track-row,
+    html[data-theme="dark"] .bgm-library-add textarea,
+    html[data-theme="dark"] .room-library-toolbar select {
+      background: #242421;
+      color: var(--text);
+      border-color: var(--line-strong);
+    }
+
+    @media (max-width: 620px) {
+      .bgm-preview-dock {
+        grid-template-columns: 1fr auto;
+      }
+
+      .bgm-preview-player-wrap {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .bgm-library-track-row,
+      .room-library-track-row {
+        grid-template-columns: 1fr;
+      }
+
+      .bgm-library-track-actions,
+      .room-library-track-actions {
+        justify-content: flex-end;
+      }
+    }
+
   </style>
 </head>
 
@@ -3139,15 +3436,20 @@
         <aside id="sessionLibraryCard" class="session-library-card library-pane hidden">
         <div class="session-library-head">
           <div>
-            <h2 class="session-library-title">내 세션</h2>
+            <h2 class="session-library-title">내 라이브러리</h2>
             <div class="session-library-desc">
-              Google 계정에 저장된 세션입니다. 목록에서 삭제해도 실제 BGM 방은 삭제되지 않습니다.
+              Google 계정에 저장되는 개인 자료입니다. 세션과 BGM 보관함은 방 데이터와 별도로 관리됩니다.
             </div>
           </div>
           <span class="version-text">ACCOUNT LIBRARY</span>
         </div>
 
-        <div class="session-toolbar">
+        <div class="account-library-tabs" role="tablist" aria-label="내 라이브러리">
+          <button id="accountSessionsTab" class="account-library-tab active" type="button" role="tab" aria-selected="true">내 세션</button>
+          <button id="accountBgmLibraryTab" class="account-library-tab" type="button" role="tab" aria-selected="false">BGM LIBRARY</button>
+        </div>
+
+        <div id="sessionToolbar" class="session-toolbar">
           <div class="session-toolbar-top">
             <div id="sessionFolderStrip" class="session-folder-strip"></div>
             <button id="addSessionFolderButton" class="session-folder-add" title="세션 폴더 추가">＋</button>
@@ -3187,6 +3489,46 @@
             </div>
           </div>
         </div>
+
+        <div id="bgmLibraryPanel" class="bgm-library-panel hidden">
+          <div class="bgm-library-toolbar">
+            <div id="bgmLibraryCategoryStrip" class="bgm-library-category-strip"></div>
+            <button id="addBgmLibraryCategoryButton" class="session-folder-add" type="button" title="BGM 카테고리 추가">＋</button>
+          </div>
+
+          <div class="bgm-library-manage">
+            <span id="bgmLibraryCurrentCategory" class="session-folder-current">미분류</span>
+            <div class="bgm-library-manage-actions">
+              <button id="renameBgmLibraryCategoryButton" class="mini-btn hidden" type="button">이름 변경</button>
+              <button id="deleteBgmLibraryCategoryButton" class="mini-btn danger-mini hidden" type="button">카테고리 삭제</button>
+            </div>
+          </div>
+
+          <button id="bgmLibraryAddToggle" class="playlist-add-toggle" type="button">＋ BGM 저장</button>
+
+          <div id="bgmLibraryAddPanel" class="bgm-library-add hidden">
+            <div class="field-label">BGM 보관함에 저장</div>
+
+            <div class="field-label" style="margin-top:8px;">제목</div>
+            <input id="bgmLibraryTitleInput" type="text" maxlength="100" placeholder="비우면 YouTube 제목 자동 적용">
+
+            <div class="field-label" style="margin-top:8px;">YouTube 링크</div>
+            <input id="bgmLibraryUrlInput" type="url" placeholder="https://www.youtube.com/watch?v=...">
+
+            <div class="field-label" style="margin-top:8px;">메모</div>
+            <textarea id="bgmLibraryMemoInput" maxlength="2000" placeholder="예: 평범한 대화 / 이동 / @@할 때"></textarea>
+
+            <div class="inline-actions">
+              <button id="saveBgmLibraryTrackButton" class="btn primary" type="button" style="min-height:34px;">저장</button>
+            </div>
+
+            <div id="bgmLibraryAddStatus" class="status-line"></div>
+          </div>
+
+          <div id="bgmLibraryTrackList" class="bgm-library-track-list">
+            <div class="playlist-empty">아직 저장된 BGM이 없습니다.</div>
+          </div>
+        </div>
         </aside>
       </div>
 
@@ -3197,7 +3539,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.16.1</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.17</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -3413,25 +3755,42 @@
             <button id="playlistAddToggle" class="playlist-add-toggle">＋ 이 폴더에 BGM 추가</button>
 
             <div id="playlistAddPanel" class="playlist-add compact-add hidden">
-              <div class="field-label">새 BGM 추가</div>
+              <div class="playlist-source-tabs">
+                <button id="playlistYoutubeSourceButton" class="playlist-source-tab active" type="button">YouTube 링크</button>
+                <button id="playlistLibrarySourceButton" class="playlist-source-tab" type="button">내 BGM LIBRARY</button>
+              </div>
 
-              <div class="compact-grid">
-                <div>
-                  <div class="field-label">내 제목</div>
-                  <input id="newPrivateTitle" type="text" maxlength="80" placeholder="예: NPC 사망">
+              <div id="playlistYoutubeSourcePanel">
+                <div class="field-label">새 BGM 추가</div>
+
+                <div class="compact-grid">
+                  <div>
+                    <div class="field-label">내 제목</div>
+                    <input id="newPrivateTitle" type="text" maxlength="80" placeholder="비우면 YouTube 제목 자동 적용">
+                  </div>
+                  <div>
+                    <div class="field-label">공개 제목</div>
+                    <input id="newPublicTitle" type="text" maxlength="80" placeholder="예: @@장면">
+                  </div>
                 </div>
-                <div>
-                  <div class="field-label">공개 제목</div>
-                  <input id="newPublicTitle" type="text" maxlength="80" placeholder="예: @@장면">
+
+                <div class="field-label" style="margin-top:10px;">YouTube 링크</div>
+                <input id="newYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
+
+                <div class="inline-actions">
+                  <button id="copyNewTitleButton" class="mini-btn">공개 제목 ← 내 제목</button>
+                  <button id="addPlaylistButton" class="btn primary" style="min-height:34px;">＋ 추가</button>
                 </div>
               </div>
 
-              <div class="field-label" style="margin-top:10px;">YouTube 링크</div>
-              <input id="newYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
-
-              <div class="inline-actions">
-                <button id="copyNewTitleButton" class="mini-btn">공개 제목 ← 내 제목</button>
-                <button id="addPlaylistButton" class="btn primary" style="min-height:34px;">＋ 추가</button>
+              <div id="playlistLibrarySourcePanel" class="hidden">
+                <div class="room-library-toolbar">
+                  <select id="roomLibraryCategorySelect" aria-label="BGM 보관함 카테고리"></select>
+                  <span id="roomLibraryCount" class="version-text">0 BGM</span>
+                </div>
+                <div id="roomLibraryTrackList" class="room-library-track-list">
+                  <div class="playlist-empty">저장된 BGM이 없습니다.</div>
+                </div>
               </div>
 
               <div id="playlistAddStatus" class="status-line"></div>
@@ -3449,6 +3808,18 @@
       </div>
     </section>
 
+  </div>
+
+  <div id="bgmLibraryPreviewDock" class="bgm-preview-dock hidden" aria-live="polite">
+    <div class="bgm-preview-info">
+      <div class="field-label">LOCAL PREVIEW</div>
+      <div id="bgmLibraryPreviewTitle" class="bgm-preview-title">미리듣기</div>
+      <div class="small">이 브라우저에서만 재생됩니다. 방의 PLAYER에게는 들리지 않습니다.</div>
+    </div>
+    <div class="bgm-preview-player-wrap">
+      <div id="bgmLibraryPreviewPlayer"></div>
+    </div>
+    <button id="stopBgmLibraryPreviewButton" class="mini-btn" type="button">정지</button>
   </div>
 
   <script>
@@ -3647,6 +4018,29 @@
     const logoutButton = $("#logoutButton");
     const accountStatus = $("#accountStatus");
     const sessionHub = $("#sessionHub");
+    const sessionToolbar = $("#sessionToolbar");
+    const accountSessionsTab = $("#accountSessionsTab");
+    const accountBgmLibraryTab = $("#accountBgmLibraryTab");
+
+    const bgmLibraryPanel = $("#bgmLibraryPanel");
+    const bgmLibraryCategoryStrip = $("#bgmLibraryCategoryStrip");
+    const addBgmLibraryCategoryButton = $("#addBgmLibraryCategoryButton");
+    const bgmLibraryCurrentCategory = $("#bgmLibraryCurrentCategory");
+    const renameBgmLibraryCategoryButton = $("#renameBgmLibraryCategoryButton");
+    const deleteBgmLibraryCategoryButton = $("#deleteBgmLibraryCategoryButton");
+    const bgmLibraryAddToggle = $("#bgmLibraryAddToggle");
+    const bgmLibraryAddPanel = $("#bgmLibraryAddPanel");
+    const bgmLibraryTitleInput = $("#bgmLibraryTitleInput");
+    const bgmLibraryUrlInput = $("#bgmLibraryUrlInput");
+    const bgmLibraryMemoInput = $("#bgmLibraryMemoInput");
+    const saveBgmLibraryTrackButton = $("#saveBgmLibraryTrackButton");
+    const bgmLibraryAddStatus = $("#bgmLibraryAddStatus");
+    const bgmLibraryTrackList = $("#bgmLibraryTrackList");
+
+    const bgmLibraryPreviewDock = $("#bgmLibraryPreviewDock");
+    const bgmLibraryPreviewTitle = $("#bgmLibraryPreviewTitle");
+    const stopBgmLibraryPreviewButton = $("#stopBgmLibraryPreviewButton");
+
     const masterSessionList = $("#masterSessionList");
     const playerSessionList = $("#playerSessionList");
     const masterSessionCount = $("#masterSessionCount");
@@ -3741,6 +4135,15 @@
 
     const playlistAddToggle = $("#playlistAddToggle");
     const playlistAddPanel = $("#playlistAddPanel");
+
+    const playlistYoutubeSourceButton = $("#playlistYoutubeSourceButton");
+    const playlistLibrarySourceButton = $("#playlistLibrarySourceButton");
+    const playlistYoutubeSourcePanel = $("#playlistYoutubeSourcePanel");
+    const playlistLibrarySourcePanel = $("#playlistLibrarySourcePanel");
+    const roomLibraryCategorySelect = $("#roomLibraryCategorySelect");
+    const roomLibraryCount = $("#roomLibraryCount");
+    const roomLibraryTrackList = $("#roomLibraryTrackList");
+
     const playlistCount = $("#playlistCount");
     const detachPlaylistButton = $("#detachPlaylistButton");
 
@@ -3783,6 +4186,35 @@
       });
 
     let anonymousSignInPromise = null;
+
+    const BGM_LIBRARY_UNFILED =
+      "__unfiled__";
+
+    let accountLibraryView =
+      "sessions";
+
+    let bgmLibraryCategories = {};
+    let bgmLibraryTracks = {};
+    let selectedBgmLibraryCategoryId =
+      BGM_LIBRARY_UNFILED;
+
+    let bgmLibraryCategoriesUnsubscribe =
+      null;
+
+    let bgmLibraryTracksUnsubscribe =
+      null;
+
+    let roomPlaylistSource =
+      "youtube";
+
+    let bgmLibraryPreviewPlayer =
+      null;
+
+    let bgmLibraryPreviewReady =
+      false;
+
+    let bgmLibraryPreviewVideoId =
+      "";
     let currentNickname = "";
     let currentRoomName = "";
     let currentOwnerUid = null;
@@ -4057,8 +4489,18 @@
         sessionSortSelect.value = sessionSortMode;
         subscribeSavedSessions(user.uid);
         subscribeSessionFolders(user.uid);
+        subscribeBgmLibrary(user.uid);
         loadAccountProfileNickname(user.uid);
+        setAccountLibraryView(
+          accountLibraryView
+        );
+        renderRoomLibrarySource();
       } else {
+        unsubscribeBgmLibrary();
+        setAccountLibraryView(
+          "sessions"
+        );
+
         if (sessionListUnsubscribe) {
           sessionListUnsubscribe();
           sessionListUnsubscribe = null;
@@ -4075,6 +4517,1332 @@
 
         renderSessionFolderStrip();
         renderSavedSessions();
+      }
+    }
+
+    function setAccountLibraryView(
+      view
+    ) {
+      accountLibraryView =
+        view === "bgm"
+          ? "bgm"
+          : "sessions";
+
+      const showBgm =
+        accountLibraryView ===
+        "bgm";
+
+      accountSessionsTab.classList.toggle(
+        "active",
+        !showBgm
+      );
+
+      accountSessionsTab.setAttribute(
+        "aria-selected",
+        showBgm
+          ? "false"
+          : "true"
+      );
+
+      accountBgmLibraryTab.classList.toggle(
+        "active",
+        showBgm
+      );
+
+      accountBgmLibraryTab.setAttribute(
+        "aria-selected",
+        showBgm
+          ? "true"
+          : "false"
+      );
+
+      sessionToolbar.classList.toggle(
+        "hidden",
+        showBgm
+      );
+
+      sessionHub.classList.toggle(
+        "hidden",
+        showBgm
+      );
+
+      bgmLibraryPanel.classList.toggle(
+        "hidden",
+        !showBgm
+      );
+
+      if (showBgm) {
+        renderBgmLibrary();
+      }
+    }
+
+    function orderedBgmLibraryCategories() {
+      return Object.entries(
+        bgmLibraryCategories || {}
+      )
+        .map(
+          ([id, value]) => ({
+            id,
+            ...(value || {})
+          })
+        )
+        .sort(
+          (a, b) => {
+            const ao =
+              Number(
+                a.order ?? 0
+              );
+
+            const bo =
+              Number(
+                b.order ?? 0
+              );
+
+            if (ao !== bo) {
+              return ao - bo;
+            }
+
+            return String(
+              a.name || ""
+            ).localeCompare(
+              String(
+                b.name || ""
+              ),
+              "ko"
+            );
+          }
+        );
+    }
+
+    function bgmLibraryCategoryName(
+      categoryId
+    ) {
+      if (
+        !categoryId ||
+        categoryId ===
+        BGM_LIBRARY_UNFILED
+      ) {
+        return "미분류";
+      }
+
+      return (
+        bgmLibraryCategories[
+          categoryId
+        ]?.name ||
+        "미분류"
+      );
+    }
+
+    function normalizeBgmLibraryCategoryId(
+      track
+    ) {
+      const id =
+        String(
+          track?.categoryId || ""
+        );
+
+      return (
+        id &&
+        bgmLibraryCategories[id]
+      )
+        ? id
+        : BGM_LIBRARY_UNFILED;
+    }
+
+    function orderedBgmLibraryTracks(
+      categoryId =
+        selectedBgmLibraryCategoryId
+    ) {
+      return Object.entries(
+        bgmLibraryTracks || {}
+      )
+        .map(
+          ([id, value]) => ({
+            id,
+            ...(value || {})
+          })
+        )
+        .filter(
+          (track) =>
+            normalizeBgmLibraryCategoryId(
+              track
+            ) === categoryId
+        )
+        .sort(
+          (a, b) => {
+            const ao =
+              Number(
+                a.order ?? 0
+              );
+
+            const bo =
+              Number(
+                b.order ?? 0
+              );
+
+            if (ao !== bo) {
+              return ao - bo;
+            }
+
+            return String(
+              a.title || ""
+            ).localeCompare(
+              String(
+                b.title || ""
+              ),
+              "ko"
+            );
+          }
+        );
+    }
+
+    function maxBgmLibraryOrder(
+      categoryId
+    ) {
+      return orderedBgmLibraryTracks(
+        categoryId
+      ).reduce(
+        (max, track) =>
+          Math.max(
+            max,
+            Number(
+              track.order ?? 0
+            )
+          ),
+        0
+      );
+    }
+
+    function subscribeBgmLibrary(
+      uid
+    ) {
+      if (
+        bgmLibraryCategoriesUnsubscribe
+      ) {
+        bgmLibraryCategoriesUnsubscribe();
+      }
+
+      if (
+        bgmLibraryTracksUnsubscribe
+      ) {
+        bgmLibraryTracksUnsubscribe();
+      }
+
+      bgmLibraryCategoriesUnsubscribe =
+        onValue(
+          ref(
+            db,
+            `users/${uid}/bgmLibrary/categories`
+          ),
+          (snapshot) => {
+            bgmLibraryCategories =
+              snapshot.val() ?? {};
+
+            if (
+              selectedBgmLibraryCategoryId !==
+                BGM_LIBRARY_UNFILED &&
+              !bgmLibraryCategories[
+                selectedBgmLibraryCategoryId
+              ]
+            ) {
+              selectedBgmLibraryCategoryId =
+                BGM_LIBRARY_UNFILED;
+            }
+
+            renderBgmLibrary();
+            renderRoomLibrarySource();
+          },
+          (error) => {
+            console.error(
+              "BGM library categories read failed",
+              error
+            );
+
+            accountStatus.textContent =
+              "BGM 보관함 카테고리를 읽지 못했습니다.";
+          }
+        );
+
+      bgmLibraryTracksUnsubscribe =
+        onValue(
+          ref(
+            db,
+            `users/${uid}/bgmLibrary/tracks`
+          ),
+          (snapshot) => {
+            bgmLibraryTracks =
+              snapshot.val() ?? {};
+
+            renderBgmLibrary();
+            renderRoomLibrarySource();
+          },
+          (error) => {
+            console.error(
+              "BGM library tracks read failed",
+              error
+            );
+
+            accountStatus.textContent =
+              "BGM 보관함을 읽지 못했습니다.";
+          }
+        );
+    }
+
+    function unsubscribeBgmLibrary() {
+      if (
+        bgmLibraryCategoriesUnsubscribe
+      ) {
+        bgmLibraryCategoriesUnsubscribe();
+        bgmLibraryCategoriesUnsubscribe =
+          null;
+      }
+
+      if (
+        bgmLibraryTracksUnsubscribe
+      ) {
+        bgmLibraryTracksUnsubscribe();
+        bgmLibraryTracksUnsubscribe =
+          null;
+      }
+
+      bgmLibraryCategories = {};
+      bgmLibraryTracks = {};
+      selectedBgmLibraryCategoryId =
+        BGM_LIBRARY_UNFILED;
+
+      stopBgmLibraryPreview();
+      renderBgmLibrary();
+      renderRoomLibrarySource();
+    }
+
+    function renderBgmLibrary() {
+      if (
+        !bgmLibraryCategoryStrip ||
+        !bgmLibraryTrackList
+      ) {
+        return;
+      }
+
+      bgmLibraryCategoryStrip.replaceChildren();
+
+      const categories = [
+        {
+          id:
+            BGM_LIBRARY_UNFILED,
+          name:
+            "미분류"
+        },
+        ...orderedBgmLibraryCategories()
+      ];
+
+      for (
+        const category of
+        categories
+      ) {
+        const count =
+          orderedBgmLibraryTracks(
+            category.id
+          ).length;
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type =
+          "button";
+
+        button.className =
+          `bgm-library-category-chip${selectedBgmLibraryCategoryId === category.id ? " active" : ""}`;
+
+        button.textContent =
+          count
+            ? `${category.name} · ${count}`
+            : category.name;
+
+        button.addEventListener(
+          "click",
+          () => {
+            selectedBgmLibraryCategoryId =
+              category.id;
+
+            renderBgmLibrary();
+          }
+        );
+
+        bgmLibraryCategoryStrip.appendChild(
+          button
+        );
+      }
+
+      const isRealCategory =
+        selectedBgmLibraryCategoryId !==
+          BGM_LIBRARY_UNFILED &&
+        Boolean(
+          bgmLibraryCategories[
+            selectedBgmLibraryCategoryId
+          ]
+        );
+
+      bgmLibraryCurrentCategory.textContent =
+        bgmLibraryCategoryName(
+          selectedBgmLibraryCategoryId
+        );
+
+      renameBgmLibraryCategoryButton.classList.toggle(
+        "hidden",
+        !isRealCategory
+      );
+
+      deleteBgmLibraryCategoryButton.classList.toggle(
+        "hidden",
+        !isRealCategory
+      );
+
+      bgmLibraryTrackList.replaceChildren();
+
+      const tracks =
+        orderedBgmLibraryTracks();
+
+      if (!tracks.length) {
+        const empty =
+          document.createElement("div");
+
+        empty.className =
+          "playlist-empty";
+
+        empty.textContent =
+          "이 카테고리에는 아직 저장된 BGM이 없습니다.";
+
+        bgmLibraryTrackList.appendChild(
+          empty
+        );
+
+        return;
+      }
+
+      for (
+        const track of
+        tracks
+      ) {
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "bgm-library-track-row";
+
+        const main =
+          document.createElement(
+            "div"
+          );
+
+        main.className =
+          "bgm-library-track-main";
+
+        const title =
+          document.createElement(
+            "div"
+          );
+
+        title.className =
+          "bgm-library-track-title";
+
+        title.textContent =
+          track.title ||
+          "제목 없음";
+
+        const memo =
+          document.createElement(
+            "div"
+          );
+
+        memo.className =
+          "bgm-library-track-memo";
+
+        memo.textContent =
+          String(
+            track.memo || ""
+          ).trim()
+            ? track.memo
+            : "메모 없음";
+
+        main.append(
+          title,
+          memo
+        );
+
+        const actions =
+          document.createElement(
+            "div"
+          );
+
+        actions.className =
+          "bgm-library-track-actions";
+
+        const preview =
+          document.createElement(
+            "button"
+          );
+
+        preview.type =
+          "button";
+
+        preview.className =
+          "mini-btn";
+
+        preview.textContent =
+          bgmLibraryPreviewVideoId ===
+            track.videoId
+            ? "정지"
+            : "미리듣기";
+
+        preview.addEventListener(
+          "click",
+          () => {
+            if (
+              bgmLibraryPreviewVideoId ===
+              track.videoId
+            ) {
+              stopBgmLibraryPreview();
+            } else {
+              previewBgmLibraryTrack(
+                track
+              );
+            }
+          }
+        );
+
+        const deleteButton =
+          document.createElement(
+            "button"
+          );
+
+        deleteButton.type =
+          "button";
+
+        deleteButton.className =
+          "mini-btn danger-mini";
+
+        deleteButton.textContent =
+          "삭제";
+
+        deleteButton.addEventListener(
+          "click",
+          async () => {
+            if (
+              !confirm(
+                `「${track.title || "이 BGM"}」을(를) 내 BGM 보관함에서 삭제할까요?`
+              )
+            ) {
+              return;
+            }
+
+            try {
+              await set(
+                ref(
+                  db,
+                  `users/${auth.currentUser.uid}/bgmLibrary/tracks/${track.id}`
+                ),
+                null
+              );
+
+              if (
+                bgmLibraryPreviewVideoId ===
+                track.videoId
+              ) {
+                stopBgmLibraryPreview();
+              }
+            } catch (error) {
+              alert(
+                error?.message ??
+                "BGM 삭제에 실패했습니다."
+              );
+            }
+          }
+        );
+
+        actions.append(
+          preview,
+          deleteButton
+        );
+
+        row.append(
+          main,
+          actions
+        );
+
+        bgmLibraryTrackList.appendChild(
+          row
+        );
+      }
+    }
+
+    async function addBgmLibraryCategory() {
+      const user =
+        auth.currentUser;
+
+      if (
+        !isPersistentAccount(user)
+      ) {
+        return;
+      }
+
+      const name =
+        prompt(
+          "새 BGM 카테고리 이름"
+        )?.trim();
+
+      if (!name) {
+        return;
+      }
+
+      const maxOrder =
+        orderedBgmLibraryCategories()
+          .reduce(
+            (max, category) =>
+              Math.max(
+                max,
+                Number(
+                  category.order ?? 0
+                )
+              ),
+            0
+          );
+
+      const categoryRef =
+        push(
+          ref(
+            db,
+            `users/${user.uid}/bgmLibrary/categories`
+          )
+        );
+
+      await set(
+        categoryRef,
+        {
+          name,
+          order:
+            maxOrder + 10,
+          createdAt:
+            serverTimestamp()
+        }
+      );
+
+      selectedBgmLibraryCategoryId =
+        categoryRef.key;
+    }
+
+    async function renameSelectedBgmLibraryCategory() {
+      const user =
+        auth.currentUser;
+
+      if (
+        !isPersistentAccount(user) ||
+        selectedBgmLibraryCategoryId ===
+          BGM_LIBRARY_UNFILED
+      ) {
+        return;
+      }
+
+      const current =
+        bgmLibraryCategories[
+          selectedBgmLibraryCategoryId
+        ];
+
+      if (!current) {
+        return;
+      }
+
+      const next =
+        prompt(
+          "카테고리 이름",
+          current.name || ""
+        )?.trim();
+
+      if (!next) {
+        return;
+      }
+
+      await set(
+        ref(
+          db,
+          `users/${user.uid}/bgmLibrary/categories/${selectedBgmLibraryCategoryId}/name`
+        ),
+        next
+      );
+    }
+
+    async function deleteSelectedBgmLibraryCategory() {
+      const user =
+        auth.currentUser;
+
+      if (
+        !isPersistentAccount(user) ||
+        selectedBgmLibraryCategoryId ===
+          BGM_LIBRARY_UNFILED
+      ) {
+        return;
+      }
+
+      const categoryId =
+        selectedBgmLibraryCategoryId;
+
+      const name =
+        bgmLibraryCategoryName(
+          categoryId
+        );
+
+      if (
+        !confirm(
+          `「${name}」 카테고리를 삭제할까요?\n\n곡은 삭제하지 않고 '미분류'로 이동합니다.`
+        )
+      ) {
+        return;
+      }
+
+      const updates = {
+        [`categories/${categoryId}`]:
+          null
+      };
+
+      let order =
+        maxBgmLibraryOrder(
+          BGM_LIBRARY_UNFILED
+        );
+
+      for (
+        const track of
+        Object.entries(
+          bgmLibraryTracks || {}
+        ).map(
+          ([id, value]) => ({
+            id,
+            ...(value || {})
+          })
+        )
+      ) {
+        if (
+          normalizeBgmLibraryCategoryId(
+            track
+          ) !== categoryId
+        ) {
+          continue;
+        }
+
+        order += 10;
+
+        updates[
+          `tracks/${track.id}/categoryId`
+        ] = null;
+
+        updates[
+          `tracks/${track.id}/order`
+        ] = order;
+      }
+
+      await update(
+        ref(
+          db,
+          `users/${user.uid}/bgmLibrary`
+        ),
+        updates
+      );
+
+      selectedBgmLibraryCategoryId =
+        BGM_LIBRARY_UNFILED;
+    }
+
+    async function saveBgmLibraryTrack() {
+      const user =
+        auth.currentUser;
+
+      if (
+        !isPersistentAccount(user)
+      ) {
+        bgmLibraryAddStatus.textContent =
+          "Google 로그인 사용자만 BGM 보관함을 사용할 수 있습니다.";
+        return;
+      }
+
+      const rawUrl =
+        bgmLibraryUrlInput.value.trim();
+
+      const videoId =
+        extractYoutubeVideoId(
+          rawUrl
+        );
+
+      if (!videoId) {
+        bgmLibraryAddStatus.textContent =
+          "올바른 YouTube 링크를 입력해 주세요.";
+        return;
+      }
+
+      try {
+        saveBgmLibraryTrackButton.disabled =
+          true;
+
+        const typedTitle =
+          bgmLibraryTitleInput.value.trim();
+
+        if (!typedTitle) {
+          bgmLibraryAddStatus.textContent =
+            "YouTube 제목을 확인하는 중…";
+        }
+
+        const title =
+          await resolveYoutubeTitle(
+            typedTitle,
+            videoId
+          );
+
+        const trackRef =
+          push(
+            ref(
+              db,
+              `users/${user.uid}/bgmLibrary/tracks`
+            )
+          );
+
+        const data = {
+          title,
+          youtubeUrl:
+            canonicalYoutubeUrl(
+              videoId
+            ),
+          videoId,
+          memo:
+            bgmLibraryMemoInput.value.trim(),
+          order:
+            maxBgmLibraryOrder(
+              selectedBgmLibraryCategoryId
+            ) + 10,
+          createdAt:
+            serverTimestamp()
+        };
+
+        if (
+          selectedBgmLibraryCategoryId !==
+          BGM_LIBRARY_UNFILED
+        ) {
+          data.categoryId =
+            selectedBgmLibraryCategoryId;
+        }
+
+        await set(
+          trackRef,
+          data
+        );
+
+        bgmLibraryTitleInput.value =
+          "";
+
+        bgmLibraryUrlInput.value =
+          "";
+
+        bgmLibraryMemoInput.value =
+          "";
+
+        bgmLibraryAddStatus.textContent =
+          `「${bgmLibraryCategoryName(selectedBgmLibraryCategoryId)}」에 저장했습니다.`;
+
+      } catch (error) {
+        console.error(
+          "BGM library save failed",
+          error
+        );
+
+        bgmLibraryAddStatus.textContent =
+          error?.message ??
+          "BGM 보관함 저장에 실패했습니다.";
+      } finally {
+        saveBgmLibraryTrackButton.disabled =
+          false;
+      }
+    }
+
+    async function ensureBgmLibraryPreviewPlayer() {
+      if (
+        bgmLibraryPreviewPlayer
+      ) {
+        return bgmLibraryPreviewPlayer;
+      }
+
+      await loadYoutubeApi();
+
+      bgmLibraryPreviewPlayer =
+        new YT.Player(
+          "bgmLibraryPreviewPlayer",
+          {
+            width:
+              "100%",
+            height:
+              "100%",
+            playerVars: {
+              playsinline:
+                1,
+              rel:
+                0,
+              controls:
+                1,
+              origin:
+                window.location.origin
+            },
+            events: {
+              onReady:
+                () => {
+                  bgmLibraryPreviewReady =
+                    true;
+                },
+              onStateChange:
+                (event) => {
+                  if (
+                    event.data ===
+                    YT.PlayerState.ENDED
+                  ) {
+                    stopBgmLibraryPreview();
+                  }
+                }
+            }
+          }
+        );
+
+      return bgmLibraryPreviewPlayer;
+    }
+
+    async function previewBgmLibraryTrack(
+      track
+    ) {
+      if (
+        !track?.videoId
+      ) {
+        return;
+      }
+
+      try {
+        const player =
+          await ensureBgmLibraryPreviewPlayer();
+
+        bgmLibraryPreviewDock.classList.remove(
+          "hidden"
+        );
+
+        bgmLibraryPreviewTitle.textContent =
+          track.title ||
+          "BGM 미리듣기";
+
+        bgmLibraryPreviewVideoId =
+          track.videoId;
+
+        player.setVolume?.(
+          35
+        );
+
+        player.unMute?.();
+
+        player.loadVideoById(
+          track.videoId
+        );
+
+        renderBgmLibrary();
+        renderRoomLibrarySource();
+
+      } catch (error) {
+        console.error(
+          "BGM preview failed",
+          error
+        );
+
+        accountStatus.textContent =
+          "미리듣기를 시작하지 못했습니다.";
+      }
+    }
+
+    function stopBgmLibraryPreview() {
+      if (
+        bgmLibraryPreviewPlayer
+      ) {
+        try {
+          bgmLibraryPreviewPlayer.stopVideo?.();
+        } catch {}
+      }
+
+      bgmLibraryPreviewVideoId =
+        "";
+
+      bgmLibraryPreviewDock.classList.add(
+        "hidden"
+      );
+
+      renderBgmLibrary();
+      renderRoomLibrarySource();
+    }
+
+    function setRoomPlaylistSource(
+      source
+    ) {
+      const canUseLibrary =
+        isPersistentAccount(
+          auth.currentUser
+        );
+
+      roomPlaylistSource =
+        source === "library" &&
+        canUseLibrary
+          ? "library"
+          : "youtube";
+
+      const libraryActive =
+        roomPlaylistSource ===
+        "library";
+
+      playlistYoutubeSourceButton.classList.toggle(
+        "active",
+        !libraryActive
+      );
+
+      playlistLibrarySourceButton.classList.toggle(
+        "active",
+        libraryActive
+      );
+
+      playlistYoutubeSourcePanel.classList.toggle(
+        "hidden",
+        libraryActive
+      );
+
+      playlistLibrarySourcePanel.classList.toggle(
+        "hidden",
+        !libraryActive
+      );
+
+      renderRoomLibrarySource();
+    }
+
+    function renderRoomLibrarySource() {
+      if (
+        !roomLibraryCategorySelect ||
+        !roomLibraryTrackList
+      ) {
+        return;
+      }
+
+      const account =
+        isPersistentAccount(
+          auth.currentUser
+        );
+
+      playlistLibrarySourceButton.classList.toggle(
+        "hidden",
+        !account
+      );
+
+      if (!account) {
+        if (
+          roomPlaylistSource ===
+          "library"
+        ) {
+          setRoomPlaylistSource(
+            "youtube"
+          );
+        }
+
+        return;
+      }
+
+      const existingValue =
+        roomLibraryCategorySelect.value ||
+        BGM_LIBRARY_UNFILED;
+
+      roomLibraryCategorySelect.replaceChildren();
+
+      const categories = [
+        {
+          id:
+            BGM_LIBRARY_UNFILED,
+          name:
+            "미분류"
+        },
+        ...orderedBgmLibraryCategories()
+      ];
+
+      for (
+        const category of
+        categories
+      ) {
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          category.id;
+
+        option.textContent =
+          category.name;
+
+        roomLibraryCategorySelect.appendChild(
+          option
+        );
+      }
+
+      const selected =
+        categories.some(
+          (category) =>
+            category.id ===
+            existingValue
+        )
+          ? existingValue
+          : BGM_LIBRARY_UNFILED;
+
+      roomLibraryCategorySelect.value =
+        selected;
+
+      const tracks =
+        orderedBgmLibraryTracks(
+          selected
+        );
+
+      roomLibraryCount.textContent =
+        `${tracks.length} BGM`;
+
+      roomLibraryTrackList.replaceChildren();
+
+      if (!tracks.length) {
+        const empty =
+          document.createElement(
+            "div"
+          );
+
+        empty.className =
+          "playlist-empty";
+
+        empty.textContent =
+          "이 카테고리에는 저장된 BGM이 없습니다.";
+
+        roomLibraryTrackList.appendChild(
+          empty
+        );
+
+        return;
+      }
+
+      for (
+        const track of
+        tracks
+      ) {
+        const row =
+          document.createElement(
+            "div"
+          );
+
+        row.className =
+          "room-library-track-row";
+
+        const main =
+          document.createElement(
+            "div"
+          );
+
+        main.className =
+          "room-library-track-main";
+
+        const title =
+          document.createElement(
+            "div"
+          );
+
+        title.className =
+          "room-library-track-title";
+
+        title.textContent =
+          track.title ||
+          "제목 없음";
+
+        const memo =
+          document.createElement(
+            "div"
+          );
+
+        memo.className =
+          "room-library-track-memo";
+
+        memo.textContent =
+          String(
+            track.memo || ""
+          ).trim()
+            ? track.memo
+            : "메모 없음";
+
+        main.append(
+          title,
+          memo
+        );
+
+        const actions =
+          document.createElement(
+            "div"
+          );
+
+        actions.className =
+          "room-library-track-actions";
+
+        const preview =
+          document.createElement(
+            "button"
+          );
+
+        preview.type =
+          "button";
+
+        preview.className =
+          "mini-btn";
+
+        preview.textContent =
+          bgmLibraryPreviewVideoId ===
+            track.videoId
+            ? "정지"
+            : "미리듣기";
+
+        preview.addEventListener(
+          "click",
+          () => {
+            if (
+              bgmLibraryPreviewVideoId ===
+              track.videoId
+            ) {
+              stopBgmLibraryPreview();
+            } else {
+              previewBgmLibraryTrack(
+                track
+              );
+            }
+          }
+        );
+
+        const add =
+          document.createElement(
+            "button"
+          );
+
+        add.type =
+          "button";
+
+        add.className =
+          "mini-btn";
+
+        add.textContent =
+          "추가";
+
+        add.addEventListener(
+          "click",
+          () => {
+            addLibraryTrackToCurrentRoom(
+              track.id
+            );
+          }
+        );
+
+        actions.append(
+          preview,
+          add
+        );
+
+        row.append(
+          main,
+          actions
+        );
+
+        roomLibraryTrackList.appendChild(
+          row
+        );
+      }
+    }
+
+    async function addLibraryTrackToCurrentRoom(
+      trackId
+    ) {
+      if (
+        !isMaster ||
+        !currentRoomId
+      ) {
+        playlistAddStatus.textContent =
+          "현재 MASTER만 방 플레이리스트에 추가할 수 있습니다.";
+        return;
+      }
+
+      const track =
+        bgmLibraryTracks[
+          trackId
+        ];
+
+      if (!track) {
+        playlistAddStatus.textContent =
+          "BGM 보관함에서 곡을 찾지 못했습니다.";
+        return;
+      }
+
+      try {
+        const trackRef =
+          push(
+            ref(
+              db,
+              `rooms/${currentRoomId}/master/playlist`
+            )
+          );
+
+        const data = {
+          privateTitle:
+            track.title ||
+            "YouTube BGM",
+          publicTitle:
+            "",
+          memo:
+            String(
+              track.memo || ""
+            ),
+          youtubeUrl:
+            track.youtubeUrl ||
+            canonicalYoutubeUrl(
+              track.videoId
+            ),
+          videoId:
+            track.videoId,
+          order:
+            maxTrackOrderInFolder(
+              selectedFolderId
+            ) + 10,
+          createdAt:
+            serverTimestamp()
+        };
+
+        if (
+          selectedFolderId !==
+          UNFILED_FOLDER_ID
+        ) {
+          data.folderId =
+            selectedFolderId;
+        }
+
+        await set(
+          trackRef,
+          data
+        );
+
+        playlistAddStatus.textContent =
+          `BGM LIBRARY의 「${track.title || "BGM"}」을(를) 「${folderName(selectedFolderId)}」에 추가했습니다.`;
+
+      } catch (error) {
+        console.error(
+          "library track room copy failed",
+          error
+        );
+
+        playlistAddStatus.textContent =
+          error?.message ??
+          "BGM LIBRARY에서 방으로 추가하지 못했습니다.";
       }
     }
 
@@ -12635,6 +14403,149 @@
       returnToEntryViaHistory
     );
 
+    accountSessionsTab.addEventListener(
+      "click",
+      () => {
+        setAccountLibraryView(
+          "sessions"
+        );
+      }
+    );
+
+    accountBgmLibraryTab.addEventListener(
+      "click",
+      () => {
+        setAccountLibraryView(
+          "bgm"
+        );
+      }
+    );
+
+    addBgmLibraryCategoryButton.addEventListener(
+      "click",
+      () => {
+        addBgmLibraryCategory()
+          .catch(
+            (error) => {
+              console.error(
+                error
+              );
+
+              alert(
+                error?.message ??
+                "BGM 카테고리 추가에 실패했습니다."
+              );
+            }
+          );
+      }
+    );
+
+    renameBgmLibraryCategoryButton.addEventListener(
+      "click",
+      () => {
+        renameSelectedBgmLibraryCategory()
+          .catch(
+            (error) => {
+              console.error(
+                error
+              );
+
+              alert(
+                error?.message ??
+                "카테고리 이름 변경에 실패했습니다."
+              );
+            }
+          );
+      }
+    );
+
+    deleteBgmLibraryCategoryButton.addEventListener(
+      "click",
+      () => {
+        deleteSelectedBgmLibraryCategory()
+          .catch(
+            (error) => {
+              console.error(
+                error
+              );
+
+              alert(
+                error?.message ??
+                "카테고리 삭제에 실패했습니다."
+              );
+            }
+          );
+      }
+    );
+
+    bgmLibraryAddToggle.addEventListener(
+      "click",
+      () => {
+        const open =
+          bgmLibraryAddPanel.classList.contains(
+            "hidden"
+          );
+
+        bgmLibraryAddPanel.classList.toggle(
+          "hidden",
+          !open
+        );
+
+        bgmLibraryAddToggle.textContent =
+          open
+            ? "− BGM 저장 닫기"
+            : "＋ BGM 저장";
+
+        bgmLibraryAddStatus.textContent =
+          "";
+      }
+    );
+
+    saveBgmLibraryTrackButton.addEventListener(
+      "click",
+      saveBgmLibraryTrack
+    );
+
+    bgmLibraryUrlInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key ===
+          "Enter"
+        ) {
+          saveBgmLibraryTrack();
+        }
+      }
+    );
+
+    stopBgmLibraryPreviewButton.addEventListener(
+      "click",
+      stopBgmLibraryPreview
+    );
+
+    playlistYoutubeSourceButton.addEventListener(
+      "click",
+      () => {
+        setRoomPlaylistSource(
+          "youtube"
+        );
+      }
+    );
+
+    playlistLibrarySourceButton.addEventListener(
+      "click",
+      () => {
+        setRoomPlaylistSource(
+          "library"
+        );
+      }
+    );
+
+    roomLibraryCategorySelect.addEventListener(
+      "change",
+      renderRoomLibrarySource
+    );
+
     addSessionFolderButton.addEventListener(
       "click",
       async () => {
@@ -12802,6 +14713,12 @@
           : "＋ 이 폴더에 BGM 추가";
 
       playlistAddStatus.textContent = "";
+
+      if (willOpen) {
+        setRoomPlaylistSource(
+          roomPlaylistSource
+        );
+      }
     });
 
     saveRoomNameButton.addEventListener("click", saveRoomName);
