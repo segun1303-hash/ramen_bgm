@@ -4274,6 +4274,28 @@
       }
     }
 
+  
+    /* v3.24.1 LISTEN TOGETHER visual readiness */
+    .listen-video-frame .player-placeholder.has-thumbnail {
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, .8);
+    }
+
+    .listen-video-frame .player-placeholder.has-thumbnail::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: rgba(0, 0, 0, .42);
+    }
+
+    .listen-video-frame .player-placeholder {
+      isolation: isolate;
+    }
+
   </style>
 </head>
 
@@ -4620,7 +4642,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.24</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.24.1</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5446,6 +5468,7 @@
     let listenLastHostVideoId = "";
     let listenLastHostIndex = -1;
     let listenQueueAdvanceInProgress = false;
+    let listenVisualReadyTimer = null;
 
     let ytPlayer = null;
     let ytReady = false;
@@ -10965,7 +10988,11 @@
         "YouTube 영상을 불러오는 중…",
         {
           loading:
-            true
+            true,
+          videoId:
+            state.videoId ||
+            state.requestedVideoId ||
+            ""
         }
       );
 
@@ -11028,6 +11055,10 @@
           listenLoadedIndex =
             -1;
 
+          armListenVisualReadyCheck(
+            state.videoId
+          );
+
         } else if (
           state.mode ===
             "playlist"
@@ -11076,6 +11107,11 @@
 
           listenLoadedIndex =
             options.index;
+
+          armListenVisualReadyCheck(
+            state.requestedVideoId ||
+            ""
+          );
         }
 
         window.setTimeout(
@@ -11635,8 +11671,8 @@
     function showListenPlayerPlaceholder(
       message,
       {
-        loading =
-          false
+        loading = false,
+        videoId = ""
       } = {}
     ) {
       listenPlayerPlaceholder.textContent =
@@ -11650,6 +11686,19 @@
         "loading",
         loading
       );
+
+      const safeVideoId =
+        String(videoId || "").trim();
+
+      listenPlayerPlaceholder.classList.toggle(
+        "has-thumbnail",
+        Boolean(safeVideoId)
+      );
+
+      listenPlayerPlaceholder.style.backgroundImage =
+        safeVideoId
+          ? `linear-gradient(rgba(0,0,0,.34), rgba(0,0,0,.46)), url("https://i.ytimg.com/vi/${encodeURIComponent(safeVideoId)}/hqdefault.jpg")`
+          : "";
     }
 
     function hideListenPlayerPlaceholder() {
@@ -11658,8 +11707,113 @@
       );
 
       listenPlayerPlaceholder.classList.remove(
-        "loading"
+        "loading",
+        "has-thumbnail"
       );
+
+      listenPlayerPlaceholder.style.backgroundImage =
+        "";
+    }
+
+    function stopListenVisualReadyCheck() {
+      if (listenVisualReadyTimer) {
+        clearInterval(
+          listenVisualReadyTimer
+        );
+
+        listenVisualReadyTimer = null;
+      }
+    }
+
+    function listenPlayerHasUsableVideo(
+      expectedVideoId = ""
+    ) {
+      if (
+        !listenPlayerReady ||
+        !listenPlayer
+      ) {
+        return false;
+      }
+
+      try {
+        const data =
+          listenPlayer.getVideoData?.() ||
+          {};
+
+        const currentVideoId =
+          String(data.video_id || "").trim();
+
+        const expected =
+          String(expectedVideoId || "").trim();
+
+        const duration =
+          Number(
+            listenPlayer.getDuration?.()
+          ) || 0;
+
+        const state =
+          listenPlayer.getPlayerState?.();
+
+        const idReady =
+          !expected ||
+          currentVideoId === expected;
+
+        const stateReady =
+          state === YT.PlayerState.PLAYING ||
+          state === YT.PlayerState.PAUSED ||
+          state === YT.PlayerState.CUED;
+
+        return (
+          idReady &&
+          duration > 0 &&
+          stateReady
+        );
+
+      } catch {
+        return false;
+      }
+    }
+
+    function armListenVisualReadyCheck(
+      expectedVideoId = ""
+    ) {
+      stopListenVisualReadyCheck();
+
+      const startedAt =
+        Date.now();
+
+      listenVisualReadyTimer =
+        setInterval(
+          () => {
+            if (
+              listenPlayerHasUsableVideo(
+                expectedVideoId
+              )
+            ) {
+              stopListenVisualReadyCheck();
+              hideListenPlayerPlaceholder();
+              updateListenVideoMetadata();
+              return;
+            }
+
+            if (
+              Date.now() - startedAt >
+              15000
+            ) {
+              stopListenVisualReadyCheck();
+
+              showListenPlayerPlaceholder(
+                "YouTube 응답을 기다리는 중입니다…",
+                {
+                  loading: true,
+                  videoId:
+                    expectedVideoId
+                }
+              );
+            }
+          },
+          120
+        );
     }
 
     function updateListenPlayerVisualState(
@@ -11667,23 +11821,33 @@
     ) {
       if (
         !listenPlayback ||
-        listenPlayback.mode ===
-          "idle"
+        listenPlayback.mode === "idle"
       ) {
         return;
       }
 
+      /*
+       * BUFFERING만으로는 준비 완료로 취급하지 않는다.
+       * 실제 videoId + duration이 준비되어야 placeholder를 제거한다.
+       */
       if (
-        state ===
-          YT.PlayerState.CUED ||
-        state ===
-          YT.PlayerState.BUFFERING ||
-        state ===
-          YT.PlayerState.PLAYING ||
-        state ===
-          YT.PlayerState.PAUSED
+        state === YT.PlayerState.PLAYING ||
+        state === YT.PlayerState.PAUSED ||
+        state === YT.PlayerState.CUED
       ) {
-        hideListenPlayerPlaceholder();
+        const expectedVideoId =
+          String(
+            listenPlayback.videoId || ""
+          ).trim();
+
+        if (
+          listenPlayerHasUsableVideo(
+            expectedVideoId
+          )
+        ) {
+          stopListenVisualReadyCheck();
+          hideListenPlayerPlaceholder();
+        }
       }
     }
 
@@ -11877,6 +12041,8 @@
         state.mode ===
           "idle"
       ) {
+        stopListenVisualReadyCheck();
+
         showListenPlayerPlaceholder(
           "HOST가 아직 음악을 선택하지 않았습니다."
         );
@@ -11907,7 +12073,11 @@
           "YouTube 영상을 불러오는 중…",
           {
             loading:
-              true
+              true,
+            videoId:
+              state.videoId ||
+              state.requestedVideoId ||
+              ""
           }
         );
       }
@@ -11986,6 +12156,10 @@
           listenLoadedIndex =
             -1;
 
+          armListenVisualReadyCheck(
+            state.videoId
+          );
+
         } else if (
           force
         ) {
@@ -12039,6 +12213,12 @@
 
           listenLoadedIndex =
             targetIndex;
+
+          armListenVisualReadyCheck(
+            state.videoId ||
+            state.requestedVideoId ||
+            ""
+          );
 
         } else if (
           force
@@ -12963,6 +13143,8 @@
 
       listenQueueAdvanceInProgress =
         false;
+
+      stopListenVisualReadyCheck();
 
       showListenPlayerPlaceholder(
         "HOST가 아직 음악을 선택하지 않았습니다."
