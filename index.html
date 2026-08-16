@@ -4296,6 +4296,73 @@
       isolation: isolate;
     }
 
+  
+    /* v3.26 CCFOLIA playback end behavior */
+    .ccf-end-behavior {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .ccf-end-label {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .ccf-end-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      min-width: 210px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft2);
+    }
+
+    .ccf-end-button {
+      min-height: 28px;
+      padding: 0 8px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 9px;
+      font-weight: 780;
+    }
+
+    .ccf-end-button.active {
+      background: var(--text);
+      color: var(--panel);
+    }
+
+    .ccf-end-button:disabled {
+      cursor: default;
+      opacity: .62;
+    }
+
+    html[data-theme="dark"] .ccf-end-button.active {
+      background: #eceae4;
+      color: #20201e;
+    }
+
+    @media (max-width: 520px) {
+      .ccf-end-behavior {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .ccf-end-toggle {
+        min-width: 0;
+        width: 100%;
+      }
+    }
+
   </style>
 </head>
 
@@ -4642,7 +4709,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.25</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.26</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -4680,6 +4747,14 @@
               <button id="resumeButton" class="btn secondary" disabled>▶ 재생</button>
               <button id="pauseButton" class="btn secondary" disabled>Ⅱ 일시정지</button>
               <button id="restartButton" class="btn secondary" disabled>↺ 처음부터</button>
+            </div>
+
+            <div class="ccf-end-behavior">
+              <span class="ccf-end-label">재생 종료</span>
+              <div class="ccf-end-toggle" role="group" aria-label="곡 종료 후 동작">
+                <button id="ccfLoopButton" class="ccf-end-button active" type="button" aria-pressed="true">↻ 반복 재생</button>
+                <button id="ccfOnceButton" class="ccf-end-button" type="button" aria-pressed="false">1× 한 번만</button>
+              </div>
             </div>
 
             <div class="seek-wrap">
@@ -5271,6 +5346,8 @@
     const resumeButton = $("#resumeButton");
     const pauseButton = $("#pauseButton");
     const restartButton = $("#restartButton");
+    const ccfLoopButton = $("#ccfLoopButton");
+    const ccfOnceButton = $("#ccfOnceButton");
     const seekSlider = $("#seekSlider");
     const seekTimeText = $("#seekTimeText");
     const masterStatus = $("#masterStatus");
@@ -5505,7 +5582,7 @@
     let desiredVolume = Number(volumeSlider.value);
     let volumeGuardTimer = null;
 
-    const AUTO_LOOP_BGM = true;
+    let roomEndBehavior = "loop";
 
     const SYNC_CHECK_MS = 4000;
     const DRIFT_THRESHOLD_SEC = 1.8;
@@ -14841,6 +14918,17 @@
 
         currentPlayback = state;
 
+        if (
+          state?.videoId
+        ) {
+          roomEndBehavior =
+            normalizeRoomEndBehavior(
+              state.endBehavior
+            );
+        }
+
+        renderRoomEndBehavior();
+
         if (!state || !state.videoId) {
           currentVideoId = "";
           currentYoutubeUrl = "";
@@ -14991,6 +15079,200 @@
       return frames.length;
     }
 
+    function normalizeRoomEndBehavior(
+      value
+    ) {
+      return value ===
+        "once"
+        ? "once"
+        : "loop";
+    }
+
+    function renderRoomEndBehavior() {
+      const loop =
+        roomEndBehavior ===
+        "loop";
+
+      ccfLoopButton.classList.toggle(
+        "active",
+        loop
+      );
+
+      ccfOnceButton.classList.toggle(
+        "active",
+        !loop
+      );
+
+      ccfLoopButton.setAttribute(
+        "aria-pressed",
+        loop
+          ? "true"
+          : "false"
+      );
+
+      ccfOnceButton.setAttribute(
+        "aria-pressed",
+        loop
+          ? "false"
+          : "true"
+      );
+
+      ccfLoopButton.disabled =
+        !isMaster;
+
+      ccfOnceButton.disabled =
+        !isMaster;
+    }
+
+    async function setRoomEndBehavior(
+      behavior
+    ) {
+      if (!isMaster) {
+        return;
+      }
+
+      roomEndBehavior =
+        normalizeRoomEndBehavior(
+          behavior
+        );
+
+      renderRoomEndBehavior();
+
+      if (
+        !currentPlayback?.videoId ||
+        !currentRoomId
+      ) {
+        return;
+      }
+
+      try {
+        await update(
+          ref(
+            db,
+            `rooms/${currentRoomId}/public/playback`
+          ),
+          {
+            endBehavior:
+              roomEndBehavior
+          }
+        );
+      } catch (error) {
+        console.error(
+          "end behavior update failed",
+          error
+        );
+
+        masterStatus.textContent =
+          "재생 종료 설정을 저장하지 못했습니다.";
+      }
+    }
+
+    async function applyMasterPlaybackLocally(
+      state
+    ) {
+      if (
+        !isMaster ||
+        !state?.videoId
+      ) {
+        return;
+      }
+
+      currentPlayback =
+        {
+          ...state,
+          endBehavior:
+            normalizeRoomEndBehavior(
+              state.endBehavior
+            ),
+          updatedAt:
+            serverNowMs()
+        };
+
+      roomEndBehavior =
+        currentPlayback.endBehavior;
+
+      currentVideoId =
+        state.videoId;
+
+      currentYoutubeUrl =
+        state.url ||
+        canonicalYoutubeUrl(
+          state.videoId
+        );
+
+      updateTrackUi();
+      updateDetachedPlaybackUi();
+      renderRoomEndBehavior();
+
+      const player =
+        await ensureYoutubePlayer();
+
+      suppressMasterVideoEvents(
+        1400
+      );
+
+      const target =
+        Math.max(
+          0,
+          Number(
+            state.position ?? 0
+          ) || 0
+        );
+
+      const loadedId =
+        player
+          .getVideoData?.()
+          .video_id ?? "";
+
+      if (
+        loadedId !==
+        state.videoId
+      ) {
+        if (
+          audioActivated &&
+          state.status ===
+            "playing"
+        ) {
+          player.loadVideoById({
+            videoId:
+              state.videoId,
+            startSeconds:
+              target
+          });
+        } else {
+          player.cueVideoById({
+            videoId:
+              state.videoId,
+            startSeconds:
+              target
+          });
+        }
+      } else {
+        player.seekTo(
+          target,
+          true
+        );
+
+        if (
+          audioActivated &&
+          state.status ===
+            "playing"
+        ) {
+          player.playVideo();
+        } else {
+          player.pauseVideo();
+        }
+      }
+
+      lastAppliedSignature =
+        [
+          state.videoId,
+          state.status,
+          Number(target).toFixed(2),
+          "master-local"
+        ].join("|");
+    }
+
     async function ensureYoutubePlayer() {
       if (ytPlayer) {
         cleanupDuplicateYoutubeIframes();
@@ -15083,12 +15365,20 @@
               }
 
               if (
-                AUTO_LOOP_BGM &&
-                event.data === YT.PlayerState.ENDED &&
+                event.data ===
+                  YT.PlayerState.ENDED &&
                 audioActivated &&
-                currentPlayback?.status === "playing"
+                currentPlayback?.status ===
+                  "playing"
               ) {
-                handleAutomaticLoopEnd();
+                if (
+                  roomEndBehavior ===
+                  "loop"
+                ) {
+                  handleAutomaticLoopEnd();
+                } else {
+                  handleAutomaticOnceEnd();
+                }
 
                 lastMasterPlayerState =
                   event.data;
@@ -15553,7 +15843,8 @@
 
     async function handleAutomaticLoopEnd() {
       if (
-        !AUTO_LOOP_BGM ||
+        roomEndBehavior !==
+          "loop" ||
         !audioActivated ||
         !ytReady ||
         !ytPlayer ||
@@ -15603,6 +15894,69 @@
       } catch (error) {
         console.error(
           "automatic loop failed",
+          error
+        );
+      }
+    }
+
+    async function handleAutomaticOnceEnd() {
+      if (
+        roomEndBehavior !==
+          "once" ||
+        !audioActivated ||
+        !currentPlayback?.videoId
+      ) {
+        return;
+      }
+
+      if (!isMaster) {
+        playerStatus.textContent =
+          "이 BGM은 한 번만 재생되도록 설정되어 있습니다.";
+
+        return;
+      }
+
+      suppressMasterVideoEvents(
+        900
+      );
+
+      try {
+        const duration =
+          ytReady
+            ? Number(
+                ytPlayer?.getDuration?.() ??
+                0
+              )
+            : 0;
+
+        await writePlayback({
+          videoId:
+            currentPlayback.videoId,
+          url:
+            currentPlayback.url,
+          status:
+            "paused",
+          position:
+            Math.max(
+              0,
+              duration
+            ),
+          publicTitle:
+            currentPlayback.publicTitle ||
+            "",
+          trackId:
+            currentPlayback.trackId ||
+            null,
+          endBehavior:
+            "once"
+        });
+
+        masterStatus.textContent =
+          "한 번만 재생이 끝나 정지했습니다.";
+
+      } catch (error) {
+        console.error(
+          "once playback end failed",
           error
         );
       }
@@ -16008,6 +16362,8 @@
       restartButton.disabled =
         !masterCanControl;
 
+      renderRoomEndBehavior();
+
       const duration =
         ytReady
           ? Number(
@@ -16054,7 +16410,9 @@
       status,
       position,
       publicTitle = "",
-      trackId = null
+      trackId = null,
+      endBehavior =
+        roomEndBehavior
     }) {
       if (!isMaster) {
         throw new Error(
@@ -16087,6 +16445,10 @@
             ),
           publicTitle: String(publicTitle || ""),
           trackId: trackId || null,
+          endBehavior:
+            normalizeRoomEndBehavior(
+              endBehavior
+            ),
           updatedAt:
             serverTimestamp()
         }
@@ -16121,18 +16483,31 @@
             "BGM"
           );
 
-        await writePlayback({
+        const state = {
           videoId,
           url:
             canonicalYoutubeUrl(
               videoId
             ),
-          status: "playing",
-          position: 0,
+          status:
+            "playing",
+          position:
+            0,
           publicTitle:
             resolvedPublicTitle,
-          trackId: null
-        });
+          trackId:
+            null,
+          endBehavior:
+            roomEndBehavior
+        };
+
+        await applyMasterPlaybackLocally(
+          state
+        );
+
+        await writePlayback(
+          state
+        );
 
         masterStatus.textContent =
           "새 BGM을 재생했습니다.";
@@ -21432,24 +21807,56 @@
     }
 
     async function playPlaylistTrack(track) {
-      if (!isMaster || !track?.videoId) return;
+      if (
+        !isMaster ||
+        !track?.videoId
+      ) {
+        return;
+      }
+
+      const state = {
+        videoId:
+          track.videoId,
+        url:
+          track.youtubeUrl ||
+          canonicalYoutubeUrl(
+            track.videoId
+          ),
+        status:
+          "playing",
+        position:
+          0,
+        publicTitle:
+          String(
+            track.publicTitle || ""
+          ).trim() ||
+          "BGM",
+        trackId:
+          track.id,
+        endBehavior:
+          roomEndBehavior
+      };
 
       try {
-        await writePlayback({
-          videoId: track.videoId,
-          url: track.youtubeUrl || canonicalYoutubeUrl(track.videoId),
-          status: "playing",
-          position: 0,
-          publicTitle: String(track.publicTitle || "").trim() || "BGM",
-          trackId: track.id
-        });
+        /*
+         * MASTER starts locally first.
+         * Firebase is then used to synchronize PLAYER browsers.
+         */
+        await applyMasterPlaybackLocally(
+          state
+        );
+
+        await writePlayback(
+          state
+        );
 
         masterStatus.textContent =
           `「${track.privateTitle || "BGM"}」을 재생했습니다.`;
 
       } catch (error) {
         masterStatus.textContent =
-          error?.message ?? "플레이리스트 재생에 실패했습니다.";
+          error?.message ??
+          "플레이리스트 재생에 실패했습니다.";
       }
     }
 
@@ -23195,6 +23602,24 @@
     loadAndPlayButton.addEventListener(
       "click",
       playNewYoutube
+    );
+
+    ccfLoopButton.addEventListener(
+      "click",
+      () => {
+        setRoomEndBehavior(
+          "loop"
+        );
+      }
+    );
+
+    ccfOnceButton.addEventListener(
+      "click",
+      () => {
+        setRoomEndBehavior(
+          "once"
+        );
+      }
     );
 
     resumeButton.addEventListener(
