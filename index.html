@@ -4709,7 +4709,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.26</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.26.1</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5567,6 +5567,8 @@
     let seekSliderDragging = false;
     let driftTimer = null;
     let lastCorrectionAt = 0;
+    let driftIgnoreUntil = 0;
+    let driftExpectedVideoId = "";
 
     let suppressMasterVideoEventUntil = 0;
     let lastMasterPlayerState = null;
@@ -14957,6 +14959,11 @@
         ) {
           seekSliderDragging = false;
 
+          suppressDriftCorrection(
+            2200,
+            currentVideoId
+          );
+
           const initialPosition =
             Math.max(
               0,
@@ -15209,6 +15216,11 @@
 
       suppressMasterVideoEvents(
         1400
+      );
+
+      suppressDriftCorrection(
+        2200,
+        state.videoId
       );
 
       const target =
@@ -15856,6 +15868,11 @@
 
       suppressMasterVideoEvents(1400);
 
+      suppressDriftCorrection(
+        2200,
+        currentPlayback.videoId
+      );
+
       try {
         ytPlayer.seekTo(
           0,
@@ -16141,6 +16158,11 @@
         loadedId !==
         state.videoId
       ) {
+        suppressDriftCorrection(
+          1800,
+          state.videoId
+        );
+
         if (
           state.status ===
           "playing"
@@ -16198,6 +16220,29 @@
       );
     }
 
+    function suppressDriftCorrection(
+      ms = 1800,
+      expectedVideoId =
+        currentPlayback?.videoId ||
+        currentVideoId ||
+        ""
+    ) {
+      driftIgnoreUntil =
+        Math.max(
+          driftIgnoreUntil,
+          Date.now() +
+          Math.max(
+            0,
+            Number(ms) || 0
+          )
+        );
+
+      driftExpectedVideoId =
+        String(
+          expectedVideoId || ""
+        ).trim();
+    }
+
     function startDriftCorrectionLoop() {
       if (driftTimer) {
         clearInterval(driftTimer);
@@ -16215,13 +16260,27 @@
         !ytReady ||
         !ytPlayer ||
         !currentPlayback?.videoId ||
-        currentPlayback.status !== "playing"
+        currentPlayback.status !==
+          "playing"
       ) {
         return;
       }
 
       const now =
         Date.now();
+
+      /*
+       * Do not measure drift while the app itself is intentionally
+       * loading/seeking/restarting a video.
+       */
+      if (
+        now <
+          suppressMasterVideoEventUntil ||
+        now <
+          driftIgnoreUntil
+      ) {
+        return;
+      }
 
       if (
         now - lastCorrectionAt <
@@ -16231,45 +16290,118 @@
       }
 
       const loadedId =
-        ytPlayer
-          .getVideoData?.()
-          .video_id ?? "";
+        String(
+          ytPlayer
+            .getVideoData?.()
+            .video_id ??
+          ""
+        ).trim();
 
+      const expectedId =
+        String(
+          currentPlayback.videoId ||
+          ""
+        ).trim();
+
+      /*
+       * During a video transition YouTube can briefly report the old
+       * video's currentTime. Never compare that value against the new
+       * playback state.
+       */
       if (
+        !loadedId ||
         loadedId !==
-        currentPlayback.videoId
+          expectedId
       ) {
+        suppressDriftCorrection(
+          1400,
+          expectedId
+        );
+
         applyRemotePlayback(
           currentPlayback,
           true
         );
 
-        lastCorrectionAt =
-          now;
-
         return;
       }
 
-      const expected =
-        estimatePlaybackPosition(
-          currentPlayback
-        );
-
-      const actual =
+      const duration =
         Number(
-          ytPlayer.getCurrentTime?.() ?? 0
+          ytPlayer.getDuration?.() ??
+          0
         );
 
-      const drift =
-        actual - expected;
+      /*
+       * getCurrentTime() is not trustworthy until the new video's
+       * metadata/duration is available.
+       */
+      if (!(duration > 0)) {
+        suppressDriftCorrection(
+          900,
+          expectedId
+        );
+
+        return;
+      }
 
       const playerState =
         ytPlayer.getPlayerState?.();
 
       if (
+        playerState ===
+          YT.PlayerState.UNSTARTED ||
+        playerState ===
+          YT.PlayerState.BUFFERING ||
+        playerState ===
+          YT.PlayerState.CUED
+      ) {
+        suppressDriftCorrection(
+          900,
+          expectedId
+        );
+
+        return;
+      }
+
+      const expected =
+        Math.min(
+          duration,
+          estimatePlaybackPosition(
+            currentPlayback
+          )
+        );
+
+      const actual =
+        Number(
+          ytPlayer.getCurrentTime?.() ??
+          0
+        );
+
+      if (
+        !Number.isFinite(actual) ||
+        actual < 0
+      ) {
+        return;
+      }
+
+      const drift =
+        actual -
+        expected;
+
+      if (
         playerState !==
         YT.PlayerState.PLAYING
       ) {
+        suppressMasterVideoEvents(
+          900
+        );
+
+        suppressDriftCorrection(
+          1200,
+          expectedId
+        );
+
         ytPlayer.seekTo(
           expected,
           true
@@ -16288,10 +16420,41 @@
         return;
       }
 
+      /*
+       * A huge jump generally means we sampled during a transition,
+       * restart or browser seek before YouTube settled. Confirm again on
+       * the next cycle instead of treating it as genuine network drift.
+       */
+      if (
+        Math.abs(drift) >=
+          20
+      ) {
+        suppressDriftCorrection(
+          1200,
+          expectedId
+        );
+
+        setDiagnostics(
+          "곡 전환 상태를 확인하는 중…",
+          "normal"
+        );
+
+        return;
+      }
+
       if (
         Math.abs(drift) >=
         DRIFT_THRESHOLD_SEC
       ) {
+        suppressMasterVideoEvents(
+          700
+        );
+
+        suppressDriftCorrection(
+          1000,
+          expectedId
+        );
+
         ytPlayer.seekTo(
           expected,
           true
@@ -16611,6 +16774,11 @@
 
     async function restartPlayback() {
       suppressMasterVideoEvents(1200);
+
+      suppressDriftCorrection(
+        2000,
+        currentPlayback?.videoId
+      );
 
       if (
         !currentPlayback?.videoId
