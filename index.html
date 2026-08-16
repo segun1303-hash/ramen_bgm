@@ -4642,7 +4642,7 @@
         <div class="topbar-left">
           <button id="backToSessionsButton" class="back-to-sessions" title="내 세션으로 돌아가기">← 내 세션</button>
           <div class="brand">
-            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.24.1</span></div>
+            <div class="brand-title">CCFOLIA BGM <span class="version-text">v3.25</span></div>
             <div id="roomLine" class="room-line"></div>
           </div>
         </div>
@@ -5469,6 +5469,8 @@
     let listenLastHostIndex = -1;
     let listenQueueAdvanceInProgress = false;
     let listenVisualReadyTimer = null;
+    let listenLocalLoadKey = "";
+    let listenLocalLoadStartedAt = 0;
 
     let ytPlayer = null;
     let ytReady = false;
@@ -10579,6 +10581,22 @@
         );
     }
 
+    function listenQueueVideoIds() {
+      return orderedListenQueue()
+        .map(
+          (item) =>
+            String(
+              item.videoId || ""
+            ).trim()
+        )
+        .filter(Boolean);
+    }
+
+    function listenQueueSignature() {
+      return listenQueueVideoIds()
+        .join("|");
+    }
+
     function listenQueueIndexById(
       queueId
     ) {
@@ -10981,6 +10999,17 @@
       listenPlayback =
         state;
 
+      const immediateKey =
+        listenSourceKey(
+          state
+        );
+
+      listenLocalLoadKey =
+        immediateKey;
+
+      listenLocalLoadStartedAt =
+        Date.now();
+
       renderListenQueue();
       updateListenControls();
 
@@ -11000,18 +11029,101 @@
         const player =
           await ensureListenPlayer();
 
-        const key =
-          listenSourceKey(
-            state
-          );
-
         listenSuppressEventsUntil =
           Date.now() +
           1200;
 
         if (
           state.mode ===
-            "queue" ||
+          "queue"
+        ) {
+          const videoIds =
+            listenQueueVideoIds();
+
+          if (!videoIds.length) {
+            return;
+          }
+
+          const targetIndex =
+            Math.max(
+              0,
+              Math.min(
+                videoIds.length - 1,
+                Number(
+                  state.index ?? 0
+                ) || 0
+              )
+            );
+
+          const sameQueueLoaded =
+            listenLoadedSourceKey ===
+            immediateKey;
+
+          if (
+            sameQueueLoaded
+          ) {
+            const currentIndex =
+              Number(
+                player.getPlaylistIndex?.()
+              );
+
+            if (
+              !Number.isFinite(
+                currentIndex
+              ) ||
+              currentIndex !==
+                targetIndex
+            ) {
+              player.playVideoAt(
+                targetIndex
+              );
+            } else if (
+              listenAudioActivated &&
+              state.status ===
+                "playing"
+            ) {
+              player.playVideo();
+            }
+
+          } else {
+            const options = {
+              list:
+                videoIds,
+              index:
+                targetIndex,
+              startSeconds:
+                Math.max(
+                  0,
+                  Number(
+                    state.position ?? 0
+                  ) || 0
+                )
+            };
+
+            if (
+              listenAudioActivated
+            ) {
+              player.loadPlaylist(
+                options
+              );
+            } else {
+              player.cuePlaylist(
+                options
+              );
+            }
+
+            listenLoadedSourceKey =
+              immediateKey;
+          }
+
+          listenLoadedIndex =
+            targetIndex;
+
+          armListenVisualReadyCheck(
+            state.videoId
+          );
+
+        } else if (
           state.mode ===
             "video"
         ) {
@@ -11050,7 +11162,7 @@
           }
 
           listenLoadedSourceKey =
-            key;
+            immediateKey;
 
           listenLoadedIndex =
             -1;
@@ -11094,8 +11206,6 @@
             player.loadPlaylist(
               options
             );
-
-            player.playVideo();
           } else {
             player.cuePlaylist(
               options
@@ -11103,7 +11213,7 @@
           }
 
           listenLoadedSourceKey =
-            key;
+            immediateKey;
 
           listenLoadedIndex =
             options.index;
@@ -11125,6 +11235,19 @@
             } catch {}
           },
           150
+        );
+
+        window.setTimeout(
+          () => {
+            if (
+              listenLocalLoadKey ===
+              immediateKey
+            ) {
+              listenLocalLoadKey =
+                "";
+            }
+          },
+          1800
         );
 
       } catch (error) {
@@ -11149,21 +11272,30 @@
         return;
       }
 
-      const item =
-        listenQueue[
-          queueId
-        ];
+      const entries =
+        orderedListenQueue();
 
-      if (!item?.videoId) {
+      const index =
+        entries.findIndex(
+          (entry) =>
+            entry.id ===
+            queueId
+        );
+
+      if (index < 0) {
         listenHostStatus.textContent =
           "영상 목록에서 곡을 찾지 못했습니다.";
         return;
       }
 
-      const index =
-        listenQueueIndexById(
-          queueId
-        );
+      const item =
+        entries[
+          index
+        ];
+
+      if (!item?.videoId) {
+        return;
+      }
 
       const nextState = {
         mode:
@@ -11178,11 +11310,7 @@
           "playing",
         position:
           0,
-        index:
-          Math.max(
-            0,
-            index
-          ),
+        index,
         loop:
           Boolean(
             listenPlayback?.mode ===
@@ -11202,12 +11330,7 @@
       listenQueueAdvanceInProgress =
         false;
 
-      /*
-       * HOST does not wait for a Firebase round trip to hear the track.
-       * Start the local YouTube player immediately, then publish the same
-       * state so LISTENER browsers follow it.
-       */
-      applyHostListenStateImmediately(
+      await applyHostListenStateImmediately(
         nextState
       );
 
@@ -11278,36 +11401,46 @@
         !listenIsHost ||
         !listenRoomId ||
         listenPlayback?.mode !==
-          "queue" ||
-        !listenPlayback.queueId
+          "queue"
       ) {
         return;
       }
 
-      const item =
-        listenQueue[
-          listenPlayback.queueId
-        ];
+      const entries =
+        orderedListenQueue();
 
-      if (!item?.videoId) {
+      if (!entries.length) {
         return;
       }
 
+      const index =
+        Math.max(
+          0,
+          Math.min(
+            entries.length - 1,
+            Number(
+              listenPlayback.index ?? 0
+            ) || 0
+          )
+        );
+
+      const item =
+        entries[
+          index
+        ];
+
       listenSuppressEventsUntil =
         Date.now() +
-        1000;
+        700;
 
       if (
         listenPlayerReady &&
         listenPlayer
       ) {
         try {
-          listenPlayer.seekTo(
-            0,
-            true
+          listenPlayer.playVideoAt(
+            index
           );
-
-          listenPlayer.playVideo();
         } catch {}
       }
 
@@ -11317,12 +11450,18 @@
           `listenRooms/${listenRoomId}/playback`
         ),
         {
+          queueId:
+            item.id,
+          videoId:
+            item.videoId,
+          title:
+            item.title ||
+            "YouTube 영상",
+          index,
           status:
             "playing",
           position:
             0,
-          videoId:
-            item.videoId,
           loop:
             true,
           updatedAt:
@@ -11337,7 +11476,9 @@
       if (
         !listenIsHost ||
         listenPlayback?.mode !==
-          "queue"
+          "queue" ||
+        !listenPlayerReady ||
+        !listenPlayer
       ) {
         return;
       }
@@ -11349,62 +11490,35 @@
         return;
       }
 
-      let index =
-        entries.findIndex(
-          (entry) =>
-            entry.id ===
-            listenPlayback.queueId
-        );
+      try {
+        listenSuppressEventsUntil =
+          Date.now() +
+          700;
 
-      if (index < 0) {
-        index =
-          Math.max(
-            0,
-            Number(
-              listenPlayback.index ??
-              0
-            )
-          );
-      }
-
-      const nextIndex =
-        index +
-        direction;
-
-      if (
-        nextIndex < 0 ||
-        nextIndex >=
-          entries.length
-      ) {
         if (
           direction > 0
         ) {
-          if (
-            listenPlayerReady &&
-            listenPlayer
-          ) {
-            try {
-              listenSuppressEventsUntil =
-                Date.now() +
-                500;
-
-              listenPlayer.pauseVideo();
-            } catch {}
-          }
-
-          await commitListenPlayback(
-            "paused"
-          );
+          listenPlayer.nextVideo();
+        } else {
+          listenPlayer.previousVideo();
         }
 
-        return;
-      }
+        window.setTimeout(
+          () => {
+            commitListenPlayback(
+              "playing"
+            ).catch(
+              console.error
+            );
+          },
+          250
+        );
 
-      await hostPlayListenQueueItem(
-        entries[
-          nextIndex
-        ].id
-      );
+      } catch (error) {
+        listenPlayerStatus.textContent =
+          error?.message ??
+          "곡을 변경하지 못했습니다.";
+      }
     }
 
     function parseListenYoutubeSource(
@@ -11517,7 +11631,7 @@
         state?.mode ===
         "queue"
       ) {
-        return `queue:${state.queueId || state.videoId || ""}`;
+        return `queue-list:${listenQueueSignature()}`;
       }
 
       return "idle";
@@ -12061,10 +12175,21 @@
           state
         );
 
+      const hostLocalLoadInFlight =
+        listenIsHost &&
+        listenLocalLoadKey ===
+          incomingKey &&
+        Date.now() -
+          listenLocalLoadStartedAt <
+          5000;
+
       const alreadyLoadedLocally =
         listenIsHost &&
-        listenLoadedSourceKey ===
-          incomingKey;
+        (
+          listenLoadedSourceKey ===
+            incomingKey ||
+          hostLocalLoadInFlight
+        );
 
       if (
         !alreadyLoadedLocally
@@ -12113,19 +12238,127 @@
         listenLoadedIndex !==
           targetIndex;
 
+      if (
+        hostLocalLoadInFlight
+      ) {
+        listenPlayback =
+          state;
+
+        updateListenControls();
+        renderListenQueue();
+        return;
+      }
+
       listenSuppressEventsUntil =
         Date.now() +
         1200;
 
       if (
         state.mode ===
-          "video" ||
-        state.mode ===
           "queue"
       ) {
+        const videoIds =
+          listenQueueVideoIds();
+
+        if (!videoIds.length) {
+          return;
+        }
+
+        const safeIndex =
+          Math.max(
+            0,
+            Math.min(
+              videoIds.length - 1,
+              targetIndex
+            )
+          );
+
+        const queueIndexChanged =
+          listenLoadedIndex !==
+          safeIndex;
+
         if (
-          !state.videoId
+          sourceChanged
         ) {
+          const options = {
+            list:
+              videoIds,
+            index:
+              safeIndex,
+            startSeconds:
+              estimated
+          };
+
+          if (
+            listenAudioActivated
+          ) {
+            player.loadPlaylist(
+              options
+            );
+          } else {
+            player.cuePlaylist(
+              options
+            );
+          }
+
+          listenLoadedSourceKey =
+            key;
+
+          listenLoadedIndex =
+            safeIndex;
+
+          armListenVisualReadyCheck(
+            state.videoId
+          );
+
+        } else if (
+          queueIndexChanged
+        ) {
+          listenSuppressEventsUntil =
+            Date.now() +
+            700;
+
+          try {
+            player.playVideoAt(
+              safeIndex
+            );
+
+            if (
+              estimated > 1
+            ) {
+              window.setTimeout(
+                () => {
+                  try {
+                    player.seekTo(
+                      estimated,
+                      true
+                    );
+                  } catch {}
+                },
+                120
+              );
+            }
+          } catch {}
+
+          listenLoadedIndex =
+            safeIndex;
+
+        } else if (
+          force
+        ) {
+          try {
+            player.seekTo(
+              estimated,
+              true
+            );
+          } catch {}
+        }
+
+      } else if (
+        state.mode ===
+          "video"
+      ) {
+        if (!state.videoId) {
           return;
         }
 
@@ -12363,6 +12596,40 @@
 
       if (
         listenPlayback.mode ===
+          "queue"
+      ) {
+        const entries =
+          orderedListenQueue();
+
+        if (
+          index >= 0 &&
+          index < entries.length
+        ) {
+          const item =
+            entries[
+              index
+            ];
+
+          updates.queueId =
+            item.id;
+
+          updates.videoId =
+            item.videoId;
+
+          updates.title =
+            item.title ||
+            "YouTube 영상";
+
+          currentVideoId =
+            item.videoId;
+
+          listenLoadedIndex =
+            index;
+        }
+      }
+
+      if (
+        listenPlayback.mode ===
         "playlist"
       ) {
         listenLoadedIndex =
@@ -12407,26 +12674,29 @@
         return;
       }
 
+      if (
+        !listenPlayback.loop
+      ) {
+        /*
+         * Queue playback is a real YouTube playlist now.
+         * With loop OFF, YouTube advances to the next item itself.
+         * PLAYING / watchdog synchronization will publish the new index.
+         */
+        return;
+      }
+
       listenQueueAdvanceInProgress =
         true;
 
       try {
-        if (
-          listenPlayback.loop
-        ) {
-          await restartListenQueueLoop();
-        } else {
-          await hostMoveListenQueue(
-            1
-          );
-        }
+        await restartListenQueueLoop();
       } finally {
         window.setTimeout(
           () => {
             listenQueueAdvanceInProgress =
               false;
           },
-          700
+          500
         );
       }
     }
@@ -13144,6 +13414,12 @@
       listenQueueAdvanceInProgress =
         false;
 
+      listenLocalLoadKey =
+        "";
+
+      listenLocalLoadStartedAt =
+        0;
+
       stopListenVisualReadyCheck();
 
       showListenPlayerPlaceholder(
@@ -13271,13 +13547,37 @@
           (
             snapshot
           ) => {
+            const previousSignature =
+              listenQueueSignature();
+
             listenQueue =
               snapshot.val() ||
               {};
 
+            const nextSignature =
+              listenQueueSignature();
+
             renderListenQueue();
             updateListenVideoMetadata();
             updateListenControls();
+
+            if (
+              listenPlayback?.mode ===
+                "queue" &&
+              nextSignature &&
+              nextSignature !==
+                previousSignature
+            ) {
+              applyListenPlayback(
+                listenPlayback,
+                {
+                  force:
+                    false
+                }
+              ).catch(
+                console.error
+              );
+            }
           }
         );
 
@@ -13921,7 +14221,7 @@
          * YouTube itself may still need time to resolve a playlist/Mix, but
          * there is no extra Firebase round trip before HOST playback begins.
          */
-        applyHostListenStateImmediately(
+        await applyHostListenStateImmediately(
           nextState
         );
 
